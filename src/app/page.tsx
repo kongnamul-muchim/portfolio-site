@@ -9,10 +9,10 @@ export default function Home() {
     <div className="min-h-screen bg-gray-50 dark:bg-[#0D0D0E] text-gray-900 dark:text-[#E5E7EB]">
       {/* Hero Section */}
       <section className="py-16 px-4 text-center">
-        <h1 className="text-4xl md:text-5xl font-bold mb-4">
+        <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4 px-2 break-keep">
           My <span className="hero-gradient">Projects</span>
         </h1>
-        <p className="text-lg text-gray-500 dark:text-[#9CA3AF]">
+        <p className="text-base sm:text-lg text-gray-500 dark:text-[#9CA3AF] px-2">
           Unity Games, Web Applications, and Tools
         </p>
       </section>
@@ -71,16 +71,16 @@ function ProjectCard({ project }: { project: typeof projects[0] }) {
         />
         <div className="absolute inset-0 bg-black/35 transition-opacity duration-200 group-hover:opacity-0" />
       </div>
-      <div className="p-4">
-        <div className="flex items-center gap-2 mb-2">
+      <div className="p-4 min-w-0">
+        <div className="flex items-center gap-2 mb-2 min-w-0">
           {typeInfo && (
-            <span className="text-xs text-gray-400">{typeInfo.icon}</span>
+            <span className="text-xs text-gray-400 shrink-0">{typeInfo.icon}</span>
           )}
-          <h3 className="font-semibold text-gray-900 dark:text-[#E5E7EB]">
+          <h3 className="font-semibold text-gray-900 dark:text-[#E5E7EB] truncate">
             {project.title}
           </h3>
         </div>
-        <p className="text-sm text-gray-500 dark:text-[#9CA3AF] mb-2 line-clamp-2">
+        <p className="text-sm text-gray-500 dark:text-[#9CA3AF] mb-2 line-clamp-2 break-words">
           {project.description}
         </p>
         {project.devPeriod && (
