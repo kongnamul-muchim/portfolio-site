@@ -60,7 +60,8 @@ export default function PlayDemoPage({ params }: { params: { slug: string } }) {
                 title={`${project.title} Demo`}
                 className="absolute inset-0 w-full h-full border-0 overflow-hidden"
                 scrolling="no"
-                allow="autoplay; fullscreen; clipboard-read; clipboard-write"
+                sandbox="allow-scripts allow-same-origin allow-popups allow-presentation"
+                allow="autoplay; fullscreen"
                 allowFullScreen
                 loading="lazy"
               />
@@ -83,7 +84,8 @@ export default function PlayDemoPage({ params }: { params: { slug: string } }) {
                 title={`${project.title} Demo`}
                 className="absolute inset-0 w-full h-full border-0 overflow-hidden"
                 scrolling="no"
-                allow="autoplay; fullscreen; clipboard-read; clipboard-write"
+                sandbox="allow-scripts allow-same-origin allow-popups allow-presentation"
+                allow="autoplay; fullscreen"
                 allowFullScreen
                 loading="lazy"
               />
