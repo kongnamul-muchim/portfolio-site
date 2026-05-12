@@ -71,16 +71,16 @@ function ProjectCard({ project }: { project: typeof projects[0] }) {
         />
         <div className="absolute inset-0 bg-black/35 transition-opacity duration-200 group-hover:opacity-0" />
       </div>
-      <div className="p-4 min-w-0">
-        <div className="flex items-center gap-2 mb-2 min-w-0">
+      <div className="p-5 min-w-0">
+        <div className="flex items-center gap-2 mb-3 min-w-0">
           {typeInfo && (
-            <span className="text-xs text-gray-400 shrink-0">{typeInfo.icon}</span>
+            <span className="text-sm text-gray-400 shrink-0">{typeInfo.icon}</span>
           )}
-          <h3 className="font-semibold text-gray-900 dark:text-[#E5E7EB] truncate">
+          <h3 className="font-semibold text-gray-900 dark:text-[#E5E7EB] truncate text-sm sm:text-base">
             {project.title}
           </h3>
         </div>
-        <p className="text-sm text-gray-500 dark:text-[#9CA3AF] mb-2 line-clamp-2 break-words">
+        <p className="text-sm text-gray-500 dark:text-[#9CA3AF] mb-3 line-clamp-2 break-words leading-relaxed">
           {project.description}
         </p>
         {project.devPeriod && (
@@ -88,11 +88,11 @@ function ProjectCard({ project }: { project: typeof projects[0] }) {
             📅 {project.devPeriod}
           </p>
         )}
-        <div className="flex flex-wrap gap-1.5 mb-3">
+        <div className="flex flex-wrap gap-2 mb-4">
           {project.technologies.slice(0, 4).map((tech) => (
             <span
               key={tech}
-              className="text-xs px-2 py-0.5 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-[#9CA3AF] border border-gray-200 dark:border-[#1F2937]"
+              className="text-[11px] px-3 py-1 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-[#9CA3AF] border border-gray-200 dark:border-[#1F2937]"
             >
               {tech}
             </span>
@@ -103,7 +103,7 @@ function ProjectCard({ project }: { project: typeof projects[0] }) {
             </span>
           )}
         </div>
-        <span className="block w-full text-center py-2 bg-[#22D3EE] text-[#0D0D0E] font-semibold text-sm rounded-lg transition-all duration-200 hover:shadow-[0_0_12px_rgba(34,211,238,0.25)]">
+        <span className="block w-full text-center py-2.5 bg-[#22D3EE] text-[#0D0D0E] font-semibold text-sm rounded-lg transition-all duration-200 hover:shadow-[0_0_12px_rgba(34,211,238,0.25)]">
           View Project
         </span>
       </div>

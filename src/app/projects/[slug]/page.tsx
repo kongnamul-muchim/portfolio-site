@@ -32,19 +32,19 @@ export default function ProjectPage({ params }: { params: { slug: string } }) {
         </Link>
 
         {/* Header */}
-        <header className="bg-white dark:bg-[#111827] border border-gray-200 dark:border-[#1F2937] rounded-xl p-4 sm:p-6 mb-6">
-          <div className="flex items-center gap-2 mb-3">
+        <header className="bg-white dark:bg-[#111827] border border-gray-200 dark:border-[#1F2937] rounded-xl p-5 sm:p-7 mb-6">
+          <div className="flex items-center gap-2 mb-4">
             {typeInfo && (
               <span className="text-lg shrink-0">{typeInfo.icon}</span>
             )}
-            <span className="text-xs px-2 py-0.5 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-[#9CA3AF] border border-gray-200 dark:border-[#1F2937]">
+            <span className="text-xs px-3 py-1 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-[#9CA3AF] border border-gray-200 dark:border-[#1F2937]">
               {typeInfo?.label || project.type}
             </span>
           </div>
-          <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 dark:text-[#E5E7EB] mb-3 break-words">
+          <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 dark:text-[#E5E7EB] mb-4 break-words leading-tight">
             {project.title}
           </h1>
-          <p className="text-sm sm:text-base text-gray-500 dark:text-[#9CA3AF] mb-4 break-words">
+          <p className="text-sm sm:text-base text-gray-500 dark:text-[#9CA3AF] mb-5 break-words leading-relaxed">
             {project.description}
           </p>
           {project.devPeriod && (
@@ -52,11 +52,11 @@ export default function ProjectPage({ params }: { params: { slug: string } }) {
               📅 {project.devPeriod}
             </p>
           )}
-          <div className="flex flex-wrap gap-1.5 sm:gap-2 min-w-0">
+          <div className="flex flex-wrap gap-2 min-w-0">
             {project.technologies.map((tech) => (
               <span
                 key={tech}
-                className="text-[10px] sm:text-xs px-2 py-1 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-[#9CA3AF] border border-gray-200 dark:border-[#1F2937] whitespace-nowrap"
+                className="text-[11px] sm:text-xs px-3 py-1 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-[#9CA3AF] border border-gray-200 dark:border-[#1F2937] whitespace-nowrap"
               >
                 {tech}
               </span>
@@ -75,8 +75,8 @@ export default function ProjectPage({ params }: { params: { slug: string } }) {
         </div>
 
         {/* Detail Content */}
-        <div className="bg-white dark:bg-[#111827] border border-gray-200 dark:border-[#1F2937] rounded-xl p-4 sm:p-6 mb-6 max-w-full min-w-0 overflow-hidden">
-          <h2 className="text-lg font-semibold text-gray-900 dark:text-[#E5E7EB] mb-4">
+        <div className="bg-white dark:bg-[#111827] border border-gray-200 dark:border-[#1F2937] rounded-xl p-5 sm:p-7 mb-6 max-w-full min-w-0 overflow-hidden">
+          <h2 className="text-lg font-semibold text-gray-900 dark:text-[#E5E7EB] mb-5">
             Project Details
           </h2>
           <div className="space-y-6 text-gray-600 dark:text-[#9CA3AF] text-sm leading-relaxed min-w-0">
