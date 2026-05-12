@@ -84,3 +84,13 @@ model Notification {
   relatedPostId String?
   createdAt    DateTime @default(now())
 }
+
+model VisitLog {
+  id        String   @id @default(cuid())
+  ip        String
+  date      DateTime @default(now())
+  createdAt DateTime @default(now())
+
+  @@unique([ip, date])
+  @@index([date])
+}

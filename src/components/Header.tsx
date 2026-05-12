@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { useSession, signOut } from 'next-auth/react'
 import { useTheme } from './ThemeProvider'
 import { usePathname } from 'next/navigation'
+import VisitorBadge from './VisitorBadge'
 
 export default function Header() {
   const { data: session } = useSession()
@@ -100,6 +101,8 @@ export default function Header() {
                 </svg>
               )}
             </button>
+
+            <VisitorBadge />
 
             {session ? (
               <div className="hidden md:flex items-center gap-2">
