@@ -19,6 +19,7 @@ export default function Header() {
 
   const projectTree = [
     { category: 'Unity', icon: '🎮', items: [
+      { slug: 'chaincrush', label: 'ChainCrush', icon: '💎' },
       { slug: 'shotfire', label: 'ShotFire', icon: '🔫' },
       { slug: 'afk', label: 'AFK Idle RPG', icon: '🌙' },
       { slug: 'defencegame', label: 'DefenceGame', icon: '🎯' },
@@ -232,6 +233,7 @@ export default function Header() {
 }
 
 const projects = [
+  { slug: 'chaincrush', title: 'ChainCrush' },
   { slug: 'shotfire', title: 'ShotFire' },
   { slug: 'afk', title: 'AFK Idle RPG' },
   { slug: 'minigame-collection', title: 'Mini Game Collection' },

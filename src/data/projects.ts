@@ -17,6 +17,19 @@ export interface Project {
 
 export const projects: Project[] = [
   {
+    id: 'chaincrush',
+    title: 'ChainCrush',
+    type: 'unity',
+    description: '10×10 블록 연계 퍼즐 (ChainCrush). 순수 C# Core + Unity Shell 분리 아키텍처, DI 컨테이너, BFS 연쇄 제거, Vercel Serverless 리더보드.',
+    image: '/images/chaincrush.png',
+    technologies: ['Unity 6', 'C#', 'DI Container', 'BFS', 'SOLID Principles', 'Vercel Serverless', 'Neon PostgreSQL'],
+    github: 'https://github.com/kongnamul-muchim/BlockPuzzle',
+    demo: 'https://kongnamul-muchim.github.io/BlockPuzzle/',
+    featured: true,
+    devPeriod: '2026-05-13 ~ 2026-05-14',
+    hasPlayableDemo: true,
+  },
+  {
     id: 'shotfire',
     title: 'ShotFire',
     type: 'unity',
