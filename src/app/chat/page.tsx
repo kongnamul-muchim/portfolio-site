@@ -133,8 +133,8 @@ export default function ChatPage() {
 
       {/* Character Header */}
       <div className="flex items-center gap-3 py-4 border-b border-gray-200 dark:border-[#2a2a2c]">
-        <div className="w-12 h-12 rounded-full bg-gradient-to-br from-[#4a3f8a] to-[#2a5a8a] flex items-center justify-center text-2xl shadow-lg shadow-purple-500/10 flex-shrink-0">
-          {charEmoji}
+        <div className="w-12 h-12 rounded-full bg-gradient-to-br from-[#4a3f8a] to-[#2a5a8a] flex items-center justify-center text-2xl shadow-lg shadow-purple-500/10 flex-shrink-0 overflow-hidden">
+          <img src="/images/luna_avatar.jpg" className="w-full h-full object-cover" alt={charName} />
         </div>
         <div className="flex-1 min-w-0">
           <h1 className="text-lg font-bold">{charName}</h1>
@@ -166,8 +166,8 @@ export default function ChatPage() {
       >
         {messages.length === 0 && (
           <div className="text-center mt-16">
-            <div className="w-20 h-20 rounded-full bg-gradient-to-br from-[#4a3f8a] to-[#2a5a8a] flex items-center justify-center text-4xl mx-auto mb-4 shadow-lg shadow-purple-500/10">
-              {charEmoji}
+            <div className="w-20 h-20 rounded-full bg-gradient-to-br from-[#4a3f8a] to-[#2a5a8a] flex items-center justify-center text-4xl mx-auto mb-4 shadow-lg shadow-purple-500/10 overflow-hidden">
+              <img src="/images/luna_avatar.jpg" className="w-full h-full object-cover" alt={charName} />
             </div>
             <h2 className="text-xl font-bold text-gray-700 dark:text-[#E5E7EB]">{charName}</h2>
             <p className="text-sm text-gray-500 dark:text-[#9CA3AF] mt-2 max-w-sm mx-auto leading-relaxed">
