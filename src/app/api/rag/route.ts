@@ -33,7 +33,11 @@ export async function GET(req: NextRequest) {
     const url = adminToken
       ? `${VPS_API}/rate-limit?admin_token=${adminToken}`
       : `${VPS_API}/rate-limit`;
-    const response = await fetch(url);
+    const response = await fetch(url, {
+      headers: {
+        'X-Forwarded-For': req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'unknown',
+      },
+    });
     const data = await response.json();
     return NextResponse.json(data);
   } catch {

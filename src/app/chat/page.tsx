@@ -1,6 +1,22 @@
 'use client';
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
+
+function getSessionId(): string {
+  if (typeof window === 'undefined') return '';
+  const stored = localStorage.getItem('aichat_session_id');
+  if (stored) return stored;
+  const id = crypto.randomUUID();
+  localStorage.setItem('aichat_session_id', id);
+  return id;
+}
+
+interface Document {
+  id: number;
+  title: string;
+  filename: string;
+  created_at?: string;
+}
 
 export default function ChatPage() {
   const [messages, setMessages] = useState<{ role: string; content: string; sources?: { title: string }[] }[]>([]);
@@ -8,18 +24,91 @@ export default function ChatPage() {
   const [loading, setLoading] = useState(false);
   const [quota, setQuota] = useState({ remaining: 10, limit: 10, is_admin: false });
   const [isAdmin, setIsAdmin] = useState(false);
-  const [showAdminInput, setShowAdminInput] = useState(false);
+  const [showAdminPanel, setShowAdminPanel] = useState(false);
   const [adminPw, setAdminPw] = useState('');
+  const [docs, setDocs] = useState<Document[]>([]);
+  const [uploading, setUploading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
-  const sessionId = useRef(crypto.randomUUID());
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const sessionId = useRef(getSessionId());
+
+  const showError = useCallback((msg: string) => {
+    setError(msg);
+    setTimeout(() => setError(null), 4000);
+  }, []);
 
   useEffect(() => {
-    fetch('/api/rag').then(r => r.json()).then(d => setQuota(d)).catch(() => {});
-  }, []);
+    fetch('/api/rag')
+      .then(r => r.json())
+      .then(d => setQuota(d))
+      .catch(() => showError('⚠️ 서버 상태 확인 실패'));
+  }, [showError]);
 
   useEffect(() => {
     containerRef.current?.scrollTo(0, containerRef.current.scrollHeight);
   }, [messages]);
+
+  const loadDocs = useCallback(async () => {
+    try {
+      const res = await fetch(`/api/rag?admin_token=${adminPw}`);
+      const data = await res.json();
+      if (data.documents) setDocs(data.documents);
+    } catch {
+      // 문서 목록 로딩 실패는 조용히 무시
+    }
+  }, [adminPw]);
+
+  const handleAdminLogin = () => {
+    if (adminPw) {
+      setIsAdmin(true);
+      setQuota(prev => ({ ...prev, remaining: 999, is_admin: true }));
+      loadDocs();
+    }
+  };
+
+  const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploading(true);
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('title', file.name.replace(/\.[^/.]+$/, ''));
+      formData.append('admin_token', adminPw);
+
+      const res = await fetch('http://45.59.101.155:8000/api/documents/upload', {
+        method: 'POST',
+        body: formData,
+      });
+      const data = await res.json();
+      if (res.ok) {
+        showError(`✅ "${data.title}" 업로드 완료 (${data.chunks}개 청크)`);
+        await loadDocs();
+      } else {
+        showError(`❌ 업로드 실패: ${data.detail || '알 수 없는 오류'}`);
+      }
+    } catch {
+      showError('❌ 업로드 중 네트워크 오류');
+    } finally {
+      setUploading(false);
+      if (fileInputRef.current) fileInputRef.current.value = '';
+    }
+  };
+
+  const handleDeleteDoc = async (docId: number) => {
+    try {
+      const res = await fetch(`http://45.59.101.155:8000/api/documents/${docId}?admin_token=${adminPw}`, {
+        method: 'DELETE',
+      });
+      if (res.ok) {
+        showError('🗑️ 문서 삭제 완료');
+        await loadDocs();
+      }
+    } catch {
+      showError('❌ 삭제 실패');
+    }
+  };
 
   const sendMessage = async () => {
     if (!input.trim() || loading) return;
@@ -42,7 +131,8 @@ export default function ChatPage() {
         if (!data.is_admin) setQuota(prev => ({ ...prev, remaining: data.remaining_quota }));
         else { setIsAdmin(true); setQuota(prev => ({ ...prev, is_admin: true })); }
       } else {
-        setMessages(prev => [...prev, { role: 'bot', content: `❌ ${data.detail?.message || data.detail || '오류가 발생했습니다'}` }]);
+        const errMsg = data.detail?.message || data.detail || '오류가 발생했습니다';
+        setMessages(prev => [...prev, { role: 'bot', content: `❌ ${errMsg}` }]);
       }
     } catch {
       setMessages(prev => [...prev, { role: 'bot', content: '❌ 네트워크 오류. 서버에 연결할 수 없습니다.' }]);
@@ -51,16 +141,15 @@ export default function ChatPage() {
     }
   };
 
-  const handleAdminLogin = () => {
-    if (adminPw) {
-      setIsAdmin(true);
-      setShowAdminInput(false);
-      setQuota(prev => ({ ...prev, remaining: 999, is_admin: true }));
-    }
-  };
-
   return (
     <div className="max-w-3xl mx-auto px-4 py-8">
+      {/* Error Toast */}
+      {error && (
+        <div className="fixed top-4 left-1/2 -translate-x-1/2 z-50 bg-gray-900 text-white px-4 py-2 rounded-lg text-sm shadow-lg animate-pulse">
+          {error}
+        </div>
+      )}
+
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div>
@@ -69,36 +158,87 @@ export default function ChatPage() {
         </div>
         <div className="flex items-center gap-3">
           {quota.is_admin ? (
-            <span className="text-sm text-yellow-500">👑 관리자 모드</span>
+            <>
+              <span className="text-sm text-yellow-500">👑 관리자</span>
+              <span className="text-xs text-gray-500">📄 {docs.length}개 문서</span>
+            </>
           ) : (
-            <span className="text-sm text-gray-500 dark:text-[#9CA3AF]">📊 {quota.remaining}/{quota.limit}회</span>
+            <span className="text-sm text-gray-500 dark:text-[#9CA3AF]">
+              📊 {quota.remaining}/{quota.limit}회
+              {quota.remaining <= 2 && ' ⚠️'}
+            </span>
           )}
           <button
-            onClick={() => setShowAdminInput(!showAdminInput)}
-            className="text-xs text-gray-400 hover:text-gray-300"
+            onClick={() => setShowAdminPanel(!showAdminPanel)}
+            className="text-xs text-gray-400 hover:text-gray-300 transition-colors"
           >
             🔐 관리자
           </button>
         </div>
       </div>
 
-      {/* Admin login */}
-      {showAdminInput && (
-        <div className="flex gap-2 mb-4 p-3 bg-gray-100 dark:bg-[#1a1a1c] rounded-lg border border-gray-200 dark:border-[#2a2a2c]">
-          <input
-            type="password"
-            value={adminPw}
-            onChange={e => setAdminPw(e.target.value)}
-            placeholder="관리자 비밀번호"
-            className="flex-1 bg-white dark:bg-[#0D0D0E] border border-gray-200 dark:border-[#2a2a2c] rounded px-3 py-2 text-sm outline-none focus:border-[#22D3EE]"
-            onKeyDown={e => e.key === 'Enter' && handleAdminLogin()}
-          />
-          <button
-            onClick={handleAdminLogin}
-            className="px-4 py-2 bg-yellow-600 text-white rounded text-sm font-medium hover:bg-yellow-500"
-          >
-            로그인
-          </button>
+      {/* Admin Panel */}
+      {showAdminPanel && (
+        <div className="mb-4 p-4 bg-gray-100 dark:bg-[#1a1a1c] rounded-xl border border-gray-200 dark:border-[#2a2a2c] space-y-3">
+          {!isAdmin ? (
+            <div className="flex gap-2">
+              <input
+                type="password"
+                value={adminPw}
+                onChange={e => setAdminPw(e.target.value)}
+                placeholder="관리자 비밀번호"
+                className="flex-1 bg-white dark:bg-[#0D0D0E] border border-gray-200 dark:border-[#2a2a2c] rounded-lg px-3 py-2 text-sm outline-none focus:border-[#22D3EE]"
+                onKeyDown={e => e.key === 'Enter' && handleAdminLogin()}
+              />
+              <button
+                onClick={handleAdminLogin}
+                className="px-4 py-2 bg-yellow-600 text-white rounded-lg text-sm font-medium hover:bg-yellow-500 transition-colors"
+              >
+                로그인
+              </button>
+            </div>
+          ) : (
+            <div className="space-y-3">
+              {/* Document Upload */}
+              <div className="flex items-center gap-3">
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept=".md,.txt,.pdf"
+                  onChange={handleUpload}
+                  className="hidden"
+                />
+                <button
+                  onClick={() => fileInputRef.current?.click()}
+                  disabled={uploading}
+                  className="px-4 py-2 bg-[#22D3EE] text-black rounded-lg text-sm font-medium hover:opacity-90 disabled:opacity-40 transition-opacity"
+                >
+                  {uploading ? '⏳ 업로드 중...' : '📄 문서 업로드'}
+                </button>
+                <span className="text-xs text-gray-500">(.md / .txt / .pdf)</span>
+              </div>
+
+              {/* Document List */}
+              {docs.length > 0 && (
+                <div className="space-y-1 max-h-40 overflow-y-auto">
+                  <p className="text-xs text-gray-500 font-medium">📚 문서 목록</p>
+                  {docs.map(doc => (
+                    <div key={doc.id} className="flex items-center justify-between bg-white dark:bg-[#0D0D0E] rounded px-3 py-1.5 text-sm">
+                      <span className="truncate text-gray-700 dark:text-[#E5E7EB]">
+                        📎 {doc.title}
+                      </span>
+                      <button
+                        onClick={() => handleDeleteDoc(doc.id)}
+                        className="text-red-400 hover:text-red-300 text-xs ml-2 shrink-0"
+                      >
+                        삭제
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
         </div>
       )}
 
@@ -152,7 +292,11 @@ export default function ChatPage() {
           value={input}
           onChange={e => setInput(e.target.value)}
           onKeyDown={e => e.key === 'Enter' && !e.shiftKey && sendMessage()}
-          placeholder={quota.remaining > 0 || quota.is_admin ? '질문을 입력하세요...' : '오늘 할당량을 다 사용했습니다'}
+          placeholder={
+            quota.remaining > 0 || quota.is_admin
+              ? '질문을 입력하세요...'
+              : '😅 오늘 할당량을 모두 사용했습니다 (내일 다시 시도해주세요)'
+          }
           disabled={quota.remaining <= 0 && !quota.is_admin}
           className="flex-1 bg-white dark:bg-[#0D0D0E] border border-gray-200 dark:border-[#2a2a2c] rounded-xl px-4 py-3 outline-none focus:border-[#22D3EE] text-gray-900 dark:text-[#E5E7EB] placeholder-gray-400"
         />
@@ -164,6 +308,15 @@ export default function ChatPage() {
           전송
         </button>
       </div>
+
+      {/* Session info */}
+      <p className="text-xs text-gray-500 mt-2 text-center">
+        🔑 세션 ID: {sessionId.current.slice(0, 8)}... | 
+        {quota.is_admin 
+          ? ' 👑 무제한' 
+          : ` 📊 ${quota.remaining}/${quota.limit}회 남음`
+        }
+      </p>
     </div>
   );
 }
