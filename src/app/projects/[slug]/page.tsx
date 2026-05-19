@@ -80,7 +80,7 @@ export default function ProjectPage({ params }: { params: { slug: string } }) {
             Project Details
           </h2>
           <div className="space-y-6 text-gray-600 dark:text-[#9CA3AF] text-sm leading-relaxed min-w-0">
-            <ProjectDetailContent slug={project.slug} />
+            <ProjectDetailContent slug={project.id} />
           </div>
         </div>
 
