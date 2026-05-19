@@ -5,9 +5,15 @@ const VPS_API = 'http://45.59.101.155:8000/api';
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
+    const clientIp = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || req.headers.get('x-real-ip') || 'unknown';
+
     const response = await fetch(`${VPS_API}/chat`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Forwarded-For': clientIp,
+        'X-Real-IP': clientIp,
+      },
       body: JSON.stringify(body),
       signal: AbortSignal.timeout(55000),
     });
