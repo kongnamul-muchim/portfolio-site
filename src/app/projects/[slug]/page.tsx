@@ -288,6 +288,42 @@ function ProjectDetailContent({ slug }: { slug: string }) {
         <p>웹소설 세계관 시뮬레이터. AI GM 시스템, 캐릭터 Role-play, 분기 스토리 시스템.</p>
       </div>
     ),
+    'aichat': (
+      <div className="space-y-4">
+        <h3 className="text-base font-semibold text-gray-900 dark:text-[#E5E7EB]">Project Overview</h3>
+        <p>RAG(Retrieval-Augmented Generation) 기반 AI 채팅 시스템입니다. 사용자가 업로드한 문서를 기반으로 LLM이 검색하여 답변하는 지능형 채팅 인터페이스를 제공합니다.</p>
+        <h3 className="text-base font-semibold text-gray-900 dark:text-[#E5E7EB]">System Architecture</h3>
+        <div className="overflow-x-auto -mx-2 sm:mx-0">
+          <pre className="bg-gray-100 dark:bg-gray-900 p-3 sm:p-4 rounded-lg text-[10px] sm:text-xs leading-tight min-w-0 whitespace-pre">
+{`User → kongfolio.vercel.app/chat
+              ↓
+        /api/rag (Vercel Proxy)
+              ↓
+        45.59.101.155:8000 (VPS)
+        ├─ DeepSeek V4 Flash LLM
+        ├─ pgvector 검색 엔진
+        ├─ e5-base Embedding (로컬)
+        └─ Valkey Rate Limit`}</pre>
+        </div>
+        <h3 className="text-base font-semibold text-gray-900 dark:text-[#E5E7EB]">RAG Pipeline</h3>
+        <ol className="list-decimal pl-5 space-y-1">
+          <li><strong>Document Upload</strong> - PDF / Markdown / TXT 업로드</li>
+          <li><strong>Chunking</strong> - RecursiveCharacterTextSplitter (1000자 단위)</li>
+          <li><strong>Embedding</strong> - e5-base 모델 → pgvector 저장</li>
+          <li><strong>Retrieval</strong> - 질문 임베딩 → Cosine Similarity 검색</li>
+          <li><strong>Generation</strong> - 검색된 Context + 질문 → DeepSeek V4 Flash 답변</li>
+        </ol>
+        <h3 className="text-base font-semibold text-gray-900 dark:text-[#E5E7EB]">Key Features</h3>
+        <ul className="list-disc pl-5 space-y-1">
+          <li><strong>한국어 특화</strong> - e5-base 한국어 임베딩 + DeepSeek 한국어 지원</li>
+          <li><strong>실시간 스트리밍</strong> - Server-Sent Events 기반 타이핑 효과</li>
+          <li><strong>소스 인용</strong> - 답변에 사용된 문서 출처 표시</li>
+          <li><strong>관리자 모드</strong> - 문서 업로드/삭제 관리</li>
+          <li><strong>Rate Limit</strong> - Valkey 기반 일일 사용량 제한 (10회/일)</li>
+          <li><strong>VPS IP 보호</strong> - Vercel Edge 프록시로 백엔드 IP 은닉</li>
+        </ul>
+      </div>
+    ),
   }
 
   return <>{details[slug] || <p>자세한 프로젝트 정보를 준비 중입니다.</p>}</>

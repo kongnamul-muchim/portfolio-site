@@ -159,6 +159,18 @@ export const projects: Project[] = [
     featured: false,
     devPeriod: '2026-03-30',
   },
+  {
+    id: 'aichat',
+    title: 'AIChat',
+    type: 'web',
+    description: 'RAG(Retrieval-Augmented Generation) 기반 AI 채팅 시스템. 문서를 업로드하면 LLM이 검색해서 답변. DeepSeek V4 Flash + pgvector + 한국어 특화.',
+    image: '/images/aichat.svg',
+    technologies: ['Next.js 14', 'TypeScript', 'Python FastAPI', 'pgvector', 'DeepSeek V4', 'RAG', 'PostgreSQL'],
+    github: 'https://github.com/kongnamul-muchim/AIChatBot',
+    demo: '/chat',
+    featured: true,
+    devPeriod: '2026-05-19',
+  },
 ]
 
 export function getProjectBySlug(slug: string): Project | undefined {

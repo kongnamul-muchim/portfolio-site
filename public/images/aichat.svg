@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="450" viewBox="0 0 800 450">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0D0D0E"/>
+      <stop offset="100%" style="stop-color:#1a1a2e"/>
+    </linearGradient>
+    <linearGradient id="cyan" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#06B6D4"/>
+      <stop offset="100%" style="stop-color:#22D3EE"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="450" fill="url(#bg)"/>
+  <!-- Chat bubble 1 -->
+  <rect x="100" y="80" width="250" height="50" rx="25" fill="#1F2937" stroke="#22D3EE" stroke-width="1.5"/>
+  <text x="130" y="110" font-family="monospace" font-size="14" fill="#E5E7EB">📄 문서를 업로드해주세요</text>
+  <!-- Chat bubble 2 -->
+  <rect x="420" y="150" width="280" height="50" rx="25" fill="#22D3EE"/>
+  <text x="440" y="180" font-family="monospace" font-size="14" fill="#0D0D0E">RAG 관련 문서를 찾고있어요...</text>
+  <!-- Chat bubble 3 -->
+  <rect x="100" y="220" width="300" height="80" rx="25" fill="#1F2937" stroke="#22D3EE" stroke-width="1.5"/>
+  <text x="130" y="250" font-family="monospace" font-size="14" fill="#E5E7EB">🔍 검색 결과:</text>
+  <text x="130" y="275" font-family="monospace" font-size="12" fill="#9CA3AF">pgvector에서 3개 청크 발견</text>
+  <!-- Chat bubble 4 -->
+  <rect x="380" y="320" width="320" height="50" rx="25" fill="#22D3EE"/>
+  <text x="400" y="350" font-family="monospace" font-size="14" fill="#0D0D0E">✨ 답변을 생성했습니다!</text>
+  <!-- Title -->
+  <text x="400" y="420" font-family="monospace" font-size="20" fill="#22D3EE" text-anchor="middle" font-weight="bold">AIChat · RAG System</text>
+</svg>
