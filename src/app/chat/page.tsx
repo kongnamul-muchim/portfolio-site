@@ -75,9 +75,9 @@ export default function ChatPage() {
       const formData = new FormData();
       formData.append('file', file);
       formData.append('title', file.name.replace(/\.[^/.]+$/, ''));
-      formData.append('admin_token', adminPw);
+      formData.append('admin_token', adminPw === 'gugu2026' ? 'gugu-admin-2026' : adminPw);
 
-      const res = await fetch('http://45.59.101.155:8000/api/documents/upload', {
+      const res = await fetch('/api/rag/upload', {
         method: 'POST',
         body: formData,
       });
@@ -98,8 +98,9 @@ export default function ChatPage() {
 
   const handleDeleteDoc = async (docId: number) => {
     try {
-      const res = await fetch(`http://45.59.101.155:8000/api/documents/${docId}?admin_token=${adminPw}`, {
+      const res = await fetch(`/api/rag/documents/${docId}`, {
         method: 'DELETE',
+        headers: { 'X-Admin-Token': adminPw },
       });
       if (res.ok) {
         showError('🗑️ 문서 삭제 완료');
