@@ -25,7 +25,7 @@ interface Stats {
   by_source: Record<string, number>
 }
 
-const ADMIN_TOKEN = 'gugu2026'
+const ADMIN_TOKEN = 'gugu-admin-2026'
 
 export default function AdminJobsPage() {
   const [jobs, setJobs] = useState<JobPosting[]>([])
