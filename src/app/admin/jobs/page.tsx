@@ -35,6 +35,8 @@ export default function AdminJobsPage() {
   const [page, setPage] = useState(1)
   const [search, setSearch] = useState('')
   const [sourceFilter, setSourceFilter] = useState('')
+  const [locationFilter, setLocationFilter] = useState('')
+  const [regions, setRegions] = useState<{name: string, count: number}[]>([])
   const [sort, setSort] = useState('newest')
   const [keyword, setKeyword] = useState('backend')
   const [total, setTotal] = useState(0)
@@ -48,6 +50,7 @@ export default function AdminJobsPage() {
       let url = `/api/jobs?admin_token=${ADMIN_TOKEN}&page=${page}&limit=${limit}&sort=${sort}`
       if (search) url += `&search=${encodeURIComponent(search)}`
       if (sourceFilter) url += `&source=${sourceFilter}`
+      if (locationFilter) url += `&location=${encodeURIComponent(locationFilter)}`
       const res = await fetch(url)
       const data = await res.json()
       if (res.ok) {
@@ -57,13 +60,21 @@ export default function AdminJobsPage() {
     } finally {
       setLoading(false)
     }
-  }, [page, search, sourceFilter, sort])
+  }, [page, search, sourceFilter, locationFilter, sort])
 
   const fetchStats = useCallback(async () => {
     try {
       const res = await fetch(`/api/jobs/stats?admin_token=${ADMIN_TOKEN}`)
       if (res.ok) {
         setStats(await res.json())
+      }
+    } catch {}
+    // Also fetch regions for location filter
+    try {
+      const res = await fetch(`/api/jobs/locations?admin_token=${ADMIN_TOKEN}`)
+      if (res.ok) {
+        const data = await res.json()
+        setRegions(data.regions || [])
       }
     } catch {}
   }, [])
@@ -79,7 +90,10 @@ export default function AdminJobsPage() {
       const res = await fetch(url, { method: 'POST' })
       const data = await res.json()
       if (res.ok) {
-        setMsg(`✅ 크롤링 완료! ${data.new}개 새 공고, ${data.skipped}개 중복`)
+        const parts = [`✅ 크롤링 완료! ${data.new}개 새 공고`]
+        if (data.updated > 0) parts.push(`${data.updated}개 지역 업데이트`)
+        parts.push(`${data.skipped}개 중복`)
+        setMsg(parts.join(', '))
         fetchJobs()
         fetchStats()
       } else {
@@ -194,17 +208,28 @@ export default function AdminJobsPage() {
             onChange={e => { setSourceFilter(e.target.value); setPage(1) }}
             className="px-3 py-2 rounded-lg border border-gray-300 dark:border-[#374151] bg-white dark:bg-[#111827] text-sm"
           >
-            <option value="">전체</option>
+            <option value="">전체 사이트</option>
             <option value="jobkorea">잡코리아</option>
             <option value="saramin">사람인</option>
+          </select>
+          <select
+            value={locationFilter}
+            onChange={e => { setLocationFilter(e.target.value); setPage(1) }}
+            className="px-3 py-2 rounded-lg border border-gray-300 dark:border-[#374151] bg-white dark:bg-[#111827] text-sm max-w-[140px]"
+          >
+            <option value="">전체 지역</option>
+            {regions.map(r => (
+              <option key={r.name} value={r.name}>{r.name} ({r.count})</option>
+            ))}
           </select>
           <select
             value={sort}
             onChange={e => setSort(e.target.value)}
             className="px-3 py-2 rounded-lg border border-gray-300 dark:border-[#374151] bg-white dark:bg-[#111827] text-sm"
           >
-            <option value="newest">최신순</option>
-            <option value="match">매칭순</option>
+            <option value="newest">🕐 최신순</option>
+            <option value="match">🏆 매칭순</option>
+            <option value="location">📍 지역순</option>
           </select>
           <div className="text-sm text-gray-500 dark:text-[#9CA3AF]">
             총 {total}건
