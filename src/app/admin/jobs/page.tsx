@@ -35,6 +35,7 @@ export default function AdminJobsPage() {
   const [page, setPage] = useState(1)
   const [search, setSearch] = useState('')
   const [sourceFilter, setSourceFilter] = useState('')
+  const [sort, setSort] = useState('newest')
   const [keyword, setKeyword] = useState('backend')
   const [total, setTotal] = useState(0)
   const [msg, setMsg] = useState('')
@@ -44,7 +45,7 @@ export default function AdminJobsPage() {
   const fetchJobs = useCallback(async () => {
     setLoading(true)
     try {
-      let url = `/api/jobs?admin_token=${ADMIN_TOKEN}&page=${page}&limit=${limit}`
+      let url = `/api/jobs?admin_token=${ADMIN_TOKEN}&page=${page}&limit=${limit}&sort=${sort}`
       if (search) url += `&search=${encodeURIComponent(search)}`
       if (sourceFilter) url += `&source=${sourceFilter}`
       const res = await fetch(url)
@@ -56,7 +57,7 @@ export default function AdminJobsPage() {
     } finally {
       setLoading(false)
     }
-  }, [page, search, sourceFilter])
+  }, [page, search, sourceFilter, sort])
 
   const fetchStats = useCallback(async () => {
     try {
@@ -149,6 +150,34 @@ export default function AdminJobsPage() {
           )}
         </div>
 
+        {/* Analyze Controls */}
+        <div className="bg-white dark:bg-[#1F2937] p-4 rounded-xl border border-gray-200 dark:border-[#374151] mb-6">
+          <div className="flex flex-wrap items-center gap-3">
+            <span className="text-sm font-medium">🤖 DeepSeek 분석</span>
+            <button
+              onClick={async () => {
+                setMsg('')
+                try {
+                  const res = await fetch(`/api/jobs/analyze?admin_token=${ADMIN_TOKEN}&limit=20`, { method: 'POST' })
+                  const data = await res.json()
+                  if (res.ok) setMsg(`✅ ${data.message}`)
+                  else setMsg(`❌ 오류: ${data.detail || ''}`)
+                  fetchJobs()
+                  fetchStats()
+                } catch (e: any) {
+                  setMsg(`❌ ${e.message}`)
+                }
+              }}
+              className="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white text-sm font-medium rounded-lg transition-colors"
+            >
+              🧠 미분석 공고 분석
+            </button>
+            <span className="text-xs text-gray-500 dark:text-[#9CA3AF]">
+              DeepSeek V4로 기술스택 추출 및 매칭 점수 계산
+            </span>
+          </div>
+        </div>
+
         {/* Search & Filter */}
         <div className="flex flex-wrap items-center gap-3 mb-4">
           <input
@@ -166,6 +195,14 @@ export default function AdminJobsPage() {
             <option value="">전체</option>
             <option value="jobkorea">잡코리아</option>
             <option value="saramin">사람인</option>
+          </select>
+          <select
+            value={sort}
+            onChange={e => setSort(e.target.value)}
+            className="px-3 py-2 rounded-lg border border-gray-300 dark:border-[#374151] bg-white dark:bg-[#111827] text-sm"
+          >
+            <option value="newest">최신순</option>
+            <option value="match">매칭순</option>
           </select>
           <div className="text-sm text-gray-500 dark:text-[#9CA3AF]">
             총 {total}건
@@ -216,12 +253,25 @@ export default function AdminJobsPage() {
                     <td className="px-4 py-3 hidden lg:table-cell text-gray-500 dark:text-[#9CA3AF]">{job.location}</td>
                     <td className="px-4 py-3 hidden lg:table-cell">{job.experience}</td>
                     <td className="px-4 py-3">
-                      <span className={`font-medium ${
-                        job.match_score >= 70 ? 'text-green-500' :
-                        job.match_score >= 40 ? 'text-yellow-500' : 'text-gray-400'
-                      }`}>
-                        {job.match_score > 0 ? `${Math.round(job.match_score)}%` : '-'}
-                      </span>
+                      <div className="flex items-center gap-2">
+                        <div className="flex-1 max-w-[80px] h-2 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+                          <div
+                            className={`h-full rounded-full transition-all ${
+                              job.match_score >= 70 ? 'bg-green-500' :
+                              job.match_score >= 40 ? 'bg-yellow-500' :
+                              job.match_score > 0 ? 'bg-blue-400' : 'bg-gray-300 dark:bg-gray-600'
+                            }`}
+                            style={{ width: `${Math.min(job.match_score || 0, 100)}%` }}
+                          />
+                        </div>
+                        <span className={`font-medium text-xs whitespace-nowrap ${
+                          job.match_score >= 70 ? 'text-green-500' :
+                          job.match_score >= 40 ? 'text-yellow-500' :
+                          job.match_score > 0 ? 'text-blue-400' : 'text-gray-400'
+                        }`}>
+                          {job.match_score > 0 ? `${Math.round(job.match_score)}%` : '-'}
+                        </span>
+                      </div>
                     </td>
                   </tr>
                 ))}
