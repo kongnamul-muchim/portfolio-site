@@ -1,8 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 const VPS_API = 'http://45.59.101.155:8000/api';
-
-// VPS 백엔드 비밀번호 (변경 불가)
 const VPS_ADMIN_PW = 'gugu-admin-2026';
 
 function translatePassword(body: Record<string, unknown>): Record<string, unknown> {
@@ -40,7 +38,6 @@ export async function POST(req: NextRequest) {
 
 export async function GET(req: NextRequest) {
   let adminToken = req.nextUrl.searchParams.get('admin_token');
-  // 새 비밀번호를 VPS 비밀번호로 변환
   if (adminToken === 'gugu2026') adminToken = VPS_ADMIN_PW;
 
   try {
