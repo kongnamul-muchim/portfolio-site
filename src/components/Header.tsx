@@ -16,6 +16,7 @@ export default function Header() {
 
   const isCommunity = pathname.startsWith('/community')
   const isPlay = pathname.startsWith('/play')
+  const isCrm = pathname.startsWith('/crm')
 
   const projectTree = [
     { category: 'Unity', icon: '🎮', items: [
@@ -71,6 +72,16 @@ export default function Header() {
                 }`}
               >
                 Community
+              </Link>
+              <Link
+                href="/crm"
+                className={`px-3 py-2 rounded-lg text-sm transition-colors ${
+                  isCrm
+                    ? 'bg-gray-100 dark:bg-gray-700 text-cyan-600 dark:text-[#22D3EE]'
+                    : 'text-gray-600 dark:text-[#9CA3AF] hover:bg-gray-100 dark:hover:bg-gray-700'
+                }`}
+              >
+                CRM
               </Link>
               <button
                 onClick={() => setProjectTreeOpen(!projectTreeOpen)}
@@ -196,6 +207,9 @@ export default function Header() {
               </Link>
               <Link href="/community" className="block px-4 py-2 rounded-lg text-gray-600 dark:text-[#9CA3AF] hover:bg-gray-100 dark:hover:bg-gray-700" onClick={() => setMobileMenuOpen(false)}>
                 💬 Community
+              </Link>
+              <Link href="/crm" className="block px-4 py-2 rounded-lg text-gray-600 dark:text-[#9CA3AF] hover:bg-gray-100 dark:hover:bg-gray-700" onClick={() => setMobileMenuOpen(false)}>
+                📊 CRM
               </Link>
               <div className="pl-4 space-y-1">
                 <p className="text-xs text-gray-400 px-2 mt-2 mb-1">Play Demos</p>
