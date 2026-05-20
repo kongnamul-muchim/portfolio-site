@@ -20,23 +20,28 @@ export default function Header() {
   const isJobs = pathname.startsWith('/admin/jobs')
 
   const projectTree = [
-    { category: 'Unity', icon: '🎮', items: [
+    { category: 'Puzzle/Casual', icon: '🧩', items: [
       { slug: 'chaincrush', label: 'ChainCrush', icon: '💎' },
-      { slug: 'shotfire', label: 'ShotFire', icon: '🔫' },
-      { slug: 'afk', label: 'AFK Idle RPG', icon: '🌙' },
-      { slug: 'defencegame', label: 'DefenceGame', icon: '🎯' },
-      { slug: 'greeddungeon', label: 'GreedDungeon', icon: '⚔️' },
-      { slug: 'pathfinder', label: 'Pathfinder', icon: '🗺️' },
       { slug: 'shotup', label: 'ShotUp', icon: '🎯' },
+    ]},
+    { category: 'Action/Strategy', icon: '⚔️', items: [
+      { slug: 'shotfire', label: 'ShotFire', icon: '🔫' },
+      { slug: 'defencegame', label: 'DefenceGame', icon: '🎯' },
+      { slug: 'pathfinder', label: 'Pathfinder', icon: '🗺️' },
+    ]},
+    { category: 'RPG/Adventure', icon: '🎮', items: [
+      { slug: 'afk', label: 'AFK Idle RPG', icon: '🌙' },
+      { slug: 'greeddungeon', label: 'GreedDungeon', icon: '⚔️' },
     ]},
     { category: 'Web', icon: '🌐', items: [
       { slug: 'minigame-collection', label: 'Mini Game Collection', icon: '🎮' },
       { slug: 'community-board', label: 'Community Board', icon: '💬' },
-    ]},
-    { category: 'Server', icon: '🖥️', items: [
       { slug: 'cookie-clicker', label: 'Cookie Clicker', icon: '🍪' },
     ]},
-    { category: 'Package', icon: '📦', items: [
+    { category: 'AI', icon: '🤖', items: [
+      { slug: 'aichat', label: 'AIChat', icon: '🤖' },
+    ]},
+    { category: 'Tools', icon: '🛠️', items: [
       { slug: 'gamedevtoolkit', label: 'GameDevToolkit', icon: '🧰' },
     ]},
     { category: 'Docs', icon: '📄', items: [
@@ -266,4 +271,5 @@ const projects = [
   { slug: 'afk', title: 'AFK Idle RPG' },
   { slug: 'minigame-collection', title: 'Mini Game Collection' },
   { slug: 'cookie-clicker', title: 'Cookie Clicker' },
+  { slug: 'aichat', title: 'AIChat' },
 ]

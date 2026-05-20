@@ -74,7 +74,9 @@ export default function AdminJobsPage() {
     setCrawling(true)
     setMsg('')
     try {
-      const res = await fetch(`/api/jobs/crawl?keyword=${encodeURIComponent(keyword)}&pages=2&admin_token=${ADMIN_TOKEN}`, { method: 'POST' })
+      let url = `/api/jobs/crawl?pages=2&admin_token=${ADMIN_TOKEN}`
+      if (keyword) url += `&keyword=${encodeURIComponent(keyword)}`
+      const res = await fetch(url, { method: 'POST' })
       const data = await res.json()
       if (res.ok) {
         setMsg(`✅ 크롤링 완료! ${data.new}개 새 공고, ${data.skipped}개 중복`)
@@ -131,7 +133,7 @@ export default function AdminJobsPage() {
               type="text"
               value={keyword}
               onChange={e => setKeyword(e.target.value)}
-              placeholder="검색어 (예: backend)"
+              placeholder="검색어 (비우면 스마트 크롤링)"
               className="px-3 py-2 rounded-lg border border-gray-300 dark:border-[#374151] bg-white dark:bg-[#111827] text-sm flex-1 min-w-[150px]"
             />
             <button
@@ -139,10 +141,10 @@ export default function AdminJobsPage() {
               disabled={crawling}
               className="px-4 py-2 bg-cyan-600 hover:bg-cyan-700 disabled:bg-gray-400 text-white text-sm font-medium rounded-lg transition-colors"
             >
-              {crawling ? '🔄 크롤링 중...' : '🕷️ 크롤링 실행'}
+              {crawling ? '🔄 크롤링 중...' : keyword ? '🕷️ 크롤링' : '🕷️ 스마트 크롤링'}
             </button>
             <div className="text-sm text-gray-500 dark:text-[#9CA3AF]">
-              잡코리아 + 사람인 각 2페이지
+              {keyword ? `"${keyword}" 검색` : '내 스펙 기반 14개 키워드 자동'}
             </div>
           </div>
           {msg && (

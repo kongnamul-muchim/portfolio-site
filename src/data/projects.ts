@@ -169,6 +169,7 @@ export const projects: Project[] = [
     github: 'https://github.com/kongnamul-muchim/AIChatBot',
     demo: '/chat',
     featured: true,
+    hasPlayableDemo: true,
     devPeriod: '2026-05-19',
   },
 ]
