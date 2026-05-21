@@ -6,16 +6,16 @@ export const authOptions: NextAuthOptions = {
     CredentialsProvider({
       name: 'credentials',
       credentials: {
-        email: { label: 'Email', type: 'email' },
+        nickname: { label: 'Nickname', type: 'text' },
         password: { label: 'Password', type: 'password' }
       },
       async authorize(credentials) {
-        if (!credentials?.email || !credentials?.password) return null
+        if (!credentials?.nickname || !credentials?.password) return null
 
         const { UserService } = await import('@/services/user.service')
         const userService = new UserService()
-        
-        const user = await userService.validateUser(credentials.email, credentials.password)
+
+        const user = await userService.validateUser(credentials.nickname, credentials.password)
         if (!user) return null
 
         return {

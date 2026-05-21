@@ -8,19 +8,18 @@ export class UserService {
     this.userRepository = new UserRepository()
   }
 
-  async signUp(email: string, password: string, nickname: string) {
-    const existingEmail = await this.userRepository.findByEmail(email)
-    if (existingEmail) throw new Error('이미 사용 중인 이메일입니다.')
-
+  async signUp(nickname: string, password: string) {
     const existingNickname = await this.userRepository.findByNickname(nickname)
     if (existingNickname) throw new Error('이미 사용 중인 닉네임입니다.')
 
     const hashedPassword = await bcrypt.hash(password, 10)
-    return this.userRepository.create({ email, password: hashedPassword, nickname })
+    // 이메일 대신 자동 생성된 placeholder 사용
+    const placeholderEmail = `user_${nickname.toLowerCase().replace(/[^a-z0-9]/g, '_')}@local.port`
+    return this.userRepository.create({ email: placeholderEmail, password: hashedPassword, nickname })
   }
 
-  async validateUser(email: string, password: string) {
-    const user = await this.userRepository.findByEmail(email)
+  async validateUser(nickname: string, password: string) {
+    const user = await this.userRepository.findByNickname(nickname)
     if (!user) return null
 
     const isValid = await bcrypt.compare(password, user.password)

@@ -21,7 +21,8 @@ export default function AdminPage() {
 
   useEffect(() => {
     if (status === 'unauthenticated') {
-      router.push('/login')
+      const callbackUrl = encodeURIComponent('/community/admin')
+      router.push(`/login?callbackUrl=${callbackUrl}`)
     } else if (status === 'authenticated' && session.user.role !== 'admin') {
       router.push('/community')
     }
@@ -205,7 +206,11 @@ export default function AdminPage() {
                     {users.map((user) => (
                       <tr key={user.id} className="hover:bg-gray-50 dark:hover:bg-gray-700/50">
                         <td className="p-4 text-gray-900 dark:text-white">{user.nickname}</td>
-                        <td className="p-4 text-gray-600 dark:text-gray-400">{user.email}</td>
+                        <td className="p-4 text-gray-600 dark:text-gray-400">
+                          {user.email?.includes('@local.port') ? (
+                            <span className="text-gray-400">—</span>
+                          ) : user.email}
+                        </td>
                         <td className="p-4 text-center">
                           <select
                             value={user.role}

@@ -46,7 +46,8 @@ export default function WritePage() {
   }
 
   if (status === 'unauthenticated') {
-    router.push('/login')
+    const callbackUrl = encodeURIComponent('/community/write')
+    router.push(`/login?callbackUrl=${callbackUrl}`)
     return null
   }
 

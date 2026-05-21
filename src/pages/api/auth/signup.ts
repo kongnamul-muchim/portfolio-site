@@ -15,13 +15,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return res.status(400).json({ error: validated.error.issues[0].message })
     }
 
-    const { email, password, nickname } = validated.data
+    const { nickname, password } = validated.data
 
-    const user = await userService.signUp(email, password, nickname)
+    const user = await userService.signUp(nickname, password)
 
     return res.status(200).json({
       id: user.id,
-      email: user.email,
       nickname: user.nickname
     })
   } catch (error) {

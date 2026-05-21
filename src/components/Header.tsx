@@ -79,26 +79,30 @@ export default function Header() {
               >
                 Community
               </Link>
-              <Link
-                href="/crm"
-                className={`px-3 py-2 rounded-lg text-sm transition-colors ${
-                  isCrm
-                    ? 'bg-gray-100 dark:bg-gray-700 text-cyan-600 dark:text-[#22D3EE]'
-                    : 'text-gray-600 dark:text-[#9CA3AF] hover:bg-gray-100 dark:hover:bg-gray-700'
-                }`}
-              >
-                CRM
-              </Link>
-              <Link
-                href="/admin/jobs"
-                className={`px-3 py-2 rounded-lg text-sm transition-colors ${
-                  isJobs
-                    ? 'bg-gray-100 dark:bg-gray-700 text-cyan-600 dark:text-[#22D3EE]'
-                    : 'text-gray-600 dark:text-[#9CA3AF] hover:bg-gray-100 dark:hover:bg-gray-700'
-                }`}
-              >
-                Jobs
-              </Link>
+              {session?.user?.role === 'admin' && (
+                <>
+                  <Link
+                    href="/crm"
+                    className={`px-3 py-2 rounded-lg text-sm transition-colors ${
+                      isCrm
+                        ? 'bg-gray-100 dark:bg-gray-700 text-cyan-600 dark:text-[#22D3EE]'
+                        : 'text-gray-600 dark:text-[#9CA3AF] hover:bg-gray-100 dark:hover:bg-gray-700'
+                    }`}
+                  >
+                    CRM
+                  </Link>
+                  <Link
+                    href="/admin/jobs"
+                    className={`px-3 py-2 rounded-lg text-sm transition-colors ${
+                      isJobs
+                        ? 'bg-gray-100 dark:bg-gray-700 text-cyan-600 dark:text-[#22D3EE]'
+                        : 'text-gray-600 dark:text-[#9CA3AF] hover:bg-gray-100 dark:hover:bg-gray-700'
+                    }`}
+                  >
+                    Jobs
+                  </Link>
+                </>
+              )}
               <button
                 onClick={() => setProjectTreeOpen(!projectTreeOpen)}
                 className={`px-3 py-2 rounded-lg text-sm transition-colors ${
@@ -224,12 +228,16 @@ export default function Header() {
               <Link href="/community" className="block px-4 py-2 rounded-lg text-gray-600 dark:text-[#9CA3AF] hover:bg-gray-100 dark:hover:bg-gray-700" onClick={() => setMobileMenuOpen(false)}>
                 💬 Community
               </Link>
-              <Link href="/crm" className="block px-4 py-2 rounded-lg text-gray-600 dark:text-[#9CA3AF] hover:bg-gray-100 dark:hover:bg-gray-700" onClick={() => setMobileMenuOpen(false)}>
-                📊 CRM
-              </Link>
-              <Link href="/admin/jobs" className="block px-4 py-2 rounded-lg text-gray-600 dark:text-[#9CA3AF] hover:bg-gray-100 dark:hover:bg-gray-700" onClick={() => setMobileMenuOpen(false)}>
-                📋 Jobs
-              </Link>
+              {session?.user?.role === 'admin' && (
+                <>
+                  <Link href="/crm" className="block px-4 py-2 rounded-lg text-gray-600 dark:text-[#9CA3AF] hover:bg-gray-100 dark:hover:bg-gray-700" onClick={() => setMobileMenuOpen(false)}>
+                    📊 CRM
+                  </Link>
+                  <Link href="/admin/jobs" className="block px-4 py-2 rounded-lg text-gray-600 dark:text-[#9CA3AF] hover:bg-gray-100 dark:hover:bg-gray-700" onClick={() => setMobileMenuOpen(false)}>
+                    📋 Jobs
+                  </Link>
+                </>
+              )}
               <div className="pl-4 space-y-1">
                 <p className="text-xs text-gray-400 px-2 mt-2 mb-1">Play Demos</p>
                 {projects.map(p => (

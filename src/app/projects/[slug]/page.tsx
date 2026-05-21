@@ -147,6 +147,55 @@ export default function ProjectPage({ params }: { params: { slug: string } }) {
 
 function ProjectDetailContent({ slug }: { slug: string }) {
   const details: Record<string, React.ReactNode> = {
+    'chaincrush': (
+      <div className="space-y-4">
+        <h3 className="text-base font-semibold text-gray-900 dark:text-[#E5E7EB]">Game Overview</h3>
+        <p>Unity 6 기반 10×10 블록 연계 퍼즐 게임. 순수 C# Core와 Unity View 레이어를 완전히 분리한 DI 아키텍처가 특징입니다. 연속으로 블록을 제거하여 점수를 올리는 방식으로, BFS 기반 연쇄 제거 시스템과 <strong>AI Hint System</strong>이 핵심입니다.</p>
+
+        <h3 className="text-base font-semibold text-gray-900 dark:text-[#E5E7EB]">AI Hint System</h3>
+        <p>자체 개발한 로컬 AI 힌트 엔진이 보드 상태를 분석하여 최적의 수를 추천합니다. 서버 의존성 제로, 완전 오프라인 동작.</p>
+        <ul className="list-disc pl-5 space-y-1">
+          <li><strong>BFS Chain Detection</strong> — 상하좌우 BFS로 동일 색상 블록 그룹 탐색, 6가지 색상 지원</li>
+          <li><strong>전략 분류 (Strategy Classification)</strong> — Chain(&gt;=5개 대형 연계), Setup(중형), Survival(위기 상황) 세 가지 전략 자동 분류</li>
+          <li><strong>자연어 힌트 생성</strong> — 전략별 4종 템플릿, 결정적 해시 기반 균일 분배로 같은 보드=같은 힌트</li>
+          <li><strong>시각적 하이라이트</strong> — 연계된 모든 블록 위치에 하얀색 오버레이 + 알파 펄스 애니메이션</li>
+          <li><strong>무활동 감지</strong> — 5초 무입력 시 자동 힌트 표시, 클릭 시 즉시 취소</li>
+        </ul>
+
+        <h3 className="text-base font-semibold text-gray-900 dark:text-[#E5E7EB]">Architecture (Core / Unity 분리)</h3>
+        <div className="overflow-x-auto -mx-2 sm:mx-0">
+          <pre className="bg-gray-100 dark:bg-gray-900 p-3 sm:p-4 rounded-lg text-[10px] sm:text-xs leading-tight min-w-0 whitespace-pre">
+{`Assets/
+├── Core/                          # Pure C# (no UnityEngine)
+│   ├── Game/
+│   │   ├── HintEngine.cs          # BFS + 전략 분류 + 템플릿 엔진
+│   │   ├── Grid.cs                # 게임 로직
+│   │   └── GameStateMachine.cs
+│   └── Interfaces/
+│       └── IAIHintService.cs      # HintResult + 이벤트 정의
+├── Unity/                         # Unity Adapter Layer
+│   ├── Adapters/
+│   │   ├── UnityAIHintService.cs  # HintEngine 호출 + DI 등록
+│   │   ├── BlockHighlighter.cs    # 오브젝트 풀 기반 시각적 하이라이트
+│   │   ├── HintTimer.cs           # 무활동 감지 + 힌트 트리거
+│   │   └── UnityGridRenderer.cs   # 블록 렌더링
+│   └── UI/
+│       └── HintUI.cs              # 말풍선 형태 힌트 패널
+└── Editor/
+    └── AIHintSetupEditor.cs       # 원클릭 셋업 툴`}</pre>
+        </div>
+
+        <h3 className="text-base font-semibold text-gray-900 dark:text-[#E5E7EB]">Key Systems</h3>
+        <ul className="list-disc pl-5 space-y-1">
+          <li><strong>DI Container</strong> — 순수 C# DIContainer (Castle Windsor 의존성 제로), 모든 서비스는 인터페이스를 통해 주입</li>
+          <li><strong>BFS Chain System</strong> — Flood-fill BFS로 연결 블록 탐색, 12가지 연계 패턴</li>
+          <li><strong>Gravity + Column Shift</strong> — 블록 제거 후 중력 낙하 + 열 이동 + 새 행 추가</li>
+          <li><strong>Event-driven Architecture</strong> — OnStateChanged, OnBlocksRemoved, OnGravityApplied 등 7개 이벤트로 Core-View 완전 분리</li>
+          <li><strong>Vercel Leaderboard</strong> — Serverless + Prisma + Neon PostgreSQL, 닉네임 기반 점수 저장</li>
+          <li><strong>Webhook Auto-Deploy</strong> — GitHub Webhook + systemd로 푸시 시 자동 빌드/배포</li>
+        </ul>
+      </div>
+    ),
     'shotfire': (
       <div className="space-y-4">
         <h3 className="text-base font-semibold text-gray-900 dark:text-[#E5E7EB]">Game Overview</h3>

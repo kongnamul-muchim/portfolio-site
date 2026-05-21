@@ -25,7 +25,8 @@ export default function EditPostPage() {
     }
 
     if (status === 'unauthenticated') {
-      router.push('/login')
+      const callbackUrl = encodeURIComponent(`/community/edit?id=${postId}`)
+      router.push(`/login?callbackUrl=${callbackUrl}`)
       return
     }
 

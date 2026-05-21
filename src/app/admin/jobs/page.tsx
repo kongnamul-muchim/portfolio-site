@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 
 interface JobPosting {
   id: number
@@ -43,35 +43,39 @@ export default function AdminJobsPage() {
   const [msg, setMsg] = useState('')
 
   const limit = 20
+  const fetchId = useRef(0)
 
   const fetchJobs = useCallback(async () => {
+    const id = ++fetchId.current
     setLoading(true)
     try {
-      let url = `/api/jobs?admin_token=${ADMIN_TOKEN}&page=${page}&limit=${limit}&sort=${sort}`
+      let url = `/api/jobs?_v=2&admin_token=${ADMIN_TOKEN}&page=${page}&limit=${limit}&sort=${sort}`
       if (search) url += `&search=${encodeURIComponent(search)}`
       if (sourceFilter) url += `&source=${sourceFilter}`
       if (locationFilter) url += `&location=${encodeURIComponent(locationFilter)}`
       const res = await fetch(url)
       const data = await res.json()
-      if (res.ok) {
+      if (res.ok && id === fetchId.current) {
         setJobs(data.items || [])
         setTotal(data.total || 0)
       }
     } finally {
-      setLoading(false)
+      if (id === fetchId.current) {
+        setLoading(false)
+      }
     }
   }, [page, search, sourceFilter, locationFilter, sort])
 
   const fetchStats = useCallback(async () => {
     try {
-      const res = await fetch(`/api/jobs/stats?admin_token=${ADMIN_TOKEN}`)
+      const res = await fetch(`/api/jobs/stats?_v=2&admin_token=${ADMIN_TOKEN}`)
       if (res.ok) {
         setStats(await res.json())
       }
     } catch {}
     // Also fetch regions for location filter
     try {
-      const res = await fetch(`/api/jobs/locations?admin_token=${ADMIN_TOKEN}`)
+      const res = await fetch(`/api/jobs/locations?_v=2&admin_token=${ADMIN_TOKEN}`)
       if (res.ok) {
         const data = await res.json()
         setRegions(data.regions || [])
