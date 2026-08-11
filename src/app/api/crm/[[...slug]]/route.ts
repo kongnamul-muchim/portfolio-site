@@ -1,16 +1,24 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { getToken } from 'next-auth/jwt';
 
-const VPS_API = 'http://45.59.101.155:8000/api';
-const VPS_ADMIN_PW = 'gugu-admin-2026';
+const VPS_API = 'http://aichat:8000/api';
+const VPS_ADMIN_PW = process.env.ADMIN_TOKEN || '';
 
 /**
  * CRM API proxy — forwards all methods to VPS backend.
  * Matches /api/crm, /api/crm/stats, /api/crm/123, etc.
+ * Admin-only — requires valid NextAuth JWT with admin role.
  */
 async function proxyToVps(
   req: NextRequest,
   { params }: { params: Promise<{ slug?: string[] }> }
 ) {
+  // Check admin auth via JWT token
+  const token = await getToken({ req });
+  if (!token || token.role !== 'admin') {
+    return NextResponse.json({ error: '관리자 권한이 필요합니다.' }, { status: 403 });
+  }
+
   const { slug } = await params;
   const path = slug ? slug.join('/') : '';
   const url = new URL(req.url);
@@ -32,12 +40,18 @@ async function proxyToVps(
     const clientIp = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim()
       || req.headers.get('x-real-ip') || 'unknown';
 
+    // Build headers: forward client IP + X-Admin-Token if present
+    const fetchHeaders: Record<string, string> = {
+      'X-Forwarded-For': clientIp,
+      'X-Real-IP': clientIp,
+    };
+
+    // Always add admin token for backend auth
+    fetchHeaders['X-Admin-Token'] = VPS_ADMIN_PW;
+
     const fetchOptions: RequestInit = {
       method,
-      headers: {
-        'X-Forwarded-For': clientIp,
-        'X-Real-IP': clientIp,
-      },
+      headers: fetchHeaders,
       signal: AbortSignal.timeout(30000),
     };
 
@@ -48,7 +62,7 @@ async function proxyToVps(
       if (body.admin_token === 'gugu2026') {
         body.admin_token = VPS_ADMIN_PW;
       }
-      fetchOptions.headers = { ...fetchOptions.headers, 'Content-Type': 'application/json' };
+      fetchHeaders['Content-Type'] = 'application/json';
       fetchOptions.body = JSON.stringify(body);
     }
 

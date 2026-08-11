@@ -94,11 +94,95 @@ body {
   background-clip: text;
 }
 
-/* Card grid hover effect */
-.card-grid:hover .project-card {
+/* Card grid hover effect - only when hovering a card, not empty space */
+.card-grid:has(.project-card:hover) .project-card:not(:hover) {
   opacity: 0.6;
 }
 
-.card-grid:hover .project-card:hover {
+.card-grid .project-card:hover {
   opacity: 1;
+}
+
+/* ===== Design Toggle Styles ===== */
+
+/* 1. Gradient Hero Background */
+.design-gradient-hero .hero-gradient-bg {
+  background: linear-gradient(135deg, rgba(147,51,234,0.15), rgba(34,211,238,0.15), rgba(236,72,153,0.15));
+  animation: gradientShift 8s ease infinite;
+  background-size: 400% 400%;
+}
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+.design-gradient-hero .hero-section {
+  position: relative;
+  overflow: hidden;
+}
+.design-gradient-hero .hero-section::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 50% 0%, rgba(34,211,238,0.08) 0%, transparent 60%),
+              radial-gradient(ellipse at 80% 0%, rgba(147,51,234,0.08) 0%, transparent 60%),
+              radial-gradient(ellipse at 20% 0%, rgba(236,72,153,0.08) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+/* 2. Glassmorphism Cards */
+.design-glass-cards .project-card {
+  background: rgba(255,255,255,0.6) !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+  border: 1px solid rgba(255,255,255,0.3) !important;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.08) !important;
+}
+.dark .design-glass-cards .project-card,
+.design-glass-cards .dark .project-card {
+  background: rgba(17,24,39,0.6) !important;
+  border: 1px solid rgba(255,255,255,0.08) !important;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.3) !important;
+}
+
+/* 3. Scroll Animation */
+.design-scroll-anim section {
+  animation: fadeUp 0.6s ease-out both;
+}
+.design-scroll-anim section:nth-child(1) { animation-delay: 0s; }
+.design-scroll-anim section:nth-child(2) { animation-delay: 0.1s; }
+.design-scroll-anim section:nth-child(3) { animation-delay: 0.2s; }
+.design-scroll-anim section:nth-child(4) { animation-delay: 0.3s; }
+.design-scroll-anim section:nth-child(5) { animation-delay: 0.4s; }
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* 4. Color Accent Theme - override via CSS variables */
+:root {
+  --accent: #22D3EE;
+  --accent-hover: #06b6d4;
+}
+.design-color-accent {
+  --accent: #D946EF;
+  --accent-hover: #C026D3;
+}
+.design-color-accent .hero-gradient {
+  background: linear-gradient(135deg, #D946EF, #8B5CF6) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
+}
+
+/* 5. 3D Tilt Hover */
+.design-tilt-hover .project-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease !important;
+}
+.design-tilt-hover .project-card:hover {
+  transform: perspective(800px) rotateX(2deg) rotateY(2deg) scale(1.02) !important;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.15) !important;
+}
+.dark .design-tilt-hover .project-card:hover {
+  box-shadow: 0 20px 40px rgba(0,0,0,0.4) !important;
 }

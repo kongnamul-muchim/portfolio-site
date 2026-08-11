@@ -6,6 +6,10 @@ import { useSession, signOut } from 'next-auth/react'
 import { useTheme } from './ThemeProvider'
 import { usePathname } from 'next/navigation'
 import VisitorBadge from './VisitorBadge'
+import { projects } from '@/data/projects'
+
+// 브라우저에서 바로 플레이 가능한 데모만 (Unity WebGL 제외)
+const playableDemos = projects.filter(p => p.hasPlayableDemo && p.demo)
 
 export default function Header() {
   const { data: session } = useSession()
@@ -18,36 +22,7 @@ export default function Header() {
   const isPlay = pathname.startsWith('/play')
   const isCrm = pathname.startsWith('/crm')
   const isJobs = pathname.startsWith('/admin/jobs')
-
-  const projectTree = [
-    { category: 'Puzzle/Casual', icon: '🧩', items: [
-      { slug: 'chaincrush', label: 'ChainCrush', icon: '💎' },
-      { slug: 'shotup', label: 'ShotUp', icon: '🎯' },
-    ]},
-    { category: 'Action/Strategy', icon: '⚔️', items: [
-      { slug: 'shotfire', label: 'ShotFire', icon: '🔫' },
-      { slug: 'defencegame', label: 'DefenceGame', icon: '🎯' },
-      { slug: 'pathfinder', label: 'Pathfinder', icon: '🗺️' },
-    ]},
-    { category: 'RPG/Adventure', icon: '🎮', items: [
-      { slug: 'afk', label: 'AFK Idle RPG', icon: '🌙' },
-      { slug: 'greeddungeon', label: 'GreedDungeon', icon: '⚔️' },
-    ]},
-    { category: 'Web', icon: '🌐', items: [
-      { slug: 'minigame-collection', label: 'Mini Game Collection', icon: '🎮' },
-      { slug: 'community-board', label: 'Community Board', icon: '💬' },
-      { slug: 'cookie-clicker', label: 'Cookie Clicker', icon: '🍪' },
-    ]},
-    { category: 'AI', icon: '🤖', items: [
-      { slug: 'aichat', label: 'AIChat', icon: '🤖' },
-    ]},
-    { category: 'Tools', icon: '🛠️', items: [
-      { slug: 'gamedevtoolkit', label: 'GameDevToolkit', icon: '🧰' },
-    ]},
-    { category: 'Docs', icon: '📄', items: [
-      { slug: 'kirdia-simulator', label: 'Kirdia Simulator', icon: '📖' },
-    ]},
-  ]
+  const isAdminUsers = pathname.startsWith('/admin/users')
 
   return (
     <header className="bg-white dark:bg-[#111827] shadow-sm sticky top-0 z-50 border-b border-gray-200 dark:border-[#1F2937]">
@@ -100,6 +75,16 @@ export default function Header() {
                     }`}
                   >
                     Jobs
+                  </Link>
+                  <Link
+                    href="/admin/users"
+                    className={`px-3 py-2 rounded-lg text-sm transition-colors ${
+                      isAdminUsers
+                        ? 'bg-gray-100 dark:bg-gray-700 text-cyan-600 dark:text-[#22D3EE]'
+                        : 'text-gray-600 dark:text-[#9CA3AF] hover:bg-gray-100 dark:hover:bg-gray-700'
+                    }`}
+                  >
+                    Users
                   </Link>
                 </>
               )}
@@ -186,32 +171,28 @@ export default function Header() {
           </div>
         </div>
 
-        {/* Project Tree Dropdown */}
+        {/* Play Demo Dropdown — 플레이 가능한 데모만 (Unity 제외) */}
         {projectTreeOpen && (
           <div className="hidden md:block absolute left-0 right-0 bg-white dark:bg-[#111827] border-b border-gray-200 dark:border-[#1F2937] shadow-lg"
             onMouseLeave={() => setProjectTreeOpen(false)}
           >
             <div className="max-w-6xl mx-auto px-4 py-4">
-              <div className="grid grid-cols-5 gap-4">
-                {projectTree.map(cat => (
-                  <div key={cat.category}>
-                    <h3 className="text-sm font-semibold text-gray-700 dark:text-[#9CA3AF] mb-2 flex items-center gap-1">
-                      <span>{cat.icon}</span> {cat.category}
-                    </h3>
-                    <div className="space-y-1">
-                      {cat.items.map(item => (
-                        <Link
-                          key={item.slug}
-                          href={`/projects/${item.slug}`}
-                          className="flex items-center gap-2 px-2 py-1.5 rounded text-sm text-gray-600 dark:text-[#9CA3AF] hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-cyan-600 dark:hover:text-[#22D3EE] transition-colors"
-                          onClick={() => setProjectTreeOpen(false)}
-                        >
-                          <span>{item.icon}</span>
-                          <span>{item.label}</span>
-                        </Link>
-                      ))}
-                    </div>
-                  </div>
+              <p className="text-xs text-gray-400 dark:text-gray-500 mb-2">
+                브라우저에서 바로 플레이할 수 있는 데모예요
+              </p>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-1">
+                {playableDemos.map(item => (
+                  <a
+                    key={item.id}
+                    href={item.demo}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2 px-2 py-1.5 rounded text-sm text-gray-600 dark:text-[#9CA3AF] hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-cyan-600 dark:hover:text-[#22D3EE] transition-colors"
+                    onClick={() => setProjectTreeOpen(false)}
+                  >
+                    <span>▶</span>
+                    <span>{item.title}</span>
+                  </a>
                 ))}
               </div>
             </div>
@@ -236,14 +217,17 @@ export default function Header() {
                   <Link href="/admin/jobs" className="block px-4 py-2 rounded-lg text-gray-600 dark:text-[#9CA3AF] hover:bg-gray-100 dark:hover:bg-gray-700" onClick={() => setMobileMenuOpen(false)}>
                     📋 Jobs
                   </Link>
+                  <Link href="/admin/users" className="block px-4 py-2 rounded-lg text-gray-600 dark:text-[#9CA3AF] hover:bg-gray-100 dark:hover:bg-gray-700" onClick={() => setMobileMenuOpen(false)}>
+                    👥 Users
+                  </Link>
                 </>
               )}
               <div className="pl-4 space-y-1">
                 <p className="text-xs text-gray-400 px-2 mt-2 mb-1">Play Demos</p>
-                {projects.map(p => (
-                  <Link key={p.slug} href={`/play/${p.slug}`} className="block px-4 py-1.5 rounded-lg text-sm text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700" onClick={() => setMobileMenuOpen(false)}>
+                {playableDemos.map(p => (
+                  <a key={p.id} href={p.demo} target="_blank" rel="noopener noreferrer" className="block px-4 py-1.5 rounded-lg text-sm text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700" onClick={() => setMobileMenuOpen(false)}>
                     ▶ {p.title}
-                  </Link>
+                  </a>
                 ))}
               </div>
               {session ? (
@@ -272,12 +256,3 @@ export default function Header() {
     </header>
   )
 }
-
-const projects = [
-  { slug: 'chaincrush', title: 'ChainCrush' },
-  { slug: 'shotfire', title: 'ShotFire' },
-  { slug: 'afk', title: 'AFK Idle RPG' },
-  { slug: 'minigame-collection', title: 'Mini Game Collection' },
-  { slug: 'cookie-clicker', title: 'Cookie Clicker' },
-  { slug: 'aichat', title: 'AIChat' },
-]

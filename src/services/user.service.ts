@@ -14,7 +14,10 @@ export class UserService {
 
     const hashedPassword = await bcrypt.hash(password, 10)
     // 이메일 대신 자동 생성된 placeholder 사용
-    const placeholderEmail = `user_${nickname.toLowerCase().replace(/[^a-z0-9]/g, '_')}@local.port`
+    // 한글 등 비ASCII 닉네임은 같은 형태로 치환되어 충돌하므로, 랜덤 접미사로 유니크 보장
+    const sanitized = nickname.toLowerCase().replace(/[^a-z0-9]/g, '_').slice(0, 40)
+    const uniqueSuffix = Math.random().toString(36).slice(2, 10)
+    const placeholderEmail = `user_${sanitized}_${uniqueSuffix}@local.port`
     return this.userRepository.create({ email: placeholderEmail, password: hashedPassword, nickname })
   }
 

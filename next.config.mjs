@@ -6,11 +6,34 @@ const nextConfig = {
   typescript: {
     ignoreBuildErrors: true
   },
-  async rewrites() {
+  async headers() {
     return [
       {
-        source: '/api/jobs/:path*',
-        destination: 'http://45.59.101.155:8000/api/jobs/:path*',
+        source: '/projects/:path*',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'no-cache, no-store, must-revalidate',
+          },
+        ],
+      },
+      {
+        source: '/play/:path*',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'no-cache, no-store, must-revalidate',
+          },
+        ],
+      },
+      {
+        source: '/',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'no-cache, no-store, must-revalidate',
+          },
+        ],
       },
     ]
   }

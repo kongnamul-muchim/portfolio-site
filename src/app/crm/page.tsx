@@ -33,7 +33,6 @@ interface CustomerForm {
   memo: string;
 }
 
-const ADMIN_TOKEN = 'gugu2026';
 const API = '/api/crm';
 const EMPTY_FORM: CustomerForm = { name: '', email: '', phone: '', company: '', position: '', status: 'lead', tags: '', memo: '' };
 
@@ -58,10 +57,9 @@ const STATUS_BG: Record<string, string> = {
   churned: 'bg-gray-500',
 };
 
-// --- Helpers ---
-function formatDate(s: string) {
-  if (!s) return '-';
-  return new Date(s).toLocaleDateString('ko-KR', { month: 'short', day: 'numeric', year: 'numeric' });
+/** No client-side token — server-side API routes handle auth. */
+function apiFetch(url: string, opts: RequestInit = {}) {
+  return fetch(url, opts);
 }
 
 export default function CrmPage() {
@@ -74,35 +72,28 @@ export default function CrmPage() {
   const [totalPages, setTotalPages] = useState(1);
   const [total, setTotal] = useState(0);
   const [limit] = useState(20);
-
-  // Modal state
-  const [modalOpen, setModalOpen] = useState(false);
-  const [editId, setEditId] = useState<number | null>(null);
+  const [showForm, setShowForm] = useState(false);
+  const [editingId, setEditingId] = useState<number | null>(null);
   const [form, setForm] = useState<CustomerForm>(EMPTY_FORM);
   const [saving, setSaving] = useState(false);
-
-  // Delete confirm
   const [deleteId, setDeleteId] = useState<number | null>(null);
   const [deleting, setDeleting] = useState(false);
-
-  // Toast
   const [toast, setToast] = useState<{ msg: string; ok: boolean } | null>(null);
 
-  const showToast = (msg: string, ok = true) => {
+  const toastMsg = (msg: string, ok: boolean = true) => {
     setToast({ msg, ok });
     setTimeout(() => setToast(null), 2500);
   };
 
-  // --- Fetch ---
-  const fetchData = useCallback(async (p: number) => {
+  const fetchCustomers = useCallback(async (p: number) => {
     setLoading(true);
     try {
-      const params = new URLSearchParams({ admin_token: ADMIN_TOKEN, page: String(p), limit: String(limit) });
+      const params = new URLSearchParams({ page: String(p), limit: String(limit) });
       if (search) params.set('search', search);
       if (statusFilter) params.set('status', statusFilter);
       const [custRes, statsRes] = await Promise.all([
-        fetch(`${API}?${params}`),
-        fetch(`${API}/stats?admin_token=${ADMIN_TOKEN}`),
+        apiFetch(`${API}?${params}`),
+        apiFetch(`${API}/stats`),
       ]);
       const custData = await custRes.json();
       const statsData = await statsRes.json();
@@ -110,117 +101,135 @@ export default function CrmPage() {
       setTotal(custData.total || 0);
       setTotalPages(custData.total_pages || 1);
       setStats(statsData);
-    } catch {
-      showToast('데이터를 불러오는데 실패했어요', false);
+    } catch (e) {
+      toastMsg('데이터를 불러오는데 실패했어요', false);
     } finally {
       setLoading(false);
     }
   }, [search, statusFilter, limit]);
 
-  useEffect(() => { fetchData(page); }, [page, fetchData]);
+  useEffect(() => { fetchCustomers(page); }, [page, fetchCustomers]);
 
-  // --- CRUD ---
-  const openAdd = () => { setEditId(null); setForm(EMPTY_FORM); setModalOpen(true); };
   const openEdit = (c: Customer) => {
-    setEditId(c.id);
-    setForm({ name: c.name, email: c.email, phone: c.phone, company: c.company, position: c.position, status: c.status, tags: c.tags.join(','), memo: c.memo });
-    setModalOpen(true);
+    setEditingId(c.id);
+    setForm({
+      name: c.name,
+      email: c.email,
+      phone: c.phone,
+      company: c.company,
+      position: c.position,
+      status: c.status,
+      tags: (c.tags || []).join(','),
+      memo: c.memo,
+    });
+    setShowForm(true);
   };
 
   const handleSave = async () => {
-    if (!form.name.trim()) { showToast('이름은 필수입니다', false); return; }
+    if (!form.name.trim()) { toastMsg('이름은 필수입니다', false); return; }
     setSaving(true);
     try {
-      const body = { ...form, admin_token: ADMIN_TOKEN };
-      const url = editId ? `${API}/${editId}` : API;
+      const body = { ...form };
+      const url = editingId ? `${API}/${editingId}` : API;
       const res = await fetch(url, {
-        method: editId ? 'PATCH' : 'POST',
+        method: editingId ? 'PATCH' : 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body),
       });
       const data = await res.json();
-      if (!res.ok) { showToast(data.detail || '오류 발생', false); return; }
-      showToast(editId ? '수정되었습니다!' : '등록되었습니다!');
-      setModalOpen(false);
-      fetchData(page);
-    } catch { showToast('저장 실패', false); }
-    finally { setSaving(false); }
+      if (!res.ok) { toastMsg(data.detail || '오류 발생', false); return; }
+      toastMsg(editingId ? '수정되었습니다!' : '등록되었습니다!');
+      setShowForm(false);
+      fetchCustomers(page);
+    } catch (e) {
+      toastMsg('저장 실패', false);
+    } finally {
+      setSaving(false);
+    }
   };
 
-  const confirmDelete = async () => {
+  const handleDelete = async () => {
     if (!deleteId) return;
     setDeleting(true);
     try {
-      const res = await fetch(`${API}/${deleteId}?admin_token=${ADMIN_TOKEN}`, { method: 'DELETE' });
+      const res = await fetch(`${API}/${deleteId}`, {
+        method: 'DELETE',
+      });
       const data = await res.json();
-      if (!res.ok) { showToast(data.detail || '오류', false); return; }
-      showToast(data.message || '삭제되었습니다');
+      if (!res.ok) { toastMsg(data.detail || '오류', false); return; }
+      toastMsg(data.message || '삭제되었습니다');
       setDeleteId(null);
-      fetchData(page);
-    } catch { showToast('삭제 실패', false); }
-    finally { setDeleting(false); }
+      fetchCustomers(page);
+    } catch (e) {
+      toastMsg('삭제 실패', false);
+    } finally {
+      setDeleting(false);
+    }
   };
 
-  // --- Stats bar chart ---
-  const maxStat = stats ? Math.max(1, ...Object.values(stats.by_status)) : 1;
+  const maxBar = stats ? Math.max(1, ...Object.values(stats.by_status)) : 1;
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-[#0D0D0E]">
       <div className="max-w-6xl mx-auto px-4 py-8">
-        {/* Title */}
+        {/* Header */}
         <div className="flex items-center justify-between mb-6">
           <div>
             <h1 className="text-2xl font-bold text-gray-900 dark:text-[#E5E7EB]">CRM</h1>
             <p className="text-sm text-gray-500 dark:text-[#9CA3AF] mt-1">고객 관계 관리</p>
           </div>
-          <button onClick={openAdd} className="px-4 py-2 bg-cyan-600 hover:bg-cyan-700 text-white rounded-lg text-sm font-medium transition-colors">
+          <button
+            onClick={() => { setEditingId(null); setForm(EMPTY_FORM); setShowForm(true); }}
+            className="px-4 py-2 bg-cyan-600 hover:bg-cyan-700 text-white rounded-lg text-sm font-medium transition-colors"
+          >
             + 고객 등록
           </button>
         </div>
 
         {/* Stats Cards */}
         {stats && (
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-            <div className="bg-white dark:bg-[#1F2937] rounded-xl p-4 border border-gray-200 dark:border-[#374151]">
-              <div className="text-xs text-gray-500 dark:text-[#9CA3AF] mb-1">전체 고객</div>
-              <div className="text-2xl font-bold text-gray-900 dark:text-[#E5E7EB]">{stats.total_customers}</div>
-            </div>
-            {Object.entries(stats.by_status).map(([s, cnt]) => (
-              <div key={s} className="bg-white dark:bg-[#1F2937] rounded-xl p-4 border border-gray-200 dark:border-[#374151]">
-                <div className="flex items-center gap-2 mb-1">
-                  <span className={`w-2 h-2 rounded-full ${STATUS_BG[s] || 'bg-gray-500'}`} />
-                  <span className="text-xs text-gray-500 dark:text-[#9CA3AF]">{STATUS_LABEL[s] || s}</span>
-                </div>
-                <div className="text-2xl font-bold text-gray-900 dark:text-[#E5E7EB]">{cnt}</div>
+          <>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+              <div className="bg-white dark:bg-[#1F2937] rounded-xl p-4 border border-gray-200 dark:border-[#374151]">
+                <div className="text-xs text-gray-500 dark:text-[#9CA3AF] mb-1">전체 고객</div>
+                <div className="text-2xl font-bold text-gray-900 dark:text-[#E5E7EB]">{stats.total_customers}</div>
               </div>
-            ))}
-          </div>
-        )}
-
-        {/* Status bar chart */}
-        {stats && stats.total_customers > 0 && (
-          <div className="bg-white dark:bg-[#1F2937] rounded-xl p-4 border border-gray-200 dark:border-[#374151] mb-6">
-            <h3 className="text-sm font-semibold text-gray-700 dark:text-[#D1D5DB] mb-3">📊 상태별 현황</h3>
-            <div className="flex gap-1 h-8 items-end">
-              {Object.entries(stats.by_status).map(([s, cnt]) => (
-                <div key={s} className="flex-1 flex flex-col items-center gap-1">
-                  <span className="text-xs text-gray-500 dark:text-[#9CA3AF]">{cnt}</span>
-                  <div
-                    className="w-full rounded-t transition-all duration-500"
-                    style={{
-                      height: `${(cnt / maxStat) * 100}%`,
-                      minHeight: cnt > 0 ? '12px' : '0',
-                      backgroundColor: s === 'lead' ? '#3B82F6' : s === 'contact' ? '#EAB308' : s === 'customer' ? '#22C55E' : '#6B7280',
-                    }}
-                  />
-                  <span className="text-[10px] text-gray-500 dark:text-[#9CA3AF]">{STATUS_LABEL[s] || s}</span>
+              {Object.entries(stats.by_status).map(([key, val]) => (
+                <div key={key} className="bg-white dark:bg-[#1F2937] rounded-xl p-4 border border-gray-200 dark:border-[#374151]">
+                  <div className="flex items-center gap-2 mb-1">
+                    <span className={`w-2 h-2 rounded-full ${STATUS_BG[key] || 'bg-gray-500'}`} />
+                    <span className="text-xs text-gray-500 dark:text-[#9CA3AF]">{STATUS_LABEL[key] || key}</span>
+                  </div>
+                  <div className="text-2xl font-bold text-gray-900 dark:text-[#E5E7EB]">{val}</div>
                 </div>
               ))}
             </div>
-          </div>
+            {/* Bar Chart */}
+            {stats.total_customers > 0 && (
+              <div className="bg-white dark:bg-[#1F2937] rounded-xl p-4 border border-gray-200 dark:border-[#374151] mb-6">
+                <h3 className="text-sm font-semibold text-gray-700 dark:text-[#D1D5DB] mb-3">📊 상태별 현황</h3>
+                <div className="flex gap-1 h-8 items-end">
+                  {Object.entries(stats.by_status).map(([key, val]) => (
+                    <div key={key} className="flex-1 flex flex-col items-center gap-1">
+                      <span className="text-xs text-gray-500 dark:text-[#9CA3AF]">{val}</span>
+                      <div
+                        className="w-full rounded-t transition-all duration-500"
+                        style={{
+                          height: `${(val / maxBar) * 100}%`,
+                          minHeight: val > 0 ? '12px' : '0',
+                          backgroundColor: key === 'lead' ? '#3B82F6' : key === 'contact' ? '#EAB308' : key === 'customer' ? '#22C55E' : '#6B7280',
+                        }}
+                      />
+                      <span className="text-[10px] text-gray-500 dark:text-[#9CA3AF]">{STATUS_LABEL[key] || key}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </>
         )}
 
-        {/* Search & Filter */}
+        {/* Search */}
         <div className="flex flex-col sm:flex-row gap-3 mb-4">
           <input
             type="text"
@@ -284,10 +293,12 @@ export default function CrmPage() {
                     </td>
                     <td className="px-4 py-3 hidden sm:table-cell">
                       <div className="flex flex-wrap gap-1">
-                        {(c.tags || []).slice(0, 3).map((t, i) => (
-                          <span key={i} className="text-xs px-1.5 py-0.5 rounded bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-[#9CA3AF]">{t}</span>
+                        {(c.tags || []).slice(0, 3).map((tag, i) => (
+                          <span key={i} className="text-xs px-1.5 py-0.5 rounded bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-[#9CA3AF]">{tag}</span>
                         ))}
-                        {(c.tags?.length || 0) > 3 && <span className="text-xs text-gray-400">+{c.tags!.length - 3}</span>}
+                        {(c.tags?.length || 0) > 3 && (
+                          <span className="text-xs text-gray-400">+{c.tags!.length - 3}</span>
+                        )}
                       </div>
                     </td>
                     <td className="px-4 py-3 text-right">
@@ -299,8 +310,6 @@ export default function CrmPage() {
               </tbody>
             </table>
           </div>
-
-          {/* Pagination */}
           {totalPages > 1 && (
             <div className="flex items-center justify-between px-4 py-3 border-t border-gray-200 dark:border-[#374151]">
               <span className="text-xs text-gray-500 dark:text-[#9CA3AF]">총 {total}명</span>
@@ -323,51 +332,51 @@ export default function CrmPage() {
 
         {/* Toast */}
         {toast && (
-          <div className={`fixed bottom-6 right-6 px-4 py-2 rounded-lg text-sm font-medium shadow-lg transition-all ${
-            toast.ok ? 'bg-green-600 text-white' : 'bg-red-600 text-white'
-          }`}>
+          <div className={`fixed bottom-6 right-6 px-4 py-2 rounded-lg text-sm font-medium shadow-lg transition-all ${toast.ok ? 'bg-green-600 text-white' : 'bg-red-600 text-white'}`}>
             {toast.msg}
           </div>
         )}
 
-        {/* Add/Edit Modal */}
-        {modalOpen && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50" onClick={() => setModalOpen(false)}>
+        {/* Form Modal */}
+        {showForm && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50" onClick={() => setShowForm(false)}>
             <div className="bg-white dark:bg-[#1F2937] rounded-xl p-6 w-full max-w-lg mx-4 border border-gray-200 dark:border-[#374151] shadow-2xl" onClick={e => e.stopPropagation()}>
-              <h2 className="text-lg font-bold text-gray-900 dark:text-[#E5E7EB] mb-4">{editId ? '고객 수정' : '신규 고객 등록'}</h2>
-
+              <h2 className="text-lg font-bold text-gray-900 dark:text-[#E5E7EB] mb-4">{editingId ? '고객 수정' : '신규 고객 등록'}</h2>
               <div className="space-y-3">
                 <div>
                   <label className="block text-xs font-medium text-gray-600 dark:text-[#9CA3AF] mb-1">이름 *</label>
-                  <input value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))} className="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-[#374151] bg-white dark:bg-[#111827] text-gray-900 dark:text-[#E5E7EB] text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500" />
+                  <input value={form.name} onChange={e => setForm(f => ({...f, name: e.target.value}))}
+                    className="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-[#374151] bg-white dark:bg-[#111827] text-gray-900 dark:text-[#E5E7EB] text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500" />
                 </div>
-
                 <div className="grid grid-cols-2 gap-3">
                   <div>
                     <label className="block text-xs font-medium text-gray-600 dark:text-[#9CA3AF] mb-1">이메일</label>
-                    <input value={form.email} onChange={e => setForm(f => ({ ...f, email: e.target.value }))} className="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-[#374151] bg-white dark:bg-[#111827] text-gray-900 dark:text-[#E5E7EB] text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500" />
+                    <input value={form.email} onChange={e => setForm(f => ({...f, email: e.target.value}))}
+                      className="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-[#374151] bg-white dark:bg-[#111827] text-gray-900 dark:text-[#E5E7EB] text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500" />
                   </div>
                   <div>
                     <label className="block text-xs font-medium text-gray-600 dark:text-[#9CA3AF] mb-1">전화번호</label>
-                    <input value={form.phone} onChange={e => setForm(f => ({ ...f, phone: e.target.value }))} className="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-[#374151] bg-white dark:bg-[#111827] text-gray-900 dark:text-[#E5E7EB] text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500" />
+                    <input value={form.phone} onChange={e => setForm(f => ({...f, phone: e.target.value}))}
+                      className="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-[#374151] bg-white dark:bg-[#111827] text-gray-900 dark:text-[#E5E7EB] text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500" />
                   </div>
                 </div>
-
                 <div className="grid grid-cols-2 gap-3">
                   <div>
                     <label className="block text-xs font-medium text-gray-600 dark:text-[#9CA3AF] mb-1">회사</label>
-                    <input value={form.company} onChange={e => setForm(f => ({ ...f, company: e.target.value }))} className="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-[#374151] bg-white dark:bg-[#111827] text-gray-900 dark:text-[#E5E7EB] text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500" />
+                    <input value={form.company} onChange={e => setForm(f => ({...f, company: e.target.value}))}
+                      className="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-[#374151] bg-white dark:bg-[#111827] text-gray-900 dark:text-[#E5E7EB] text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500" />
                   </div>
                   <div>
                     <label className="block text-xs font-medium text-gray-600 dark:text-[#9CA3AF] mb-1">직책</label>
-                    <input value={form.position} onChange={e => setForm(f => ({ ...f, position: e.target.value }))} className="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-[#374151] bg-white dark:bg-[#111827] text-gray-900 dark:text-[#E5E7EB] text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500" />
+                    <input value={form.position} onChange={e => setForm(f => ({...f, position: e.target.value}))}
+                      className="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-[#374151] bg-white dark:bg-[#111827] text-gray-900 dark:text-[#E5E7EB] text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500" />
                   </div>
                 </div>
-
                 <div className="grid grid-cols-2 gap-3">
                   <div>
                     <label className="block text-xs font-medium text-gray-600 dark:text-[#9CA3AF] mb-1">상태</label>
-                    <select value={form.status} onChange={e => setForm(f => ({ ...f, status: e.target.value }))} className="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-[#374151] bg-white dark:bg-[#111827] text-gray-900 dark:text-[#E5E7EB] text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500">
+                    <select value={form.status} onChange={e => setForm(f => ({...f, status: e.target.value}))}
+                      className="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-[#374151] bg-white dark:bg-[#111827] text-gray-900 dark:text-[#E5E7EB] text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500">
                       <option value="lead">잠재고객</option>
                       <option value="contact">상담중</option>
                       <option value="customer">고객</option>
@@ -376,20 +385,22 @@ export default function CrmPage() {
                   </div>
                   <div>
                     <label className="block text-xs font-medium text-gray-600 dark:text-[#9CA3AF] mb-1">태그 (쉼표 구분)</label>
-                    <input value={form.tags} onChange={e => setForm(f => ({ ...f, tags: e.target.value }))} placeholder="VIP, 파트너" className="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-[#374151] bg-white dark:bg-[#111827] text-gray-900 dark:text-[#E5E7EB] text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500" />
+                    <input value={form.tags} onChange={e => setForm(f => ({...f, tags: e.target.value}))} placeholder="VIP, 파트너"
+                      className="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-[#374151] bg-white dark:bg-[#111827] text-gray-900 dark:text-[#E5E7EB] text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500" />
                   </div>
                 </div>
-
                 <div>
                   <label className="block text-xs font-medium text-gray-600 dark:text-[#9CA3AF] mb-1">메모</label>
-                  <textarea value={form.memo} onChange={e => setForm(f => ({ ...f, memo: e.target.value }))} rows={3} className="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-[#374151] bg-white dark:bg-[#111827] text-gray-900 dark:text-[#E5E7EB] text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500" />
+                  <textarea value={form.memo} onChange={e => setForm(f => ({...f, memo: e.target.value}))} rows={3}
+                    className="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-[#374151] bg-white dark:bg-[#111827] text-gray-900 dark:text-[#E5E7EB] text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500" />
                 </div>
               </div>
-
               <div className="flex justify-end gap-2 mt-6">
-                <button onClick={() => setModalOpen(false)} className="px-4 py-2 rounded-lg text-sm text-gray-600 dark:text-[#9CA3AF] hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">취소</button>
-                <button onClick={handleSave} disabled={saving} className="px-4 py-2 bg-cyan-600 hover:bg-cyan-700 text-white rounded-lg text-sm font-medium disabled:opacity-50 transition-colors">
-                  {saving ? '저장중...' : (editId ? '수정' : '등록')}
+                <button onClick={() => setShowForm(false)}
+                  className="px-4 py-2 rounded-lg text-sm text-gray-600 dark:text-[#9CA3AF] hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">취소</button>
+                <button onClick={handleSave} disabled={saving}
+                  className="px-4 py-2 bg-cyan-600 hover:bg-cyan-700 text-white rounded-lg text-sm font-medium disabled:opacity-50 transition-colors">
+                  {saving ? '저장중...' : editingId ? '수정' : '등록'}
                 </button>
               </div>
             </div>
@@ -402,8 +413,10 @@ export default function CrmPage() {
             <div className="bg-white dark:bg-[#1F2937] rounded-xl p-6 w-full max-w-sm mx-4 border border-gray-200 dark:border-[#374151] shadow-2xl" onClick={e => e.stopPropagation()}>
               <p className="text-gray-900 dark:text-[#E5E7EB] font-medium mb-4">정말 삭제하시겠습니까?</p>
               <div className="flex justify-end gap-2">
-                <button onClick={() => setDeleteId(null)} className="px-4 py-2 rounded-lg text-sm text-gray-600 dark:text-[#9CA3AF] hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">취소</button>
-                <button onClick={confirmDelete} disabled={deleting} className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg text-sm font-medium disabled:opacity-50 transition-colors">
+                <button onClick={() => setDeleteId(null)}
+                  className="px-4 py-2 rounded-lg text-sm text-gray-600 dark:text-[#9CA3AF] hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">취소</button>
+                <button onClick={handleDelete} disabled={deleting}
+                  className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg text-sm font-medium disabled:opacity-50 transition-colors">
                   {deleting ? '삭제중...' : '삭제'}
                 </button>
               </div>

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-const VPS_API = 'http://45.59.101.155:8000/api';
+const VPS_API = 'http://host.docker.internal:8000/api';
 
 export async function POST(req: NextRequest) {
   try {

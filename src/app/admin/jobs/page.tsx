@@ -25,7 +25,10 @@ interface Stats {
   by_source: Record<string, number>
 }
 
-const ADMIN_TOKEN = 'gugu-admin-2026'
+/** No client-side token — server-side API routes handle auth. */
+function apiFetch(url: string, opts: RequestInit = {}) {
+  return fetch(url, opts)
+}
 
 export default function AdminJobsPage() {
   const [jobs, setJobs] = useState<JobPosting[]>([])
@@ -49,11 +52,11 @@ export default function AdminJobsPage() {
     const id = ++fetchId.current
     setLoading(true)
     try {
-      let url = `/api/jobs?_v=2&admin_token=${ADMIN_TOKEN}&page=${page}&limit=${limit}&sort=${sort}`
+      let url = `/api/jobs?_v=2&page=${page}&limit=${limit}&sort=${sort}`
       if (search) url += `&search=${encodeURIComponent(search)}`
       if (sourceFilter) url += `&source=${sourceFilter}`
       if (locationFilter) url += `&location=${encodeURIComponent(locationFilter)}`
-      const res = await fetch(url)
+      const res = await apiFetch(url)
       const data = await res.json()
       if (res.ok && id === fetchId.current) {
         setJobs(data.items || [])
@@ -68,14 +71,14 @@ export default function AdminJobsPage() {
 
   const fetchStats = useCallback(async () => {
     try {
-      const res = await fetch(`/api/jobs/stats?_v=2&admin_token=${ADMIN_TOKEN}`)
+      const res = await apiFetch(`/api/jobs/stats?_v=2`)
       if (res.ok) {
         setStats(await res.json())
       }
     } catch {}
     // Also fetch regions for location filter
     try {
-      const res = await fetch(`/api/jobs/locations?_v=2&admin_token=${ADMIN_TOKEN}`)
+      const res = await apiFetch(`/api/jobs/locations?_v=2`)
       if (res.ok) {
         const data = await res.json()
         setRegions(data.regions || [])
@@ -89,9 +92,9 @@ export default function AdminJobsPage() {
     setCrawling(true)
     setMsg('')
     try {
-      let url = `/api/jobs/crawl?pages=2&admin_token=${ADMIN_TOKEN}`
+      let url = `/api/jobs/crawl?pages=2`
       if (keyword) url += `&keyword=${encodeURIComponent(keyword)}`
-      const res = await fetch(url, { method: 'POST' })
+      const res = await apiFetch(url, { method: 'POST' })
       const data = await res.json()
       if (res.ok) {
         const parts = [`✅ 크롤링 완료! ${data.new}개 새 공고`]
@@ -141,6 +144,14 @@ export default function AdminJobsPage() {
               <div className="text-sm text-gray-500 dark:text-[#9CA3AF]">사람인</div>
               <div className="text-2xl font-bold text-orange-400">{stats.by_source?.saramin || 0}</div>
             </div>
+            <div className="bg-white dark:bg-[#1F2937] p-4 rounded-xl border border-gray-200 dark:border-[#374151]">
+              <div className="text-sm text-gray-500 dark:text-[#9CA3AF]">게임잡</div>
+              <div className="text-2xl font-bold text-purple-400">{stats.by_source?.gamejob || 0}</div>
+            </div>
+            <div className="bg-white dark:bg-[#1F2937] p-4 rounded-xl border border-gray-200 dark:border-[#374151]">
+              <div className="text-sm text-gray-500 dark:text-[#9CA3AF]">원티드 🆕</div>
+              <div className="text-2xl font-bold text-rose-400">{stats.by_source?.wanted || 0}</div>
+            </div>
           </div>
         )}
 
@@ -178,7 +189,7 @@ export default function AdminJobsPage() {
               onClick={async () => {
                 setMsg('')
                 try {
-                  const res = await fetch(`/api/jobs/analyze?admin_token=${ADMIN_TOKEN}&limit=20`, { method: 'POST' })
+                  const res = await apiFetch(`/api/jobs/analyze?limit=20`, { method: 'POST' })
                   const data = await res.json()
                   if (res.ok) setMsg(`✅ ${data.message}`)
                   else setMsg(`❌ 오류: ${data.detail || ''}`)
@@ -215,6 +226,8 @@ export default function AdminJobsPage() {
             <option value="">전체 사이트</option>
             <option value="jobkorea">잡코리아</option>
             <option value="saramin">사람인</option>
+            <option value="gamejob">게임잡</option>
+            <option value="wanted">원티드</option>
           </select>
           <select
             value={locationFilter}
@@ -263,11 +276,16 @@ export default function AdminJobsPage() {
                   <tr key={job.id} className="border-b border-gray-100 dark:border-[#374151] hover:bg-gray-50 dark:hover:bg-[#111827]">
                     <td className="px-4 py-3">
                       <span className={`inline-block px-2 py-0.5 rounded text-xs font-medium ${
-                        job.source === 'jobkorea'
-                          ? 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300'
-                          : 'bg-orange-100 text-orange-700 dark:bg-orange-900 dark:text-orange-300'
+                        job.source === 'jobkorea' ? 'bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-300' :
+                        job.source === 'saramin' ? 'bg-orange-100 text-orange-700 dark:bg-orange-900 dark:text-orange-300' :
+                        job.source === 'gamejob' ? 'bg-purple-100 text-purple-700 dark:bg-purple-900 dark:text-purple-300' :
+                        job.source === 'wanted' ? 'bg-rose-100 text-rose-700 dark:bg-rose-900 dark:text-rose-300' :
+                        'bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300'
                       }`}>
-                        {job.source === 'jobkorea' ? '잡코' : '사람인'}
+                        {job.source === 'jobkorea' ? '잡코' :
+                         job.source === 'saramin' ? '사람인' :
+                         job.source === 'gamejob' ? '게임잡' :
+                         job.source === 'wanted' ? '원티드' : job.source}
                       </span>
                     </td>
                     <td className="px-4 py-3">

@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="540" viewBox="0 0 960 540">
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="40%" r="70%">
+      <stop offset="0%" style="stop-color:#1a0a0a"/>
+      <stop offset="100%" style="stop-color:#0a0a0a"/>
+    </radialGradient>
+    <linearGradient id="glow" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#ef4444"/>
+      <stop offset="100%" style="stop-color:#f97316"/>
+    </linearGradient>
+  </defs>
+  <rect width="960" height="540" fill="url(#bg)"/>
+  <line x1="0" y1="270" x2="960" y2="270" stroke="#1a1a1a" stroke-width="1"/>
+  <line x1="480" y1="0" x2="480" y2="540" stroke="#1a1a1a" stroke-width="1"/>
+  <g transform="translate(480, 270)">
+    <circle r="80" fill="none" stroke="#ef4444" stroke-width="1" opacity="0.3"/>
+    <circle r="3" fill="#ef4444"/>
+    <line x1="0" y1="-80" x2="0" y2="-200" stroke="#ef4444" stroke-width="2" opacity="0.8"/>
+    <circle r="4" cx="0" cy="-200" fill="#ef4444"/>
+    <line x1="-4" y1="-200" x2="-60" y2="-170" stroke="#ef4444" stroke-width="1.5" opacity="0.5"/>
+    <line x1="4" y1="-200" x2="60" y2="-170" stroke="#ef4444" stroke-width="1.5" opacity="0.5"/>
+  </g>
+  <g opacity="0.06">
+    <polygon points="100,440 120,400 140,440" fill="#ef4444"/>
+    <polygon points="200,380 220,340 240,380" fill="#ef4444"/>
+    <polygon points="700,420 720,380 740,420" fill="#ef4444"/>
+    <polygon points="800,360 820,320 840,360" fill="#ef4444"/>
+    <polygon points="150,200 170,160 190,200" fill="#ef4444"/>
+    <polygon points="650,180 670,140 690,180" fill="#ef4444"/>
+    <polygon points="750,250 770,210 790,250" fill="#ef4444"/>
+  </g>
+  <text x="480" y="140" font-family="system-ui, sans-serif" font-size="48" font-weight="bold" fill="#ffffff" text-anchor="middle" letter-spacing="6">SHOTFIRE</text>
+  <text x="480" y="175" font-family="system-ui, sans-serif" font-size="18" fill="#ef4444" text-anchor="middle" letter-spacing="3">TOP-DOWN STEALTH ACTION</text>
+  <text x="480" y="450" font-family="system-ui, sans-serif" font-size="13" fill="#6b7280" text-anchor="middle">4 Weapons · Behavior Tree AI · Procedural Maps</text>
+  <g transform="translate(130, 480)">
+    <text x="0" y="0" font-family="system-ui, sans-serif" font-size="12" fill="#4b5563">Unity 6 · C# · DI Container</text>
+  </g>
+</svg>

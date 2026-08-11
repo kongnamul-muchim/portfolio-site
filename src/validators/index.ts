@@ -2,7 +2,9 @@ import { z } from 'zod'
 
 export const signUpSchema = z.object({
   nickname: z.string().min(2, '닉네임은 2자 이상이어야 합니다.').max(20, '닉네임은 20자 이하여야 합니다.'),
-  password: z.string().min(6, '비밀번호는 6자 이상이어야 합니다.'),
+  password: z.string()
+    .min(8, '비밀번호는 8자 이상이어야 합니다.')
+    .regex(/^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]).+$/, '비밀번호는 영문, 숫자, 특수문자를 각각 최소 1개 포함해야 합니다.'),
   confirmPassword: z.string()
 }).refine((data) => data.password === data.confirmPassword, {
   message: '비밀번호가 일치하지 않습니다.',
@@ -53,7 +55,9 @@ export const updateProfileSchema = z.object({
 
 export const changePasswordSchema = z.object({
   currentPassword: z.string().min(1, '현재 비밀번호를 입력해주세요.'),
-  newPassword: z.string().min(6, '새 비밀번호는 6자 이상이어야 합니다.'),
+  newPassword: z.string()
+    .min(8, '새 비밀번호는 8자 이상이어야 합니다.')
+    .regex(/^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]).+$/, '새 비밀번호는 영문, 숫자, 특수문자를 각각 최소 1개 포함해야 합니다.'),
   confirmPassword: z.string().min(1, '비밀번호 확인을 입력해주세요.')
 }).refine(data => data.newPassword === data.confirmPassword, {
   message: '새 비밀번호가 일치하지 않습니다.',
