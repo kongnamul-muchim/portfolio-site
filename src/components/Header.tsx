@@ -5,7 +5,6 @@ import Link from 'next/link'
 import { useSession, signOut } from 'next-auth/react'
 import { useTheme } from './ThemeProvider'
 import { usePathname } from 'next/navigation'
-import VisitorBadge from './VisitorBadge'
 import { projects } from '@/data/projects'
 
 // 브라우저에서 바로 플레이 가능한 데모만 (Unity WebGL 제외)
@@ -14,245 +13,205 @@ const playableDemos = projects.filter(p => p.hasPlayableDemo && p.demo)
 export default function Header() {
   const { data: session } = useSession()
   const { isDark, toggleTheme } = useTheme()
-  const pathname = usePathname()
+  const pathname = usePathname() ?? '/'
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [projectTreeOpen, setProjectTreeOpen] = useState(false)
 
-  const isCommunity = pathname.startsWith('/community')
-  const isPlay = pathname.startsWith('/play')
-  const isCrm = pathname.startsWith('/crm')
-  const isJobs = pathname.startsWith('/admin/jobs')
-  const isAdminUsers = pathname.startsWith('/admin/users')
+  const isCommunity = pathname?.startsWith('/community')
+  const isPlay = pathname?.startsWith('/play')
+  const isCrm = pathname?.startsWith('/crm')
+  const isJobs = pathname?.startsWith('/admin/jobs')
+  const isAdminUsers = pathname?.startsWith('/admin/users')
+
+  const linkClass = (active: boolean) =>
+    `masthead-link ${active ? 'active' : ''}`
 
   return (
-    <header className="bg-white dark:bg-[#111827] shadow-sm sticky top-0 z-50 border-b border-gray-200 dark:border-[#1F2937]">
-      <div className="max-w-6xl mx-auto px-4">
-        <div className="flex justify-between items-center h-16">
-          {/* Logo */}
-          <div className="flex items-center gap-4">
-            <Link href="/" className="text-xl font-bold text-gray-900 dark:text-[#E5E7EB] hover:text-cyan-500 dark:hover:text-[#22D3EE] transition-colors">
-              Portfolio
+    <header className="masthead">
+      <div className="masthead-inner">
+        {/* 좌측 — 워드마크 */}
+        <Link href="/" className="masthead-wordmark">
+          GuGu<span className="dot">.</span>dev
+        </Link>
+
+        {/* 우측 — 링크 + 액션 (데스크톱) */}
+        <div className="hidden md:flex items-center gap-2">
+          <nav className="masthead-nav">
+            <Link href="/" className={linkClass(!isCommunity && !isPlay && pathname === '/')}>
+              Projects
             </Link>
-            <nav className="hidden md:flex items-center gap-1">
-              <Link
-                href="/"
-                className={`px-3 py-2 rounded-lg text-sm transition-colors ${
-                  !isCommunity && !isPlay && pathname === '/'
-                    ? 'bg-gray-100 dark:bg-gray-700 text-cyan-600 dark:text-[#22D3EE]'
-                    : 'text-gray-600 dark:text-[#9CA3AF] hover:bg-gray-100 dark:hover:bg-gray-700'
-                }`}
-              >
-                Projects
-              </Link>
-              <Link
-                href="/community"
-                className={`px-3 py-2 rounded-lg text-sm transition-colors ${
-                  isCommunity
-                    ? 'bg-gray-100 dark:bg-gray-700 text-cyan-600 dark:text-[#22D3EE]'
-                    : 'text-gray-600 dark:text-[#9CA3AF] hover:bg-gray-100 dark:hover:bg-gray-700'
-                }`}
-              >
-                Community
-              </Link>
-              {session?.user?.role === 'admin' && (
-                <>
-                  <Link
-                    href="/crm"
-                    className={`px-3 py-2 rounded-lg text-sm transition-colors ${
-                      isCrm
-                        ? 'bg-gray-100 dark:bg-gray-700 text-cyan-600 dark:text-[#22D3EE]'
-                        : 'text-gray-600 dark:text-[#9CA3AF] hover:bg-gray-100 dark:hover:bg-gray-700'
-                    }`}
-                  >
-                    CRM
-                  </Link>
-                  <Link
-                    href="/admin/jobs"
-                    className={`px-3 py-2 rounded-lg text-sm transition-colors ${
-                      isJobs
-                        ? 'bg-gray-100 dark:bg-gray-700 text-cyan-600 dark:text-[#22D3EE]'
-                        : 'text-gray-600 dark:text-[#9CA3AF] hover:bg-gray-100 dark:hover:bg-gray-700'
-                    }`}
-                  >
-                    Jobs
-                  </Link>
-                  <Link
-                    href="/admin/users"
-                    className={`px-3 py-2 rounded-lg text-sm transition-colors ${
-                      isAdminUsers
-                        ? 'bg-gray-100 dark:bg-gray-700 text-cyan-600 dark:text-[#22D3EE]'
-                        : 'text-gray-600 dark:text-[#9CA3AF] hover:bg-gray-100 dark:hover:bg-gray-700'
-                    }`}
-                  >
-                    Users
-                  </Link>
-                </>
-              )}
-              <button
-                onClick={() => setProjectTreeOpen(!projectTreeOpen)}
-                className={`px-3 py-2 rounded-lg text-sm transition-colors ${
-                  projectTreeOpen || isPlay
-                    ? 'bg-gray-100 dark:bg-gray-700 text-cyan-600 dark:text-[#22D3EE]'
-                    : 'text-gray-600 dark:text-[#9CA3AF] hover:bg-gray-100 dark:hover:bg-gray-700'
-                }`}
-              >
-                Play Demo
-              </button>
-            </nav>
-          </div>
-
-          {/* Right side */}
-          <div className="flex items-center gap-2">
-            <button
-              onClick={toggleTheme}
-              className="p-2 rounded-lg text-gray-600 dark:text-[#9CA3AF] hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-              aria-label="테마 전환"
-            >
-              {isDark ? (
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
-                </svg>
-              ) : (
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
-                </svg>
-              )}
-            </button>
-
-            <VisitorBadge />
-
-            {session ? (
-              <div className="hidden md:flex items-center gap-2">
-                <Link
-                  href="/profile"
-                  className="flex items-center gap-2 px-3 py-2 rounded-lg text-gray-600 dark:text-[#9CA3AF] hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors text-sm"
-                >
-                  <div className="w-7 h-7 rounded-full bg-purple-500 flex items-center justify-center text-white text-xs font-medium">
-                    {session.user?.name?.charAt(0) || '?'}
-                  </div>
-                  <span>{session.user?.name}</span>
+            <Link href="/community" className={linkClass(!!isCommunity)}>
+              Community
+            </Link>
+            {session?.user?.role === 'admin' && (
+              <>
+                <Link href="/crm" className={linkClass(!!isCrm)}>
+                  CRM
                 </Link>
-                <button
-                  onClick={() => signOut()}
-                  className="px-3 py-2 rounded-lg text-gray-600 dark:text-[#9CA3AF] hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors text-sm"
-                >
-                  Logout
-                </button>
-              </div>
-            ) : (
-              <div className="hidden md:flex items-center gap-2">
-                <Link
-                  href="/login"
-                  className="px-3 py-2 rounded-lg text-gray-600 dark:text-[#9CA3AF] hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors text-sm"
-                >
-                  Login
+                <Link href="/admin/jobs" className={linkClass(!!isJobs)}>
+                  Jobs
                 </Link>
-                <Link
-                  href="/signup"
-                  className="px-4 py-2 bg-cyan-600 hover:bg-cyan-700 text-white text-sm font-medium rounded-lg transition-colors"
-                >
-                  Sign Up
+                <Link href="/admin/users" className={linkClass(!!isAdminUsers)}>
+                  Users
                 </Link>
-              </div>
+              </>
             )}
-
             <button
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="md:hidden p-2 rounded-lg text-gray-600 dark:text-[#9CA3AF] hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+              onClick={() => setProjectTreeOpen(!projectTreeOpen)}
+              className={`masthead-link ${projectTreeOpen || isPlay ? 'active' : ''}`}
             >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                {mobileMenuOpen ? (
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                ) : (
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-                )}
-              </svg>
+              Play Demo
             </button>
-          </div>
+          </nav>
+          <button
+            onClick={toggleTheme}
+            className="masthead-icon-btn"
+            aria-label="테마 전환"
+          >
+            {isDark ? (
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+              </svg>
+            ) : (
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+              </svg>
+            )}
+          </button>
+          {session ? (
+            <>
+              <Link href="/profile" className="masthead-link">
+                {session.user?.name}
+              </Link>
+              <button onClick={() => signOut()} className="masthead-link">
+                Logout
+              </button>
+            </>
+          ) : (
+            <>
+              <Link href="/login" className="masthead-link">
+                Login
+              </Link>
+              <Link href="/signup" className="masthead-cta">
+                Sign Up
+              </Link>
+            </>
+          )}
         </div>
 
-        {/* Play Demo Dropdown — 플레이 가능한 데모만 (Unity 제외) */}
-        {projectTreeOpen && (
-          <div className="hidden md:block absolute left-0 right-0 bg-white dark:bg-[#111827] border-b border-gray-200 dark:border-[#1F2937] shadow-lg"
-            onMouseLeave={() => setProjectTreeOpen(false)}
+        {/* 모바일 — 버거 + 테마 */}
+        <div className="flex md:hidden items-center gap-2">
+          <button
+            onClick={toggleTheme}
+            className="masthead-icon-btn"
+            aria-label="테마 전환"
           >
-            <div className="max-w-6xl mx-auto px-4 py-4">
-              <p className="text-xs text-gray-400 dark:text-gray-500 mb-2">
-                브라우저에서 바로 플레이할 수 있는 데모예요
-              </p>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-1">
-                {playableDemos.map(item => (
-                  <a
-                    key={item.id}
-                    href={item.demo}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-2 px-2 py-1.5 rounded text-sm text-gray-600 dark:text-[#9CA3AF] hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-cyan-600 dark:hover:text-[#22D3EE] transition-colors"
-                    onClick={() => setProjectTreeOpen(false)}
-                  >
-                    <span>▶</span>
-                    <span>{item.title}</span>
-                  </a>
-                ))}
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* Mobile Menu */}
-        {mobileMenuOpen && (
-          <div className="md:hidden py-4 border-t border-gray-200 dark:border-[#1F2937]">
-            <div className="space-y-2">
-              <Link href="/" className="block px-4 py-2 rounded-lg text-gray-600 dark:text-[#9CA3AF] hover:bg-gray-100 dark:hover:bg-gray-700" onClick={() => setMobileMenuOpen(false)}>
-                📂 Projects
-              </Link>
-              <Link href="/community" className="block px-4 py-2 rounded-lg text-gray-600 dark:text-[#9CA3AF] hover:bg-gray-100 dark:hover:bg-gray-700" onClick={() => setMobileMenuOpen(false)}>
-                💬 Community
-              </Link>
-              {session?.user?.role === 'admin' && (
-                <>
-                  <Link href="/crm" className="block px-4 py-2 rounded-lg text-gray-600 dark:text-[#9CA3AF] hover:bg-gray-100 dark:hover:bg-gray-700" onClick={() => setMobileMenuOpen(false)}>
-                    📊 CRM
-                  </Link>
-                  <Link href="/admin/jobs" className="block px-4 py-2 rounded-lg text-gray-600 dark:text-[#9CA3AF] hover:bg-gray-100 dark:hover:bg-gray-700" onClick={() => setMobileMenuOpen(false)}>
-                    📋 Jobs
-                  </Link>
-                  <Link href="/admin/users" className="block px-4 py-2 rounded-lg text-gray-600 dark:text-[#9CA3AF] hover:bg-gray-100 dark:hover:bg-gray-700" onClick={() => setMobileMenuOpen(false)}>
-                    👥 Users
-                  </Link>
-                </>
-              )}
-              <div className="pl-4 space-y-1">
-                <p className="text-xs text-gray-400 px-2 mt-2 mb-1">Play Demos</p>
-                {playableDemos.map(p => (
-                  <a key={p.id} href={p.demo} target="_blank" rel="noopener noreferrer" className="block px-4 py-1.5 rounded-lg text-sm text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700" onClick={() => setMobileMenuOpen(false)}>
-                    ▶ {p.title}
-                  </a>
-                ))}
-              </div>
-              {session ? (
-                <>
-                  <Link href="/profile" className="block px-4 py-2 rounded-lg text-gray-600 dark:text-[#9CA3AF] hover:bg-gray-100 dark:hover:bg-gray-700" onClick={() => setMobileMenuOpen(false)}>
-                    👤 Profile
-                  </Link>
-                  <button onClick={() => { signOut(); setMobileMenuOpen(false); }} className="block w-full text-left px-4 py-2 rounded-lg text-gray-600 dark:text-[#9CA3AF] hover:bg-gray-100 dark:hover:bg-gray-700">
-                    Logout
-                  </button>
-                </>
+            {isDark ? (
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+              </svg>
+            ) : (
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+              </svg>
+            )}
+          </button>
+          <button
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="masthead-burger"
+            aria-label="메뉴"
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              {mobileMenuOpen ? (
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
               ) : (
-                <>
-                  <Link href="/login" className="block px-4 py-2 rounded-lg text-gray-600 dark:text-[#9CA3AF] hover:bg-gray-100 dark:hover:bg-gray-700" onClick={() => setMobileMenuOpen(false)}>
-                    Login
-                  </Link>
-                  <Link href="/signup" className="block px-4 py-2 rounded-lg text-gray-600 dark:text-[#9CA3AF] hover:bg-gray-100 dark:hover:bg-gray-700" onClick={() => setMobileMenuOpen(false)}>
-                    Sign Up
-                  </Link>
-                </>
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
               )}
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      {/* Play Demo 드롭다운 */}
+      {projectTreeOpen && (
+        <div
+          className="hidden md:block absolute left-0 right-0 bg-transparent"
+          style={{ background: 'var(--color-paper)' }}
+          onMouseLeave={() => setProjectTreeOpen(false)}
+        >
+          <div className="max-w-6xl mx-auto px-6 py-4">
+            <p className="text-xs mb-2" style={{ color: 'var(--color-neutral)' }}>
+              브라우저에서 바로 플레이할 수 있는 데모예요
+            </p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-1">
+              {playableDemos.map(item => (
+                <a
+                  key={item.id}
+                  href={item.demo}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="masthead-link"
+                  onClick={() => setProjectTreeOpen(false)}
+                >
+                  ▶ {item.title}
+                </a>
+              ))}
             </div>
           </div>
-        )}
-      </div>
+        </div>
+      )}
+
+      {/* 모바일 메뉴 */}
+      {mobileMenuOpen && (
+        <div className="masthead-mobile md:hidden">
+          <Link href="/" onClick={() => setMobileMenuOpen(false)}>
+            📂 Projects
+          </Link>
+          <Link href="/community" onClick={() => setMobileMenuOpen(false)}>
+            💬 Community
+          </Link>
+          {session?.user?.role === 'admin' && (
+            <>
+              <Link href="/crm" onClick={() => setMobileMenuOpen(false)}>
+                📊 CRM
+              </Link>
+              <Link href="/admin/jobs" onClick={() => setMobileMenuOpen(false)}>
+                📋 Jobs
+              </Link>
+              <Link href="/admin/users" onClick={() => setMobileMenuOpen(false)}>
+                👥 Users
+              </Link>
+            </>
+          )}
+          <p className="text-xs mt-2 mb-1" style={{ color: 'var(--color-neutral)' }}>
+            Play Demos
+          </p>
+          {playableDemos.map(p => (
+            <a key={p.id} href={p.demo} target="_blank" rel="noopener noreferrer" onClick={() => setMobileMenuOpen(false)}>
+              ▶ {p.title}
+            </a>
+          ))}
+          {session ? (
+            <>
+              <Link href="/profile" onClick={() => setMobileMenuOpen(false)}>
+                👤 Profile
+              </Link>
+              <button onClick={() => { signOut(); setMobileMenuOpen(false); }}>
+                Logout
+              </button>
+            </>
+          ) : (
+            <>
+              <Link href="/login" onClick={() => setMobileMenuOpen(false)}>
+                Login
+              </Link>
+              <Link href="/signup" onClick={() => setMobileMenuOpen(false)}>
+                Sign Up
+              </Link>
+            </>
+          )}
+        </div>
+      )}
     </header>
   )
 }

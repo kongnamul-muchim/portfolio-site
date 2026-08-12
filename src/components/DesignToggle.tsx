@@ -56,10 +56,10 @@ export default function DesignToggle() {
 
   return (
     <>
-      {/* Toggle button */}
+      {/* Toggle button — 모바일에서는 숨김 (내용 가림 방지) */}
       <button
         onClick={() => setOpen(!open)}
-        className="fixed right-0 top-1/2 -translate-y-1/2 z-[100] bg-white dark:bg-[#1F2937] border border-r-0 border-gray-200 dark:border-[#374151] rounded-l-xl px-2 py-4 shadow-lg hover:shadow-xl transition-all group"
+        className="hidden md:block fixed right-0 top-1/2 -translate-y-1/2 z-[100] bg-white dark:bg-[#1F2937] border border-r-0 border-gray-200 dark:border-[#374151] rounded-l-xl px-2 py-4 shadow-lg hover:shadow-xl transition-all group"
         aria-label="디자인 설정"
       >
         <span className="block text-lg group-hover:scale-110 transition-transform">🎨</span>
@@ -70,11 +70,11 @@ export default function DesignToggle() {
         )}
       </button>
 
-      {/* Panel */}
+      {/* Panel — 데스크톱 전용 */}
       {open && (
         <>
-          <div className="fixed inset-0 z-40" onClick={() => setOpen(false)} />
-          <div className="fixed right-0 top-1/2 -translate-y-1/2 z-50 mr-14">
+          <div className="hidden md:block fixed inset-0 z-40" onClick={() => setOpen(false)} />
+          <div className="hidden md:block fixed right-0 top-1/2 -translate-y-1/2 z-50 mr-14">
             <div className="bg-white dark:bg-[#111827] border border-gray-200 dark:border-[#1F2937] rounded-xl shadow-2xl p-4 w-64">
               <div className="flex items-center justify-between mb-3">
                 <h3 className="text-sm font-semibold text-gray-900 dark:text-[#E5E7EB]">
