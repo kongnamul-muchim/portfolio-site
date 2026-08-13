@@ -2,13 +2,12 @@
 
 import Link from 'next/link'
 import { useState } from 'react'
-import { projects, getFeaturedProjects, getOtherProjects, projectTypes } from '@/data/projects'
+import { projects, getFeaturedProjects, projectTypes } from '@/data/projects'
 import GithubActivityBadge from '@/components/GithubActivityBadge'
 
 export default function Home() {
   const featuredProjects = getFeaturedProjects()
-  const otherProjects = getOtherProjects()
-  const allProjects = [...featuredProjects, ...otherProjects]
+  const allProjects = projects
   const [activeFilter, setActiveFilter] = useState('all')
 
   const filters = [
@@ -20,9 +19,9 @@ export default function Home() {
     { value: 'wip', label: '제작중', count: allProjects.filter(p => p.type === 'wip').length },
   ]
 
-  const filteredOtherProjects = activeFilter === 'all'
-    ? otherProjects
-    : otherProjects.filter(p => p.type === activeFilter)
+  const filteredProjects = activeFilter === 'all'
+    ? allProjects
+    : allProjects.filter(p => p.type === activeFilter)
 
   return (
     <div className="portfolio-page min-h-screen">
@@ -111,11 +110,11 @@ export default function Home() {
             ))}
           </div>
           <div className="play-grid">
-            {filteredOtherProjects.map((project) => (
+            {filteredProjects.map((project) => (
               <PlayCard key={project.id} project={project} />
             ))}
           </div>
-          {filteredOtherProjects.length === 0 && (
+          {filteredProjects.length === 0 && (
             <p className="text-center py-12 text-sm" style={{ color: 'var(--color-neutral)' }}>
               이 필터에 해당하는 작품이 없습니다.
             </p>
