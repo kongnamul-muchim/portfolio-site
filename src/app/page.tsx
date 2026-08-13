@@ -34,13 +34,13 @@ export default function Home() {
           개발자.
         </h1>
         <p className="marquee-lede">
-          고등학교 졸업 후 독학으로 시작해 Unity 게임 8종을 직접 만들며 개발을 배웠습니다.
+          고등학교 졸업 후 독학으로 시작해 Unity 게임 10종을 직접 만들며 개발을 배웠습니다.
           클라이언트에서 백엔드, AI, 인프라까지 전 스택을 다루는,<br />
           <strong>견고하고 확장 가능한 게임 시스템을 설계하는 개발자</strong>입니다.
         </p>
         <div className="marquee-badges">
           <span className="marquee-badge hot">독학 개발자</span>
-          <span className="marquee-badge">🎮 8개 Unity 게임</span>
+          <span className="marquee-badge">🎮 10개 Unity 게임</span>
           <span className="marquee-badge">🤖 RAG AI 챗봇</span>
           <span className="marquee-badge">🐳 Docker 자체 운영</span>
           <span className="marquee-badge">☁️ Cloudflare + nginx</span>
