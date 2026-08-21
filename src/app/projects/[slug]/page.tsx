@@ -149,7 +149,7 @@ export default function ProjectPage({ params }: { params: { slug: string } }) {
               href={project.demo}
               target="_blank"
               rel="noopener noreferrer"
-              className="detail-demo-btn inline-flex items-center gap-2 px-5 sm:px-7 py-3 bg-gradient-to-r from-[#22D3EE] to-[#0EA5E9] hover:from-[#06B6D4] hover:to-[#0284C7] text-[#0D0D0E] hover:text-white font-bold text-sm sm:text-base rounded-xl shadow-lg shadow-cyan-500/25 transition-all duration-300"
+              className="detail-demo-btn inline-flex items-center gap-2 px-5 sm:px-7 py-3 bg-gradient-to-r from-[#22D3EE] to-[#0EA5E9] text-[#0D0D0E] font-bold text-sm sm:text-base rounded-xl shadow-lg shadow-cyan-500/25 transition-[transform,box-shadow] duration-200 hover:-translate-y-0.5 hover:shadow-xl hover:shadow-cyan-500/40"
             >
               <svg className="w-5 h-5 shrink-0" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M8 5.14v14l11-7-11-7z" />

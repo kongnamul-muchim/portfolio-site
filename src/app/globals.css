@@ -909,7 +909,7 @@ html.ornate .filter-tab:hover {
 /* --- 과한 버전: 단일 포인트 컬러(accent) + 얇은 단색 보더 --- */
 /* 헤더 카드 — 얇은 accent 보더 */
 html.ornate .detail-header-card {
-  border: 1px solid color-mix(in oklch, var(--color-accent) 40%, transparent);
+  border: 1px solid color-mix(in oklch, var(--color-accent) 60%, transparent);
 }
 /* 제목 — accent 단색 */
 html.ornate .detail-header-card h1 {
@@ -917,11 +917,11 @@ html.ornate .detail-header-card h1 {
 }
 /* 이미지 — 얇은 accent 보더 */
 html.ornate .detail-image {
-  border: 1px solid color-mix(in oklch, var(--color-accent) 35%, transparent);
+  border: 1px solid color-mix(in oklch, var(--color-accent) 55%, transparent);
 }
 /* 상세 콘텐츠 — 얇은 accent 보더 */
 html.ornate .detail-content {
-  border: 1px solid color-mix(in oklch, var(--color-accent) 30%, transparent);
+  border: 1px solid color-mix(in oklch, var(--color-accent) 50%, transparent);
 }
 /* Live Preview — 단색 언더라인 */
 html.ornate .detail-preview h2 {
@@ -955,4 +955,15 @@ html.ornate a[target="_blank"]:not(.detail-back):hover {
   html.ornate a[target="_blank"]:not(.detail-back):hover {
     transform: none;
   }
+}
+
+/* 과한 버전 — 포인트 컬러 확대 (기본과 차이 명확히) */
+html.ornate .detail-content h2 {
+  color: var(--color-accent);
+}
+html.ornate .detail-spec dt {
+  color: color-mix(in oklch, var(--color-accent) 75%, transparent);
+}
+html.ornate .detail-stats > div > div:first-child {
+  color: var(--color-accent);
 }
