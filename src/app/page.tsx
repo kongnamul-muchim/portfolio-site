@@ -4,6 +4,8 @@ import Link from 'next/link'
 import { useState } from 'react'
 import { projects, getFeaturedProjects, projectTypes } from '@/data/projects'
 import GithubActivityBadge from '@/components/GithubActivityBadge'
+import Reveal from '@/components/Reveal'
+import OrnateDetector from '@/components/OrnateDetector'
 
 export default function Home() {
   const featuredProjects = getFeaturedProjects()
@@ -25,12 +27,13 @@ export default function Home() {
 
   return (
     <div className="portfolio-page min-h-screen">
+      <OrnateDetector />
       {/* Marquee Hero — 게임 타이틀 화면 */}
       <section className="marquee-hero px-8 sm:px-12">
         <h1 className="marquee-display">
-          게임, AI, 인프라.<br />
-          <span className="accent-word">세 영역을 직접 잇는</span><br />
-          개발자.
+          <span className="line line-1">게임, AI, 인프라.</span>
+          <span className="line accent-word line-2">세 영역을 직접 잇는</span>
+          <span className="line line-3">개발자.</span>
         </h1>
         <p className="marquee-lede">
           고등학교 졸업 후 독학으로 시작해 Unity 게임 10종을 직접 만들며 개발을 배웠습니다.
@@ -49,11 +52,14 @@ export default function Home() {
       {/* About */}
       <section className="play-section px-8 sm:px-12 pt-0">
         <div className="max-w-6xl mx-auto">
-          <div className="play-section-head">
-            <h2>About</h2>
-            <span className="count">독학 스토리</span>
-          </div>
-          <div className="about-card">
+          <Reveal>
+            <div className="play-section-head">
+              <h2>About</h2>
+              <span className="count">독학 스토리</span>
+            </div>
+          </Reveal>
+          <Reveal delay={80}>
+            <div className="about-card">
             <p>
               고등학교 졸업 후 <strong>독학</strong>으로 개발을 시작했습니다. Unity 게임 개발로 처음 코드를 배웠지만,
               <strong> “서버 없이 완성된 게임은 없다”</strong>는 생각에 Next.js와 Docker를 공부했고,
@@ -71,6 +77,7 @@ export default function Home() {
               <span className="about-badge">RAG + pgvector</span>
             </div>
           </div>
+          </Reveal>
         </div>
       </section>
 
@@ -78,13 +85,17 @@ export default function Home() {
       {featuredProjects.length > 0 && (
         <section className="play-section px-8 sm:px-12 pt-0">
           <div className="max-w-6xl mx-auto">
-            <div className="play-section-head">
-              <h2>대표 작품</h2>
-              <span className="count">{featuredProjects.length}</span>
-            </div>
+            <Reveal>
+              <div className="play-section-head">
+                <h2>대표 작품</h2>
+                <span className="count">{featuredProjects.length}</span>
+              </div>
+            </Reveal>
             <div className="play-grid">
-              {featuredProjects.map((project) => (
-                <PlayCard key={project.id} project={project} />
+              {featuredProjects.map((project, i) => (
+                <Reveal key={project.id} delay={Math.min(i * 70, 420)}>
+                  <PlayCard project={project} />
+                </Reveal>
               ))}
             </div>
           </div>
@@ -94,24 +105,30 @@ export default function Home() {
       {/* All Works — 필터 + 카드 그리드 */}
       <section className="play-section px-8 sm:px-12 pt-0">
         <div className="max-w-6xl mx-auto">
-          <div className="play-section-head">
-            <h2>모든 작품</h2>
-            <span className="count">{allProjects.length}</span>
-          </div>
-          <div className="filter-tabs">
-            {filters.map((f) => (
-              <button
-                key={f.value}
-                onClick={() => setActiveFilter(f.value)}
-                className={`filter-tab ${activeFilter === f.value ? 'active' : ''}`}
-              >
-                {f.label} ({f.count})
-              </button>
-            ))}
-          </div>
+          <Reveal>
+            <div className="play-section-head">
+              <h2>모든 작품</h2>
+              <span className="count">{allProjects.length}</span>
+            </div>
+          </Reveal>
+          <Reveal delay={60}>
+            <div className="filter-tabs">
+              {filters.map((f) => (
+                <button
+                  key={f.value}
+                  onClick={() => setActiveFilter(f.value)}
+                  className={`filter-tab ${activeFilter === f.value ? 'active' : ''}`}
+                >
+                  {f.label} ({f.count})
+                </button>
+              ))}
+            </div>
+          </Reveal>
           <div className="play-grid">
-            {filteredProjects.map((project) => (
-              <PlayCard key={project.id} project={project} />
+            {filteredProjects.map((project, i) => (
+              <Reveal key={project.id} delay={Math.min(i * 50, 350)}>
+                <PlayCard project={project} />
+              </Reveal>
             ))}
           </div>
           {filteredProjects.length === 0 && (

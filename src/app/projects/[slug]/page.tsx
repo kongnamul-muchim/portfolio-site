@@ -2,6 +2,7 @@ import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { projects, getProjectBySlug, projectTypes } from '@/data/projects'
 import GithubActivityBadge from '@/components/GithubActivityBadge'
+import OrnateDetector from '@/components/OrnateDetector'
 
 export function generateStaticParams() {
   return projects.map((project) => ({
@@ -19,12 +20,13 @@ export default function ProjectPage({ params }: { params: { slug: string } }) {
   const typeInfo = projectTypes.find(t => t.value === project.type)
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-[#0D0D0E]">
+    <div className="project-detail-page min-h-screen bg-gray-50 dark:bg-[#0D0D0E]">
+      <OrnateDetector />
       <article className="max-w-4xl mx-auto px-4 py-8">
         {/* Back Link */}
         <Link
           href="/"
-          className="inline-flex items-center gap-1 text-sm text-gray-500 dark:text-[#9CA3AF] hover:text-[#22D3EE] transition-colors mb-6"
+          className="detail-back inline-flex items-center gap-1 text-sm text-gray-500 dark:text-[#9CA3AF] hover:text-[#22D3EE] transition-colors mb-6"
         >
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
@@ -33,7 +35,7 @@ export default function ProjectPage({ params }: { params: { slug: string } }) {
         </Link>
 
         {/* Header */}
-        <header className="bg-white dark:bg-[#111827] border border-gray-200 dark:border-[#1F2937] rounded-xl p-5 sm:p-7 mb-6">
+        <header className="detail-header-card bg-white dark:bg-[#111827] border border-gray-200 dark:border-[#1F2937] rounded-xl p-5 sm:p-7 mb-6">
           <div className="flex items-center justify-between flex-wrap gap-2 mb-4">
             <div className="flex items-center gap-2">
               {typeInfo && (
@@ -43,12 +45,6 @@ export default function ProjectPage({ params }: { params: { slug: string } }) {
                 {typeInfo?.label || project.type}
               </span>
             </div>
-            {/* Scope badge */}
-            {project.devPeriod && (
-              <span className="text-xs px-3 py-1 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 border border-blue-200 dark:border-blue-800/50">
-                📅 {project.devPeriod}
-              </span>
-            )}
           </div>
           <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 dark:text-[#E5E7EB] mb-4 break-words leading-tight">
             {project.title}
@@ -56,21 +52,24 @@ export default function ProjectPage({ params }: { params: { slug: string } }) {
           <p className="text-sm sm:text-base text-gray-500 dark:text-[#9CA3AF] mb-5 break-words leading-relaxed">
             {project.description}
           </p>
-          {project.devPeriod && (
-            <p className="text-xs sm:text-sm text-gray-400 dark:text-gray-500 mb-4">
-              📅 {project.devPeriod}
-            </p>
-          )}
-          <div className="flex flex-wrap gap-2 min-w-0">
-            {project.technologies.map((tech) => (
-              <span
-                key={tech}
-                className="text-[11px] sm:text-xs px-3 py-1 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-[#9CA3AF] border border-gray-200 dark:border-[#1F2937] whitespace-nowrap"
-              >
-                {tech}
-              </span>
-            ))}
-          </div>
+
+          {/* Spec Sheet — 행 목록 (게임 패키지 뒷면 느낌) */}
+          <dl className="detail-spec border-t border-gray-100 dark:border-gray-800 pt-4">
+            {project.devPeriod && (
+              <div className="flex py-1.5">
+                <dt className="w-20 sm:w-24 shrink-0 text-xs font-medium text-gray-400 dark:text-gray-500">개발 기간</dt>
+                <dd className="text-xs text-gray-600 dark:text-[#9CA3AF]">{project.devPeriod}</dd>
+              </div>
+            )}
+            <div className="flex py-1.5">
+              <dt className="w-20 sm:w-24 shrink-0 text-xs font-medium text-gray-400 dark:text-gray-500">게임 타입</dt>
+              <dd className="text-xs text-gray-600 dark:text-[#9CA3AF]">{typeInfo?.label || project.type}</dd>
+            </div>
+            <div className="flex py-1.5">
+              <dt className="w-20 sm:w-24 shrink-0 text-xs font-medium text-gray-400 dark:text-gray-500">주요 기술</dt>
+              <dd className="text-xs text-gray-600 dark:text-[#9CA3AF] leading-relaxed">{project.technologies.join(' · ')}</dd>
+            </div>
+          </dl>
         </header>
 
         {/* GitHub Activity Badge */}
@@ -81,7 +80,7 @@ export default function ProjectPage({ params }: { params: { slug: string } }) {
         )}
 
         {/* Image */}
-        <div className="relative w-full rounded-xl overflow-hidden mb-6 bg-white dark:bg-[#111827] border border-gray-200 dark:border-[#1F2937] shadow-lg group">
+        <div className="detail-image relative w-full rounded-xl overflow-hidden mb-6 bg-white dark:bg-[#111827] border border-gray-200 dark:border-[#1F2937] shadow-lg group">
           <img
             src={displayImage}
             alt={project.title}
@@ -91,18 +90,36 @@ export default function ProjectPage({ params }: { params: { slug: string } }) {
         </div>
 
         {/* Detail Content */}
-        <div className="bg-white dark:bg-[#111827] border border-gray-200 dark:border-[#1F2937] rounded-xl p-5 sm:p-7 mb-6 max-w-full min-w-0 overflow-hidden">
-          {/* Key Achievement Card */}
+        <div className="detail-content bg-white dark:bg-[#111827] border border-gray-200 dark:border-[#1F2937] rounded-xl p-5 sm:p-7 mb-6 max-w-full min-w-0 overflow-hidden">
+          {/* Key Achievement — 숫자 스탯 (데이터 있는 프로젝트) / 문단 (나머지) */}
           <div className="mb-6 p-4 rounded-lg bg-gradient-to-r from-cyan-50 to-blue-50 dark:from-cyan-900/10 dark:to-blue-900/10 border border-cyan-200 dark:border-cyan-800/30">
-            <div className="flex items-start gap-3">
-              <span className="text-xl shrink-0 mt-0.5">💡</span>
-              <div>
-                <p className="text-xs font-semibold text-cyan-700 dark:text-cyan-400 mb-1 uppercase tracking-wider">Key Achievement</p>
-                <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
-                  <KeyAchievement slug={project.id} />
-                </p>
+            {keyStats[project.id] ? (
+              <div className="detail-stats grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3">
+                {keyStats[project.id].map((s) => (
+                  <div
+                    key={s.label}
+                    className="bg-white dark:bg-[#0D0D0E] border border-gray-200 dark:border-[#1F2937] rounded-lg p-3 text-center"
+                  >
+                    <div className="text-lg sm:text-xl font-bold text-gray-900 dark:text-[#E5E7EB] leading-tight">
+                      {s.value}
+                    </div>
+                    <div className="text-[10px] sm:text-[11px] text-gray-400 dark:text-gray-500 mt-1">
+                      {s.label}
+                    </div>
+                  </div>
+                ))}
               </div>
-            </div>
+            ) : (
+              <div className="flex items-start gap-3">
+                <span className="text-xl shrink-0 mt-0.5">💡</span>
+                <div>
+                  <p className="text-xs font-semibold text-cyan-700 dark:text-cyan-400 mb-1 uppercase tracking-wider">Key Achievement</p>
+                  <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed">
+                    <KeyAchievement slug={project.id} />
+                  </p>
+                </div>
+              </div>
+            )}
           </div>
           <h2 className="text-lg font-semibold text-gray-900 dark:text-[#E5E7EB] mb-5">
             Project Details
@@ -132,19 +149,19 @@ export default function ProjectPage({ params }: { params: { slug: string } }) {
               href={project.demo}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-4 sm:px-5 py-2.5 bg-[#22D3EE] hover:bg-[#06B6D4] text-[#0D0D0E] font-semibold text-xs sm:text-sm rounded-lg transition-colors"
+              className="detail-demo-btn inline-flex items-center gap-2 px-5 sm:px-7 py-3 bg-gradient-to-r from-[#22D3EE] to-[#0EA5E9] hover:from-[#06B6D4] hover:to-[#0284C7] text-[#0D0D0E] hover:text-white font-bold text-sm sm:text-base rounded-xl shadow-lg shadow-cyan-500/25 transition-all duration-300"
             >
-              <svg className="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+              <svg className="w-5 h-5 shrink-0" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M8 5.14v14l11-7-11-7z" />
               </svg>
-              <span className="truncate">Live Demo</span>
+              <span className="truncate">게임 실행</span>
             </a>
           )}
         </div>
 
         {/* Live Preview — 썸네일 미리보기 (클릭 시 새창) */}
         {project.demo && (project.type === 'web' || project.type === 'server') && (
-          <section className="mb-6">
+          <section className="detail-preview mb-6">
             <h2 className="text-lg font-semibold text-gray-900 dark:text-[#E5E7EB] mb-4">
               Live Preview
             </h2>
@@ -178,6 +195,80 @@ export default function ProjectPage({ params }: { params: { slug: string } }) {
         )}
       </article>
     </div>
+  )
+}
+
+/* 핵심 수치 스탯 — 페이지 본문에서 확인되는 실제 수치만 사용 */
+const keyStats: Record<string, { value: string; label: string }[]> = {
+  'chaincrush': [
+    { value: '2일', label: '프로토타입 → 완성' },
+    { value: '10×10', label: '퍼즐 보드' },
+    { value: '6색', label: '블록 지원' },
+    { value: '오프라인', label: 'AI 힌트 엔진' },
+  ],
+  'shotfire': [
+    { value: '5일', label: '개발 기간' },
+    { value: '4종', label: '무기 시스템' },
+    { value: 'BTree', label: '적 AI' },
+    { value: '절차적', label: '맵 생성' },
+  ],
+  'afk': [
+    { value: '6주', label: '기획 → 완성' },
+    { value: '100+', label: '스테이지' },
+    { value: '4종', label: '장비 × 5단계' },
+    { value: 'CSV', label: '밸런스 파이프라인' },
+  ],
+  'match3': [
+    { value: '1일', label: '프로토타입 → 완성' },
+    { value: '8×8', label: '퍼즐 보드' },
+    { value: 'BFS', label: '매치 탐지' },
+    { value: '재사용', label: 'Core/Shell 아키텍처' },
+  ],
+  'minigame-collection': [
+    { value: '6종', label: '미니게임' },
+    { value: '2종', label: 'AI 대전 (오목/체스)' },
+    { value: '40%', label: '코드 재사용률' },
+  ],
+  'aichat': [
+    { value: 'RAG', label: '문서 검색 채팅' },
+    { value: 'SSE', label: '실시간 스트리밍' },
+    { value: '10회/일', label: '사용량 제한' },
+  ],
+  'resonance': [
+    { value: '3,000줄', label: 'Vanilla JS' },
+    { value: '6개', label: '직업' },
+    { value: '68종', label: '유물' },
+    { value: '40+', label: '스킬' },
+  ],
+  'hide-and-ink': [
+    { value: '4인', label: '팀 프로젝트' },
+    { value: '3개월', label: '협업 기간' },
+    { value: '800+', label: '커밋' },
+  ],
+  'spirit-merge': [
+    { value: '10일', label: '기획 → 완성' },
+    { value: '30종', label: '정령' },
+    { value: '88개', label: '스크립트' },
+    { value: '13개', label: '서비스 (SRP)' },
+  ],
+}
+
+/* 코드 트리 접이식 — 긴 아키텍처 블록을 클릭 시 펼침 (스크롤 벽 제거) */
+function CollapsibleCode({ summary, children }: { summary: string; children: React.ReactNode }) {
+  return (
+    <details className="code-tree group rounded-lg border border-gray-200 dark:border-[#1F2937] bg-gray-50 dark:bg-gray-900/50">
+      <summary className="cursor-pointer select-none px-3 sm:px-4 py-2.5 text-xs sm:text-sm font-medium text-gray-600 dark:text-[#9CA3AF] hover:text-[#22D3EE] transition-colors list-none [&::-webkit-details-marker]:hidden">
+        <span className="inline-flex items-center gap-2">
+          <svg className="w-3.5 h-3.5 transition-transform duration-200 group-open:rotate-90" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+          </svg>
+          {summary}
+        </span>
+      </summary>
+      <div className="px-3 sm:px-4 pb-3 overflow-x-auto">
+        {children}
+      </div>
+    </details>
   )
 }
 
@@ -221,7 +312,7 @@ function ProjectDetailContent({ slug }: { slug: string }) {
         </ul>
 
         <h3 className="text-base font-semibold text-gray-900 dark:text-[#E5E7EB]">Architecture (Core / Unity 분리)</h3>
-        <div className="overflow-x-auto -mx-2 sm:mx-0">
+        <CollapsibleCode summary="아키텍처 트리 보기">
           <pre className="bg-gray-100 dark:bg-gray-900 p-3 sm:p-4 rounded-lg text-[10px] sm:text-xs leading-tight min-w-0 whitespace-pre">
 {`Assets/
 ├── Core/                          # Pure C# (no UnityEngine)
@@ -241,7 +332,7 @@ function ProjectDetailContent({ slug }: { slug: string }) {
 │       └── HintUI.cs              # 말풍선 형태 힌트 패널
 └── Editor/
     └── AIHintSetupEditor.cs       # 원클릭 셋업 툴`}</pre>
-        </div>
+        </CollapsibleCode>
 
         <h3 className="text-base font-semibold text-gray-900 dark:text-[#E5E7EB]">Key Systems</h3>
         <ul className="list-disc pl-5 space-y-1">
@@ -267,7 +358,7 @@ function ProjectDetailContent({ slug }: { slug: string }) {
           <li><strong>Fog of War</strong> - 글로벌 라이트 0, 플레이어 중심 포인트 라이트</li>
         </ul>
         <h3 className="text-base font-semibold text-gray-900 dark:text-[#E5E7EB]">Architecture</h3>
-         <div className="overflow-x-auto -mx-2 sm:mx-0">
+         <CollapsibleCode summary="아키텍처 트리 보기">
            <pre className="bg-gray-100 dark:bg-gray-900 p-3 sm:p-4 rounded-lg text-[10px] sm:text-xs leading-tight min-w-0 whitespace-pre">
 {`Assets/
 ├── Core/                    # Pure C# (no UnityEngine)
@@ -281,7 +372,7 @@ function ProjectDetailContent({ slug }: { slug: string }) {
 ├── Unity/                   # Unity-dependent adapters
 │   ├── Adapters/            # Input, Physics, Renderer, Audio
 │   └── UI/                  # HUD, MissionCompleteScreen`}</pre>
-         </div>
+         </CollapsibleCode>
       </div>
     ),
     'afk': (
@@ -418,7 +509,7 @@ function ProjectDetailContent({ slug }: { slug: string }) {
         <h3 className="text-base font-semibold text-gray-900 dark:text-[#E5E7EB]">Game Overview</h3>
         <p>Unity 6 기반 Match-3 퍼즐 게임. 8×8 보드에서 3개 이상 같은 색상의 보석을 매치시켜 제거하는 방식입니다. ChainCrush(BlockPuzzle)와 동일한 순수 C# Core + Unity Shell 분리 아키텍처를 채용하여 DI, Event-driven 패턴을 재사용했습니다.</p>
         <h3 className="text-base font-semibold text-gray-900 dark:text-[#E5E7EB]">Architecture (Core / Unity 분리)</h3>
-        <div className="overflow-x-auto -mx-2 sm:mx-0">
+        <CollapsibleCode summary="아키텍처 트리 보기">
           <pre className="bg-gray-100 dark:bg-gray-900 p-3 sm:p-4 rounded-lg text-[10px] sm:text-xs leading-tight min-w-0 whitespace-pre">
 {`Assets/
 ├── Core/                          # Pure C# (no UnityEngine)
@@ -443,7 +534,7 @@ function ProjectDetailContent({ slug }: { slug: string }) {
 └── Editor/
     └── Match3SetupEditor.cs`}
           </pre>
-        </div>
+        </CollapsibleCode>
         <h3 className="text-base font-semibold text-gray-900 dark:text-[#E5E7EB]">Key Systems</h3>
         <ul className="list-disc pl-5 space-y-1">
           <li><strong>DI Container</strong> — BlockPuzzle과 동일한 순수 C# DI, 인터페이스 기반 주입</li>
@@ -460,7 +551,7 @@ function ProjectDetailContent({ slug }: { slug: string }) {
         <h3 className="text-base font-semibold text-gray-900 dark:text-[#E5E7EB]">Project Overview</h3>
         <p>RAG(Retrieval-Augmented Generation) 기반 AI 채팅 시스템입니다. 사용자가 업로드한 문서를 기반으로 LLM이 검색하여 답변하는 지능형 채팅 인터페이스를 제공합니다.</p>
         <h3 className="text-base font-semibold text-gray-900 dark:text-[#E5E7EB]">System Architecture</h3>
-        <div className="overflow-x-auto -mx-2 sm:mx-0">
+        <CollapsibleCode summary="아키텍처 트리 보기">
           <pre className="bg-gray-100 dark:bg-gray-900 p-3 sm:p-4 rounded-lg text-[10px] sm:text-xs leading-tight min-w-0 whitespace-pre">
 {`User → portfolio.olivilo.shop/chat
               ↓
@@ -471,7 +562,7 @@ function ProjectDetailContent({ slug }: { slug: string }) {
         ├─ pgvector 검색 엔진
         ├─ e5-base Embedding (로컬)
         └─ Valkey Rate Limit`}</pre>
-        </div>
+        </CollapsibleCode>
         <h3 className="text-base font-semibold text-gray-900 dark:text-[#E5E7EB]">RAG Pipeline</h3>
         <ol className="list-decimal pl-5 space-y-1">
           <li><strong>Document Upload</strong> - PDF / Markdown / TXT 업로드</li>
@@ -526,7 +617,7 @@ function ProjectDetailContent({ slug }: { slug: string }) {
         <p>Vanilla JavaScript로 제작 중인 턴제 전략 RPG입니다. 6개 직업(⚔️기사/🗡️추적자/🔮메아리술사/🌑어둠의메아리/✨잊혀진서약/🩸영원한악몽), 40+ 스킬, 7종 잔향 시스템, 68종 유물 시스템을 갖추고 있습니다. DI 패턴 + Event-driven 아키텍처로 3,000줄 내외의 코드에 게임 로직을 체계적으로 구성했습니다.</p>
 
         <h3 className="text-base font-semibold text-gray-900 dark:text-[#E5E7EB]">Current Features (v2.0)</h3>
-        <div className="overflow-x-auto -mx-2 sm:mx-0">
+        <CollapsibleCode summary="프로젝트 구조 보기">
           <pre className="bg-gray-100 dark:bg-gray-900 p-3 sm:p-4 rounded-lg text-[10px] sm:text-xs leading-tight min-w-0 whitespace-pre">
 {`resonance/
 ├── js/
@@ -542,7 +633,7 @@ function ProjectDetailContent({ slug }: { slug: string }) {
 │   └── ui.js                # View 레이어 (DOM 조작)
 ├── css/style.css
 └── index.html`}</pre>
-        </div>
+        </CollapsibleCode>
 
         <h3 className="text-base font-semibold text-gray-900 dark:text-[#E5E7EB]">Key Systems</h3>
         <ul className="list-disc pl-5 space-y-1">
@@ -633,7 +724,7 @@ function ProjectDetailContent({ slug }: { slug: string }) {
         </ul>
 
         <h3 className="text-base font-semibold text-gray-900 dark:text-[#E5E7EB]">Architecture</h3>
-        <div className="overflow-x-auto -mx-2 sm:mx-0">
+        <CollapsibleCode summary="아키텍처 트리 보기">
           <pre className="bg-gray-100 dark:bg-gray-900 p-3 sm:p-4 rounded-lg text-[10px] sm:text-xs leading-tight min-w-0 whitespace-pre">
 {`Assets/Scripts/
 ├── Battle/        # 전투 시스템 (WaveController, Monster, SpiritUnit, WaveCalculator)
@@ -646,7 +737,7 @@ function ProjectDetailContent({ slug }: { slug: string }) {
 ├── Data/          # SpiritData, StageData, MonsterData, SaveData, Enums
 ├── Presentation/  # UI (RequestUI, RaidBattle, DispatchFormationUI, CliTestSuite)
 └── Editor/        # 에디터 도구 (CliServer, ProjectSetup, UI 빌더)`}</pre>
-        </div>
+        </CollapsibleCode>
 
         <h3 className="text-base font-semibold text-gray-900 dark:text-[#E5E7EB]">Data &amp; Balance</h3>
         <ul className="list-disc pl-5 space-y-1">
