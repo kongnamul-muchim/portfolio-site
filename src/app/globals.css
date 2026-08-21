@@ -812,20 +812,20 @@ html, body {
    장식 과한 버전 (?ornate=1 — 테스트 비교용 전용)
    "AI 티 없는 화려함" — 단일 포인트 컬러(accent) + 구조 중심
    ===================================================================== */
-.ornate .marquee-hero {
+html.ornate .marquee-hero {
   background:
     radial-gradient(ellipse 60% 40% at 50% 100%, color-mix(in oklch, var(--color-accent) 7%, transparent) 0%, transparent 65%);
 }
-.ornate .portfolio-page > * {
+html.ornate .portfolio-page > * {
   position: relative;
   z-index: 1;
 }
 /* 포인트 컬러 텍스트 (accent 단색) */
-.ornate .marquee-display .accent-word {
+html.ornate .marquee-display .accent-word {
   color: var(--color-accent);
 }
 /* 히어로 라인 등장 — 한 번만 */
-.ornate .marquee-display .line {
+html.ornate .marquee-display .line {
   animation: ornate-line-in 0.9s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }
 @keyframes ornate-line-in {
@@ -833,25 +833,25 @@ html, body {
   to   { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
 }
 /* 카드 호버 — 가벼운 리프트 (글로우 없음) */
-.ornate .play-card {
+html.ornate .play-card {
   transition: transform 220ms ease;
 }
-.ornate .play-card:hover {
+html.ornate .play-card:hover {
   transform: translateY(-4px);
 }
-.ornate .play-card .card-thumb {
+html.ornate .play-card .card-thumb {
   transition: transform 260ms ease, border-color 200ms ease;
 }
-.ornate .play-card:hover .card-thumb {
+html.ornate .play-card:hover .card-thumb {
   transform: scale(1.05) rotate(-0.6deg);
   border-color: color-mix(in oklch, var(--color-accent) 60%, var(--color-rule));
 }
 /* 섹션 헤더 — 단색 언더라인 */
-.ornate .play-section-head h2 {
+html.ornate .play-section-head h2 {
   position: relative;
   display: inline-block;
 }
-.ornate .play-section-head h2::after {
+html.ornate .play-section-head h2::after {
   content: '';
   position: absolute;
   left: 0;
@@ -862,26 +862,26 @@ html, body {
   background: var(--color-accent);
 }
 /* About 카드 — 얇은 단색 보더 */
-.ornate .about-card {
+html.ornate .about-card {
   border: 1px solid color-mix(in oklch, var(--color-accent) 35%, transparent);
 }
 /* 필터 탭 — 호버 시 accent 링만 */
-.ornate .filter-tab:hover {
+html.ornate .filter-tab:hover {
   box-shadow: 0 0 0 1px color-mix(in oklch, var(--color-accent) 40%, transparent);
 }
 /* 모션 줄이기 — ornate도 즉시 표시 */
 @media (prefers-reduced-motion: reduce) {
-  .ornate .marquee-display .line {
+  html.ornate .marquee-display .line {
     animation: none;
     opacity: 1;
     transform: none;
     filter: none;
   }
-  .ornate .play-card,
-  .ornate .play-card .card-thumb {
+  html.ornate .play-card,
+  html.ornate .play-card .card-thumb {
     transition: none;
   }
-  .ornate .play-card:hover {
+  html.ornate .play-card:hover {
     transform: none;
   }
 }
@@ -908,27 +908,27 @@ html, body {
 
 /* --- 과한 버전: 단일 포인트 컬러(accent) + 얇은 단색 보더 --- */
 /* 헤더 카드 — 얇은 accent 보더 */
-.ornate .detail-header-card {
+html.ornate .detail-header-card {
   border: 1px solid color-mix(in oklch, var(--color-accent) 40%, transparent);
 }
 /* 제목 — accent 단색 */
-.ornate .detail-header-card h1 {
+html.ornate .detail-header-card h1 {
   color: var(--color-accent);
 }
 /* 이미지 — 얇은 accent 보더 */
-.ornate .detail-image {
+html.ornate .detail-image {
   border: 1px solid color-mix(in oklch, var(--color-accent) 35%, transparent);
 }
 /* 상세 콘텐츠 — 얇은 accent 보더 */
-.ornate .detail-content {
+html.ornate .detail-content {
   border: 1px solid color-mix(in oklch, var(--color-accent) 30%, transparent);
 }
 /* Live Preview — 단색 언더라인 */
-.ornate .detail-preview h2 {
+html.ornate .detail-preview h2 {
   position: relative;
   display: inline-block;
 }
-.ornate .detail-preview h2::after {
+html.ornate .detail-preview h2::after {
   content: '';
   position: absolute;
   left: 0;
@@ -939,20 +939,20 @@ html, body {
   background: var(--color-accent);
 }
 /* GitHub/Demo 버튼 — 호버 리프트만 (글로우 없음) */
-.ornate a[target="_blank"]:not(.detail-back) {
+html.ornate a[target="_blank"]:not(.detail-back) {
   transition: box-shadow 200ms ease, transform 200ms ease;
 }
-.ornate a[target="_blank"]:not(.detail-back):hover {
+html.ornate a[target="_blank"]:not(.detail-back):hover {
   transform: translateY(-1px);
 }
 /* 모션 줄이기 — 상세 페이지 ornate도 즉시 */
 @media (prefers-reduced-motion: reduce) {
-  .ornate a[target="_blank"]:not(.detail-back),
+  html.ornate a[target="_blank"]:not(.detail-back),
   .detail-image,
   .detail-header-card {
     transition: none;
   }
-  .ornate a[target="_blank"]:not(.detail-back):hover {
+  html.ornate a[target="_blank"]:not(.detail-back):hover {
     transform: none;
   }
 }
