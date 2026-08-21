@@ -2,7 +2,6 @@ import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { projects, getProjectBySlug, projectTypes } from '@/data/projects'
 import GithubActivityBadge from '@/components/GithubActivityBadge'
-import OrnateDetector from '@/components/OrnateDetector'
 
 export function generateStaticParams() {
   return projects.map((project) => ({
@@ -21,7 +20,6 @@ export default function ProjectPage({ params }: { params: { slug: string } }) {
 
   return (
     <div className="project-detail-page min-h-screen bg-gray-50 dark:bg-[#0D0D0E]">
-      <OrnateDetector />
       <article className="max-w-4xl mx-auto px-4 py-8">
         {/* Back Link */}
         <Link
