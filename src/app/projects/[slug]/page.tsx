@@ -249,6 +249,12 @@ const keyStats: Record<string, { value: string; label: string }[]> = {
     { value: '88개', label: '스크립트' },
     { value: '13개', label: '서비스 (SRP)' },
   ],
+  'portfolio-site': [
+    { value: '1개', label: '풀스택 앱 (이 사이트)' },
+    { value: '3영역', label: '게임·AI·서버 운영' },
+    { value: 'Docker', label: '컨테이너 운영' },
+    { value: 'webhook', label: '자동 배포' },
+  ],
 }
 
 /* 코드 트리 접이식 — 긴 아키텍처 블록을 클릭 시 펼침 (스크롤 벽 제거) */
@@ -288,6 +294,7 @@ function KeyAchievement({ slug }: { slug: string }) {
     'resonance': '3,000줄 Vanilla JS 턴제 전략 RPG. 6개 직업, 68종 유물(직업전용 18종), 잔향 레벨5+자동합성 시스템. 매주 업데이트 중.',
     'hide-and-ink': '4인 팀 프로젝트의 시스템 아키텍트 & 코어 프로그래머. 전체 아키텍처 설계, DI Container 기반 의존성 분리, 핵심 상태머신(FSM) 구현. README에 팀원 역할 바운더리 정의로 Git 충돌 최소화. 800+ 커밋의 장기 팀 협업 경험.',
     'spirit-merge': '10일 만에 기획부터 완성까지. 머지+자동전투+파견 3개 루프가 맞물리는 방치형 RPG. 88개 스크립트를 Core/Systems 13개 서비스로 SRP 분리, 원자적 쓰기+백업 자동 저장(오프라인 경과 반영), Unity TCP CLI로 14개 시스템 통합 검증, WebGL 브라우저 실기동.',
+    'portfolio-site': '지금 보고 있는 이 사이트 자체. Next.js App Router + Prisma + PostgreSQL + Docker로 직접 구축·운영. 커뮤니티부터 RAG AI 챗봇, 채용공고 관리까지 전 기능을 통합한 풀스택 앱.',
   }
   return <>{highlights[slug] || '자세한 정보는 아래 Project Details를 확인해주세요.'}</>
 }
@@ -750,6 +757,30 @@ function ProjectDetailContent({ slug }: { slug: string }) {
           <li><strong>컴파일 검증</strong> — 배치 빌드 스크립트(unity.ps1 verify)로 GUI 없이 컴파일 에러 확인</li>
           <li><strong>WebGL 배포</strong> — GitHub Pages (master/docs) + GitHub Actions 자동 배포, 브라우저에서 바로 플레이 가능</li>
           <li><strong>캔버스 반응형</strong> — 창 크기에 맞춰 9:16 비율 유지 축소, 좁은 화면에서도 잘림 없음</li>
+        </ul>
+      </div>
+    ),
+    'portfolio-site': (
+      <div className="space-y-4">
+        <h3 className="text-base font-semibold text-gray-900 dark:text-[#E5E7EB]">Project Overview</h3>
+        <p>지금 보고 있는 이 포트폴리오 사이트 자체입니다. Next.js App Router + TypeScript + Prisma + PostgreSQL로 설계하고, VPS에서 Docker 컨테이너로 직접 운영하는 풀스택 앱입니다.</p>
+
+        <h3 className="text-base font-semibold text-gray-900 dark:text-[#E5E7EB]">Full-stack Composition</h3>
+        <ul className="list-disc pl-5 space-y-1">
+          <li><strong>Frontend</strong> — Next.js App Router + TypeScript, 반응형 다크/라이트 테마</li>
+          <li><strong>Backend</strong> — Prisma ORM + PostgreSQL, 인증/권한, REST API 라우트</li>
+          <li><strong>Infrastructure</strong> — VPS + Docker 컨테이너 운영, nginx 리버스 프록시</li>
+          <li><strong>Security</strong> — Cloudflare Proxy, fail2ban, Let&apos;s Encrypt SSL</li>
+          <li><strong>CD</strong> — GitHub webhook + systemd 자동 빌드/배포</li>
+        </ul>
+
+        <h3 className="text-base font-semibold text-gray-900 dark:text-[#E5E7EB]">Included Services</h3>
+        <ul className="list-disc pl-5 space-y-1">
+          <li><strong>유저 시스템</strong> — 회원가입/로그인/프로필</li>
+          <li><strong>커뮤니티 게시판</strong> — 글/댓글/좋아요/알림</li>
+          <li><strong>RAG AI 챗봇</strong> — DeepSeek + pgvector 문서 검색 채팅 (/chat)</li>
+          <li><strong>채용공고 관리</strong> — 어드민 크롤링/관리 (/admin)</li>
+          <li><strong>GitHub 활동 배지</strong> — 서버리스로 레포 활동 실시간 표시</li>
         </ul>
       </div>
     ),
