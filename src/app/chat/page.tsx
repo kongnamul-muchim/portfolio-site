@@ -224,6 +224,9 @@ export default function ChatPage() {
   const charTitle = character?.title || '별빛 큐레이터';
   const greetingMsg = character?.greeting_message || '안녕하세요! 별빛 도서관의 사서예요 🌙';
   const displayName = profile.name_override || charName;
+  // remaining=-1 = 서버 연결 실패(상태 불명) → 입력 잠그지 않음. remaining=0 = 한도 소진 → 잠금 + 안내 표시
+  const quotaUnknown = quota.remaining === -1 && !quota.is_admin && !adminToken;
+  const isQuotaBlocked = quota.remaining === 0 && !quota.is_admin && !adminToken;
 
   // Settings handlers
   const openSettings = () => {
@@ -564,6 +567,8 @@ export default function ChatPage() {
         <div className="text-xs text-gray-400 whitespace-nowrap">
           {quota.is_admin || adminToken ? (
             <span className="text-yellow-500 cursor-pointer" onClick={logoutAdmin}>👑 관리자</span>
+          ) : quotaUnknown ? (
+            <span className="text-red-400">⚠️ 서버 연결 실패</span>
           ) : (
             <span>💬 {quota.remaining}/{quota.limit}회</span>
           )}
@@ -652,6 +657,11 @@ export default function ChatPage() {
 
       {/* Input */}
       <div className="py-4 border-t border-gray-200 dark:border-[#2a2a2c]">
+        {isQuotaBlocked && (
+          <div className="mb-3 text-center text-xs text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-[#2a2418] border border-amber-200 dark:border-[#4a3a18] rounded-lg px-3 py-2">
+            😴 오늘의 대화 한도를 모두 사용했어요. 내일 다시 시도해주세요!
+          </div>
+        )}
         <div className="flex gap-3 items-end">
           <div className="flex-1 relative bg-gray-100 dark:bg-[#14142e] rounded-2xl border border-gray-200 dark:border-[#2a2a4a] focus-within:border-purple-400 transition-colors">
             <textarea
@@ -667,12 +677,12 @@ export default function ChatPage() {
               rows={1}
               className="w-full bg-transparent px-4 py-3 text-sm outline-none resize-none text-gray-900 dark:text-[#E5E7EB] placeholder-gray-400"
               style={{ minHeight: '44px', maxHeight: '120px' }}
-              disabled={quota.remaining <= 0 && !quota.is_admin && !adminToken}
+              disabled={isQuotaBlocked}
             />
           </div>
           <button
             onClick={sendMessage}
-            disabled={loading || !input.trim() || (quota.remaining <= 0 && !quota.is_admin && !adminToken)}
+            disabled={loading || !input.trim() || isQuotaBlocked}
             className="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#4a3f8a] to-[#3a3faa] text-white flex items-center justify-center hover:shadow-lg hover:shadow-purple-500/20 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
           >
             ➤
@@ -680,7 +690,7 @@ export default function ChatPage() {
         </div>
         <p className="text-xs text-gray-500 mt-2 text-center">
           🔑 세션 ID: {sessionId.current.slice(0, 8)}...
-          {quota.is_admin || adminToken ? ' | 👑 무제한' : ` | 💬 ${quota.remaining}/${quota.limit}회 남음`}
+          {quota.is_admin || adminToken ? ' | 👑 무제한' : quotaUnknown ? ' | ⚠️ 서버 연결 실패' : ` | 💬 ${quota.remaining}/${quota.limit}회 남음`}
           {adminToken && (
             <span className="ml-2 text-purple-400 cursor-pointer" onClick={openSettings}>⚙ 설정</span>
           )}

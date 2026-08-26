@@ -17,8 +17,6 @@ export default function Home() {
     { value: 'unity', label: 'Unity', count: allProjects.filter(p => p.type === 'unity').length },
     { value: 'web', label: 'Web', count: allProjects.filter(p => p.type === 'web').length },
     { value: 'server', label: 'Server', count: allProjects.filter(p => p.type === 'server').length },
-    { value: 'docs', label: 'Docs', count: allProjects.filter(p => p.type === 'docs').length },
-    { value: 'wip', label: '제작중', count: allProjects.filter(p => p.type === 'wip').length },
   ]
 
   const filteredProjects = activeFilter === 'all'
@@ -36,13 +34,13 @@ export default function Home() {
           <span className="line line-3">개발자.</span>
         </h1>
         <p className="marquee-lede">
-          고등학교 졸업 후 독학으로 시작해 Unity 게임 10종을 직접 만들며 개발을 배웠습니다.
+          고등학교 졸업 후 독학으로 시작해 Unity 게임과 미니게임 프로토타입을 직접 설계·개발하며 성장했습니다.
           클라이언트에서 백엔드, AI, 인프라까지 전 스택을 다루는,<br />
           <strong>견고하고 확장 가능한 게임 시스템을 설계하는 개발자</strong>입니다.
         </p>
         <div className="marquee-badges">
           <span className="marquee-badge hot">독학 개발자</span>
-          <span className="marquee-badge">🎮 10개 Unity 게임</span>
+          <span className="marquee-badge">🎮 Unity 게임 아키텍처</span>
           <span className="marquee-badge">🤖 RAG AI 챗봇</span>
           <span className="marquee-badge">🐳 Docker 자체 운영</span>
           <span className="marquee-badge">☁️ Cloudflare + nginx</span>

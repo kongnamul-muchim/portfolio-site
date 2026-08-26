@@ -21,13 +21,13 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     title: "Portfolio | Game + AI + Infrastructure Engineer",
-    description: "Unity 게임 10종, RAG AI 챗봇, Docker 기반 자체 서버 운영 — 전 스택을 직접 다루는 프로덕트 엔지니어",
+    description: "Unity 게임 개발, RAG AI 챗봇, Docker 기반 자체 서버 운영 — 전 스택을 직접 다루는 프로덕트 엔지니어",
     images: ["/images/resonance.png"],
   },
   twitter: {
     card: "summary_large_image",
     title: "Portfolio | Game + AI + Infrastructure Engineer",
-    description: "Unity 게임 10종, RAG AI 챗봇, Docker 기반 자체 서버 운영 — 전 스택을 직접 다루는 프로덕트 엔지니어",
+    description: "Unity 게임 개발, RAG AI 챗봇, Docker 기반 자체 서버 운영 — 전 스택을 직접 다루는 프로덕트 엔지니어",
     images: ["/images/resonance.png"],
   },
 };

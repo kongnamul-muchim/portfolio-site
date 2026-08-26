@@ -69,8 +69,9 @@ export async function GET(req: NextRequest) {
     const data = await response.json();
     return NextResponse.json(data);
   } catch {
+    // 백엔드 연결 실패: remaining=-1 = "상태 불명" (0은 "한도 소진"과 구분 — 0이면 UI가 채팅창을 잠금)
     return NextResponse.json(
-      { remaining: 0, limit: 10, is_admin: false },
+      { remaining: -1, limit: 10, is_admin: false },
       { status: 200 }
     );
   }

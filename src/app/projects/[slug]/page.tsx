@@ -222,6 +222,11 @@ const keyStats: Record<string, { value: string; label: string }[]> = {
     { value: 'BFS', label: '매치 탐지' },
     { value: '재사용', label: 'Core/Shell 아키텍처' },
   ],
+  'unity-minigames': [
+    { value: '7종', label: '장르별 미니게임' },
+    { value: '1개', label: '공통 Core/Shell' },
+    { value: 'DI', label: '순수 C# 의존성' },
+  ],
   'minigame-collection': [
     { value: '6종', label: '미니게임' },
     { value: '2종', label: 'AI 대전 (오목/체스)' },
@@ -278,19 +283,12 @@ function CollapsibleCode({ summary, children }: { summary: string; children: Rea
 
 function KeyAchievement({ slug }: { slug: string }) {
   const highlights: Record<string, string> = {
-    'chaincrush': '2일 만에 Core/Shell 분리 아키텍처 + BFS AI 힌트 엔진 완성. 순수 C# DI Container로 Unity 의존성 없이 게임 로직 테스트 가능.',
-    'shotfire': 'Behavior Tree 적 AI + 절차적 맵 생성으로 5일 만에 완성. Fog of War, 소음 시스템 등 스텔스 메카닉 전면 구현.',
     'afk': '6주 장기 프로젝트. DI Container + Event-driven 구조로 자동 전투/장비 합성/환생 시스템 구현. CSV 파이프라인으로 100+ 스테이지 밸런스 조절.',
-    'match3': '하루 만에 완성. BlockPuzzle의 Core/Shell 아키텍처를 재사용하여 빠르게 프로토타입 → 리더보드까지 확장.',
+    'unity-minigames': '블록퍼즐부터 매치3까지 7개 장르를 동일한 Core/Shell + DI 아키텍처로 구현. 순수 C# 게임 로직을 Unity View와 분리해 장르가 달라도 재사용 가능한 구조를 증명.',
     'aichat': 'DeepSeek V4 + pgvector 기반 RAG 시스템. Docker 컨테이너 분리 + VPS 직배포 운영. Cloudflare Proxy로 백엔드 IP 은닉.',
-    'cookie-clicker': 'Docker + PostgreSQL 풀스택 운영. Cloudflare Full(strict) SSL + fail2ban 보안 직접 구성. 서버사이드 저장으로 진행 유지.',
+    'cookie-clicker': '강화·스킬트리·프레스티지로 진짜 성장 사이클을 설계한 인크리멘털 게임. 새로고침해도 진행도가 유지되는 저장 구조를 직접 구현.',
     'minigame-collection': 'Blazor WebAssembly + SOLID 원칙. 6종 게임 공통 Core 라이브러리로 코드 재사용 40% 달성.',
     'community-board': 'Next.js + Prisma 풀스택. 포트폴리오 사이트 자체가 이 프로젝트의 확장판. 실제 회원가입/로그인/게시글 운영 중.',
-    'defencegame': '4종 타워 × 3단계 강화 × 특수 능력 해금. 타워 간 시너지 시스템으로 전략적 깊이 확보.',
-    'greeddungeon': '턴제 로그라이트. 행동 게이지 + 랜덤 장비 파밍 + 스킬 조합 시스템. 랜덤성과 전략의 균형 설계.',
-    'pathfinder': '메트로바니아 스타일. Custom DI Container로 Unity 의존성 분리. 능력 해금 기반 백트래킹 맵 설계.',
-    'shotup': '물리엔진 기반 공 발사 퍼즐. 각도/파워 조절로 골인. 2일 초고속 프로토타이핑.',
-    'kirdia-simulator': 'AI GM 시스템 + 분기 스토리. 마크다운 기반 세계관 구축으로 기술 없이도 스토리 확장 가능.',
     'resonance': '3,000줄 Vanilla JS 턴제 전략 RPG. 6개 직업, 68종 유물(직업전용 18종), 잔향 레벨5+자동합성 시스템. 매주 업데이트 중.',
     'hide-and-ink': '4인 팀 프로젝트의 시스템 아키텍트 & 코어 프로그래머. 전체 아키텍처 설계, DI Container 기반 의존성 분리, 핵심 상태머신(FSM) 구현. README에 팀원 역할 바운더리 정의로 Git 충돌 최소화. 800+ 커밋의 장기 팀 협업 경험.',
     'spirit-merge': '10일 만에 기획부터 완성까지. 머지+자동전투+파견 3개 루프가 맞물리는 방치형 RPG. 88개 스크립트를 Core/Systems 13개 서비스로 SRP 분리, 원자적 쓰기+백업 자동 저장(오프라인 경과 반영), Unity TCP CLI로 14개 시스템 통합 검증, WebGL 브라우저 실기동.',
@@ -301,85 +299,7 @@ function KeyAchievement({ slug }: { slug: string }) {
 
 function ProjectDetailContent({ slug }: { slug: string }) {
   const details: Record<string, React.ReactNode> = {
-    'chaincrush': (
-      <div className="space-y-4">
-        <h3 className="text-base font-semibold text-gray-900 dark:text-[#E5E7EB]">Game Overview</h3>
-        <p>Unity 6 기반 10×10 블록 연계 퍼즐 게임. 순수 C# Core와 Unity View 레이어를 완전히 분리한 DI 아키텍처가 특징입니다. 연속으로 블록을 제거하여 점수를 올리는 방식으로, BFS 기반 연쇄 제거 시스템과 <strong>AI Hint System</strong>이 핵심입니다.</p>
 
-        <h3 className="text-base font-semibold text-gray-900 dark:text-[#E5E7EB]">AI Hint System</h3>
-        <p>자체 개발한 로컬 AI 힌트 엔진이 보드 상태를 분석하여 최적의 수를 추천합니다. 서버 의존성 제로, 완전 오프라인 동작.</p>
-        <ul className="list-disc pl-5 space-y-1">
-          <li><strong>BFS Chain Detection</strong> — 상하좌우 BFS로 동일 색상 블록 그룹 탐색, 6가지 색상 지원</li>
-          <li><strong>전략 분류 (Strategy Classification)</strong> — Chain(&gt;=5개 대형 연계), Setup(중형), Survival(위기 상황) 세 가지 전략 자동 분류</li>
-          <li><strong>자연어 힌트 생성</strong> — 전략별 4종 템플릿, 결정적 해시 기반 균일 분배로 같은 보드=같은 힌트</li>
-          <li><strong>시각적 하이라이트</strong> — 연계된 모든 블록 위치에 하얀색 오버레이 + 알파 펄스 애니메이션</li>
-          <li><strong>무활동 감지</strong> — 5초 무입력 시 자동 힌트 표시, 클릭 시 즉시 취소</li>
-        </ul>
-
-        <h3 className="text-base font-semibold text-gray-900 dark:text-[#E5E7EB]">Architecture (Core / Unity 분리)</h3>
-        <CollapsibleCode summary="아키텍처 트리 보기">
-          <pre className="bg-gray-100 dark:bg-gray-900 p-3 sm:p-4 rounded-lg text-[10px] sm:text-xs leading-tight min-w-0 whitespace-pre">
-{`Assets/
-├── Core/                          # Pure C# (no UnityEngine)
-│   ├── Game/
-│   │   ├── HintEngine.cs          # BFS + 전략 분류 + 템플릿 엔진
-│   │   ├── Grid.cs                # 게임 로직
-│   │   └── GameStateMachine.cs
-│   └── Interfaces/
-│       └── IAIHintService.cs      # HintResult + 이벤트 정의
-├── Unity/                         # Unity Adapter Layer
-│   ├── Adapters/
-│   │   ├── UnityAIHintService.cs  # HintEngine 호출 + DI 등록
-│   │   ├── BlockHighlighter.cs    # 오브젝트 풀 기반 시각적 하이라이트
-│   │   ├── HintTimer.cs           # 무활동 감지 + 힌트 트리거
-│   │   └── UnityGridRenderer.cs   # 블록 렌더링
-│   └── UI/
-│       └── HintUI.cs              # 말풍선 형태 힌트 패널
-└── Editor/
-    └── AIHintSetupEditor.cs       # 원클릭 셋업 툴`}</pre>
-        </CollapsibleCode>
-
-        <h3 className="text-base font-semibold text-gray-900 dark:text-[#E5E7EB]">Key Systems</h3>
-        <ul className="list-disc pl-5 space-y-1">
-          <li><strong>DI Container</strong> — 순수 C# DIContainer (Castle Windsor 의존성 제로), 모든 서비스는 인터페이스를 통해 주입</li>
-          <li><strong>BFS Chain System</strong> — Flood-fill BFS로 연결 블록 탐색, 12가지 연계 패턴</li>
-          <li><strong>Gravity + Column Shift</strong> — 블록 제거 후 중력 낙하 + 열 이동 + 새 행 추가</li>
-          <li><strong>Event-driven Architecture</strong> — OnStateChanged, OnBlocksRemoved, OnGravityApplied 등 7개 이벤트로 Core-View 완전 분리</li>
-          <li><strong>Vercel Leaderboard</strong> — Serverless + Prisma + Neon PostgreSQL, 닉네임 기반 점수 저장</li>
-          <li><strong>Webhook Auto-Deploy</strong> — GitHub Webhook + systemd로 푸시 시 자동 빌드/배포</li>
-        </ul>
-      </div>
-    ),
-    'shotfire': (
-      <div className="space-y-4">
-        <h3 className="text-base font-semibold text-gray-900 dark:text-[#E5E7EB]">Game Overview</h3>
-        <p>Unity 6 엔진으로 개발한 탑다운 2D 스텔스 액션 슈터입니다. 순수 C# 코어 로직과 Unity View 레이어를 분리한 클린 아키텍처가 특징입니다.</p>
-        <h3 className="text-base font-semibold text-gray-900 dark:text-[#E5E7EB]">Key Systems</h3>
-        <ul className="list-disc pl-5 space-y-1">
-          <li><strong>Stealth System</strong> - 시야 콘 기반 탐지, 소음 시스템, 앉기/서기 자세별 시인성</li>
-          <li><strong>Behavior Tree AI</strong> - Guard(순찰/추격/사격), Heavy(고정 방어), 팀 협동 경보 시스템</li>
-          <li><strong>4 Weapons</strong> - Pistol, SMG, Shotgun, Rifle (현장 습득, 탄약 소진 시 자동 드랍)</li>
-          <li><strong>Procedural Map Generation</strong> - 방-복도 기반 랜덤 맵 생성</li>
-          <li><strong>Fog of War</strong> - 글로벌 라이트 0, 플레이어 중심 포인트 라이트</li>
-        </ul>
-        <h3 className="text-base font-semibold text-gray-900 dark:text-[#E5E7EB]">Architecture</h3>
-         <CollapsibleCode summary="아키텍처 트리 보기">
-           <pre className="bg-gray-100 dark:bg-gray-900 p-3 sm:p-4 rounded-lg text-[10px] sm:text-xs leading-tight min-w-0 whitespace-pre">
-{`Assets/
-├── Core/                    # Pure C# (no UnityEngine)
-│   ├── Interfaces/          # IPlayerController, IVisionSystem, etc.
-│   ├── Managers/            # DI Container, GameStateMachine
-│   ├── Entities/            # Player, Enemy
-│   ├── Stealth/             # VisionSystem, NoiseSystem
-│   ├── Combat/              # CombatSystem, 4 weapon types
-│   ├── AI/                  # TeamCoordinator
-│   └── Level/               # MapDataProvider, MapGenerator
-├── Unity/                   # Unity-dependent adapters
-│   ├── Adapters/            # Input, Physics, Renderer, Audio
-│   └── UI/                  # HUD, MissionCompleteScreen`}</pre>
-         </CollapsibleCode>
-      </div>
-    ),
     'afk': (
       <div className="space-y-4">
         <h3 className="text-base font-semibold text-gray-900 dark:text-[#E5E7EB]">Game Overview</h3>
@@ -393,6 +313,42 @@ function ProjectDetailContent({ slug }: { slug: string }) {
           <li><strong>Offline Rewards</strong> - 오프라인 시간 비례 자원 획득</li>
           <li><strong>Mission System</strong> - 일일/주간 미션</li>
         </ul>
+      </div>
+    ),
+    'unity-minigames': (
+      <div className="space-y-4">
+        <h3 className="text-base font-semibold text-gray-900 dark:text-[#E5E7EB]">Collection Overview</h3>
+        <p>서로 다른 7개 장르의 Unity 6 미니게임을 하나의 검증된 Core/Shell + DI 아키텍처로 빠르게 프로토타이핑한 컬렉션입니다. 모든 게임은 순수 C#으로 로직을 작성하고 Unity View 레이어만 분리해, 로직 전체를 엔진 의존성 없이 검증할 수 있습니다.</p>
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm border-collapse">
+            <thead>
+              <tr className="border-b border-gray-200 dark:border-[#1F2937]">
+                <th className="text-left py-2 pr-4">Game</th>
+                <th className="text-left py-2 pr-4">Genre</th>
+                <th className="text-left py-2">Key System</th>
+              </tr>
+            </thead>
+            <tbody>
+              {[
+                ['BlockPuzzle', '블록퍼즐', 'BFS 연쇄 + AI 힌트'],
+                ['ShotFire', '스텔스 슈터', 'Behavior Tree + 절차적 맵'],
+                ['DefenceGame', '타워디펜스', '4종 타워 시너지'],
+                ['GreedDungeon', '로그라이트', '행동 게이지 + 스킬 조합'],
+                ['Pathfinder', '메트로바니아', 'Custom DI + 백트래킹 맵'],
+                ['ShotUp', '물리퍼즐', '2D 물리 각도/파워'],
+                ['Match3', '매치-3', 'BFS 매치 + 캐스케이드'],
+              ].map(([g, genre, key]) => (
+                <tr key={g} className="border-b border-gray-100 dark:border-gray-800">
+                  <td className="py-2 pr-4 font-medium">{g}</td>
+                  <td className="py-2 pr-4 text-gray-500 dark:text-[#9CA3AF]">{genre}</td>
+                  <td className="py-2 text-gray-500 dark:text-[#9CA3AF]">{key}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <h3 className="text-base font-semibold text-gray-900 dark:text-[#E5E7EB]">Why Grouped</h3>
+        <p>7개 장르를 별도 카드로 나열하면 "게임을 많이 만들었다"는 인상만 남지만, 하나로 묶으면 <strong>어떤 장르든 동일한 아키텍처로 설계·구현할 수 있다는 전문성</strong>을 보여줍니다. 공통적으로 순수 C# DI Container, SOLID, Event-driven 패턴을 사용합니다.</p>
       </div>
     ),
     'minigame-collection': (
@@ -443,114 +399,20 @@ function ProjectDetailContent({ slug }: { slug: string }) {
     ),
     'cookie-clicker': (
       <div className="space-y-4">
-        <h3 className="text-base font-semibold text-gray-900 dark:text-[#E5E7EB]">Project Overview</h3>
-        <p>Next.js + Prisma + PostgreSQL 기반의 쿠키클리커 인크리멘털 게임입니다. 자체 서버에서 PostgreSQL에 게임 상태를 저장합니다.</p>
-        <h3 className="text-base font-semibold text-gray-900 dark:text-[#E5E7EB]">Key Features</h3>
-        <ul className="list-disc pl-5 space-y-1">
-          <li>클릭당 쿠키 획득</li>
-          <li>자동 생산 업그레이드</li>
-          <li>스킬 트리 시스템</li>
-          <li>PostgreSQL 기반 영구 저장</li>
-          <li>프레스티지 시스템</li>
-        </ul>
-
-        <h3 className="text-base font-semibold text-gray-900 dark:text-[#E5E7EB] mt-6">🔧 Troubleshooting</h3>
-        <div className="space-y-4">
-          <div className="bg-amber-50 dark:bg-[#1a1500] border border-amber-200 dark:border-[#3a2a00] rounded-lg p-4">
-            <h4 className="text-sm font-bold text-amber-800 dark:text-amber-300 mb-2">1. 통계(Stats) 항상 0으로 표시</h4>
-            <p className="text-xs text-amber-700 dark:text-amber-400 mb-2"><strong>문제:</strong> 프론트엔드가 stats.total_clicks(snake_case)를 요청하지만, 백엔드 stats/route.ts가 totalClicks(camelCase)로 반환해서 필드명 불일치 발생. 모든 통계가 undefined → 0으로 표시됨</p>
-            <p className="text-xs text-amber-700 dark:text-amber-400"><strong>해결:</strong> stats/route.ts 응답 키를 snake_case로 통일</p>
-          </div>
-          <div className="bg-amber-50 dark:bg-[#1a1500] border border-amber-200 dark:border-[#3a2a00] rounded-lg p-4">
-            <h4 className="text-sm font-bold text-amber-800 dark:text-amber-300 mb-2">2. 업적(Achievements) 잠금 해제 불가</h4>
-            <p className="text-xs text-amber-700 dark:text-amber-400 mb-2"><strong>문제:</strong> /api/click 등에서 newAchievements: []를 하드코딩으로 반환. 서버 어디에도 Achievement 테이블을 쓰는 로직이 없어서 업적 조건 체크 자체가 구현되지 않음</p>
-            <p className="text-xs text-amber-700 dark:text-amber-400"><strong>해결:</strong> 클릭 수/쿠키 수/업그레이드 수 등의 조건을 체크해서 업적 해제를 기록하는 로직 구현</p>
-          </div>
-          <div className="bg-amber-50 dark:bg-[#1a1500] border border-amber-200 dark:border-[#3a2a00] rounded-lg p-4">
-            <h4 className="text-sm font-bold text-amber-800 dark:text-amber-300 mb-2">3. 강화(Enhancement) 효과 없음</h4>
-            <p className="text-xs text-amber-700 dark:text-amber-400 mb-2"><strong>문제:</strong> 강화 비용 1000쿠키는 정상 차감되고 DB에 enhancementCount는 증가하지만, statsCalculator.ts가 CPS/클릭당 계산에 enhancementCount를 전혀 참조하지 않아서 강화를 해도 아무 효과 없음</p>
-            <p className="text-xs text-amber-700 dark:text-amber-400"><strong>해결:</strong> calculateStats()에 enhancementCount를 CPS/클릭당 계산식에 반영</p>
-          </div>
-          <div className="bg-amber-50 dark:bg-[#1a1500] border border-amber-200 dark:border-[#3a2a00] rounded-lg p-4">
-            <h4 className="text-sm font-bold text-amber-800 dark:text-amber-300 mb-2">4. Cloudflare SSL 526 + Brotli 압축 문제</h4>
-            <p className="text-xs text-amber-700 dark:text-amber-400 mb-2"><strong>문제:</strong> Let's Encrypt 인증서에 cookieclicker.olivilo.shop이 없어서 Cloudflare Full(strict) SSL 검증 실패 → 526 에러. 또한 Cloudflare가 .br 파일의 Content-Encoding 헤더를 제거해서 브라우저가 압축 해제 못 함</p>
-            <p className="text-xs text-amber-700 dark:text-amber-400"><strong>해결:</strong> certbot으로 인증서 확장 + .br 파일은 압축 풀어서 배포</p>
-          </div>
-        </div>
-      </div>
-    ),
-    'defencegame': (
-      <div className="space-y-4">
         <h3 className="text-base font-semibold text-gray-900 dark:text-[#E5E7EB]">Game Overview</h3>
-        <p>타워 디펜스 게임. 4종 타워 (궁수/마법사/레이저/메이지타워)를 배치하고 레벨업하여 적을 막아냅니다.</p>
-      </div>
-    ),
-    'greeddungeon': (
-      <div className="space-y-4">
-        <h3 className="text-base font-semibold text-gray-900 dark:text-[#E5E7EB]">Game Overview</h3>
-        <p>2D 턴제 로그라이트 던전 크롤러. 행동 게이지 시스템, 장비/스킬/버프, 전투 비주얼 효과.</p>
-      </div>
-    ),
-    'pathfinder': (
-      <div className="space-y-4">
-        <h3 className="text-base font-semibold text-gray-900 dark:text-[#E5E7EB]">Game Overview</h3>
-        <p>메트로바니아 2D 플랫포머. 능력 해금으로 백트래킹, 즉사 함정, Custom DI Container 적용.</p>
-      </div>
-    ),
-    'shotup': (
-      <div className="space-y-4">
-        <h3 className="text-base font-semibold text-gray-900 dark:text-[#E5E7EB]">Game Overview</h3>
-        <p>공을 발사하여 골에 넣는 물리 기반 게임. 마우스 조준/파워 조절 시스템.</p>
-      </div>
-    ),
-    'kirdia-simulator': (
-      <div className="space-y-4">
-        <h3 className="text-base font-semibold text-gray-900 dark:text-[#E5E7EB]">Project Overview</h3>
-        <p>웹소설 세계관 시뮬레이터. AI GM 시스템, 캐릭터 Role-play, 분기 스토리 시스템.</p>
-      </div>
-    ),
-    'match3': (
-      <div className="space-y-4">
-        <h3 className="text-base font-semibold text-gray-900 dark:text-[#E5E7EB]">Game Overview</h3>
-        <p>Unity 6 기반 Match-3 퍼즐 게임. 8×8 보드에서 3개 이상 같은 색상의 보석을 매치시켜 제거하는 방식입니다. ChainCrush(BlockPuzzle)와 동일한 순수 C# Core + Unity Shell 분리 아키텍처를 채용하여 DI, Event-driven 패턴을 재사용했습니다.</p>
-        <h3 className="text-base font-semibold text-gray-900 dark:text-[#E5E7EB]">Architecture (Core / Unity 분리)</h3>
-        <CollapsibleCode summary="아키텍처 트리 보기">
-          <pre className="bg-gray-100 dark:bg-gray-900 p-3 sm:p-4 rounded-lg text-[10px] sm:text-xs leading-tight min-w-0 whitespace-pre">
-{`Assets/
-├── Core/                          # Pure C# (no UnityEngine)
-│   ├── Game/
-│   │   ├── Board.cs              # 8×8 그리드 + 타일 데이터
-│   │   ├── MatchFinder.cs        # BFS 3연속 매치 감지
-│   │   ├── SwapHandler.cs        # 스왑 + 유효성 검증
-│   │   ├── CascadeHandler.cs     # 제거 → 중력 낙하 → 생성
-│   │   ├── ScoreManager.cs       # 점수 / 콤보
-│   │   ├── GameStateMachine.cs   # 상태 관리
-│   │   └── GameController.cs     # 전체 오케스트레이션
-│   └── Interfaces/
-│       ├── IBoardRenderer.cs
-│       └── IInputHandler.cs
-├── Unity/                         # Unity Adapter Layer
-│   ├── Adapters/
-│   │   ├── UnityBoardRenderer.cs # DOTween 애니메이션
-│   │   └── UnityInputHandler.cs  # 드래그/스와이프 입력
-│   └── UI/
-│       ├── ScoreUI.cs
-│       └── GameOverUI.cs
-└── Editor/
-    └── Match3SetupEditor.cs`}
-          </pre>
-        </CollapsibleCode>
+        <p>클릭으로 시작해 자동 생산까지 성장하는 인크리멘털 클리커 게임입니다. 단순한 클릭 게임이 아니라 <strong>진짜 성장 사이클</strong>을 설계하는 데 집중했습니다.</p>
         <h3 className="text-base font-semibold text-gray-900 dark:text-[#E5E7EB]">Key Systems</h3>
         <ul className="list-disc pl-5 space-y-1">
-          <li><strong>DI Container</strong> — BlockPuzzle과 동일한 순수 C# DI, 인터페이스 기반 주입</li>
-          <li><strong>BFS Match Detection</strong> — 가로/세로 스캔으로 3연속 이상 매치 그룹 탐색</li>
-          <li><strong>Cascade System</strong> — 매치 제거 → 중력 낙하 → 새 타일 생성 무한 체인</li>
-          <li><strong>GameOver Detection</strong> — 가능한 스왑이 없을 때 자동 게임 종료</li>
-          <li><strong>AI Hint System</strong> — 모든 가능한 스왑 시뮬레이션 후 최적의 수 추천</li>
-          <li><strong>Event-driven Architecture</strong> — OnMatchFound, OnCascadeComplete 등 6개 이벤트</li>
+          <li><strong>강화(Enhancement)</strong> — 클릭당 생산량을 결정적으로 올리는 핵심 성장 축</li>
+          <li><strong>스킬트리</strong> — CPS(초당 쿠키)와 클릭당 쿠키를 전략적으로 분배</li>
+          <li><strong>프레스티지</strong> — 리셋 + 영구 보너스로 깊이 있는 반복 플레이 유도</li>
+          <li><strong>진행도 유지</strong> — 새로고침/재접속해도 진행 상태가 그대로 유지되는 쾌적한 저장</li>
         </ul>
+        <h3 className="text-base font-semibold text-gray-900 dark:text-[#E5E7EB]">Why This Project</h3>
+        <p>숫자와 비례 관계를 다루는 경제 설계의 기본기를 익히기 위해 직접 설계·구현했습니다.</p>
       </div>
     ),
+
     'aichat': (
       <div className="space-y-4">
         <h3 className="text-base font-semibold text-gray-900 dark:text-[#E5E7EB]">Project Overview</h3>
@@ -586,34 +448,15 @@ function ProjectDetailContent({ slug }: { slug: string }) {
           <li><strong>VPS IP 보호</strong> - Vercel Edge 프록시로 백엔드 IP 은닉</li>
         </ul>
 
-        <h3 className="text-base font-semibold text-gray-900 dark:text-[#E5E7EB] mt-6">🔧 Troubleshooting</h3>
-        <div className="space-y-4">
-          <div className="bg-amber-50 dark:bg-[#1a1500] border border-amber-200 dark:border-[#3a2a00] rounded-lg p-4">
-            <h4 className="text-sm font-bold text-amber-800 dark:text-amber-300 mb-2">1. RAG 챗봇 입력 비활성화 (quota 0/10)</h4>
-            <p className="text-xs text-amber-700 dark:text-amber-400 mb-2"><strong>문제:</strong> 포트폴리오 웹(portfolio container)이 AI챗 백엔드(aichat container)와 다른 Docker 네트워크에 있어서 DNS 조회 불가 → rate-limit API 호출 실패 → fallback으로 0/10 반환 → 입력창 disabled</p>
-            <p className="text-xs text-amber-700 dark:text-amber-400"><strong>해결:</strong> <code>docker network connect root_default portfolio</code>로 portfolio 컨테이너를 aichat과 동일한 네트워크에 연결</p>
-          </div>
-          <div className="bg-amber-50 dark:bg-[#1a1500] border border-amber-200 dark:border-[#3a2a00] rounded-lg p-4">
-            <h4 className="text-sm font-bold text-amber-800 dark:text-amber-300 mb-2">2. Valkey 연결 refused (host.docker.internal:6379)</h4>
-            <p className="text-xs text-amber-700 dark:text-amber-400 mb-2"><strong>문제:</strong> aichat 컨테이너가 host.docker.internal(172.18.0.1)로 Valkey 접속 시도했으나, Valkey가 127.0.0.1에만 바인딩되어 있어 연결 거부 → rate-limit/챗봇 내부 오류</p>
-            <p className="text-xs text-amber-700 dark:text-amber-400"><strong>해결:</strong> /etc/valkey/valkey.conf의 bind에 172.18.0.1 추가 → systemctl restart valkey</p>
-          </div>
-          <div className="bg-amber-50 dark:bg-[#1a1500] border border-amber-200 dark:border-[#3a2a00] rounded-lg p-4">
-            <h4 className="text-sm font-bold text-amber-800 dark:text-amber-300 mb-2">3. Cloudflare 521 (Web server is down)</h4>
-            <p className="text-xs text-amber-700 dark:text-amber-400 mb-2"><strong>문제:</strong> fail2ban nginx-scanners가 Cloudflare 에지 IP들을 차단 (maxretry=2, bantime=14d). 차단된 Cloudflare IP가 요청을 프록시하려 하면 origin 연결 불가 → 521 에러</p>
-            <p className="text-xs text-amber-700 dark:text-amber-400"><strong>해결:</strong> /etc/fail2ban/jail.d/cloudflare-whitelist.conf에 Cloudflare IP CIDR 대역 ignoreip 추가 + fail2ban 재시작</p>
-          </div>
-          <div className="bg-amber-50 dark:bg-[#1a1500] border border-amber-200 dark:border-[#3a2a00] rounded-lg p-4">
-            <h4 className="text-sm font-bold text-amber-800 dark:text-amber-300 mb-2">4. Portfolio 컨테이너 다운 (502 Bad Gateway)</h4>
-            <p className="text-xs text-amber-700 dark:text-amber-400 mb-2"><strong>문제:</strong> portfolio Docker 컨테이너가 약 1시간 15분 동안 다운됨 (KST 10:50~12:05). nginx(80/443)는 살아있었지만 백엔드(3001)가 죽어서 방문자에게 502 에러 표시</p>
-            <p className="text-xs text-amber-700 dark:text-amber-400"><strong>해결:</strong> Docker 컨테이너 재시작으로 복구. 모니터링 강화를 위해 server-status 페이지에 컨테이너 상태 체크 추가</p>
-          </div>
-          <div className="bg-amber-50 dark:bg-[#1a1500] border border-amber-200 dark:border-[#3a2a00] rounded-lg p-4">
-            <h4 className="text-sm font-bold text-amber-800 dark:text-amber-300 mb-2">5. Cache-Control 1년 설정 (수정 즉시 반영 안 됨)</h4>
-            <p className="text-xs text-amber-700 dark:text-amber-400 mb-2"><strong>문제:</strong> next.config.mjs에 s-maxage=31536000(1년) 캐시 설정 → 프로젝트 페이지를 수정해도 Cloudflare가 1년간 캐시된 버전만 제공. 수정사항이 방문자에게 즉시 반영 안 됨</p>
-            <p className="text-xs text-amber-700 dark:text-amber-400"><strong>해결:</strong> /projects/*와 /play/* 경로에 no-cache 헤더 적용. 메인 페이지도 no-cache로 변경</p>
-          </div>
-        </div>
+        <h3 className="text-base font-semibold text-gray-900 dark:text-[#E5E7EB]">Why This Project</h3>
+        <p>실제 방문자가 사용하는 운영 중인 서비스로, 단순 기능 구현이 아니라 <strong>VPS 직배포 + Docker 컨테이너 분리 + Cloudflare Proxy 보안</strong>까지 전체 운영 사이클을 직접 설계·구축했습니다. RAG 파이프라인 구성부터 인프라 보안, 모니터링까지 백엔드 운영의 전 과정을 경험한 프로젝트입니다.</p>
+        <h3 className="text-base font-semibold text-gray-900 dark:text-[#E5E7EB]">Key Architecture Decisions</h3>
+        <ul className="list-disc pl-5 space-y-1">
+          <li><strong>컨테이너 네트워크 통합</strong> — 프론트(portfolio)와 백엔드(aichat)를 동일 Docker 네트워크로 연결해 안정적으로 통신</li>
+          <li><strong>백엔드 IP 은닉</strong> — Cloudflare Proxy + Vercel Edge 프록시로 원본 서버 IP 노출 최소화</li>
+          <li><strong>방어 계층화</strong> — fail2ban + nginx 보안 규칙으로 스캐너/공격 IP 자동 차단, 한국 이용자 예외 처리</li>
+          <li><strong>안정적 제공</strong> — 캐시 정책을 조정해 수정사항이 방문자에게 즉시 반영되도록 운영</li>
+        </ul>
       </div>
     ),
     'resonance': (
