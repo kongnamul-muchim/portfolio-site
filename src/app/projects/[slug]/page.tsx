@@ -152,7 +152,7 @@ export default function ProjectPage({ params }: { params: { slug: string } }) {
               <svg className="w-5 h-5 shrink-0" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M8 5.14v14l11-7-11-7z" />
               </svg>
-              <span className="truncate">게임 실행</span>
+              <span className="truncate">{project.type === 'unity' ? '게임 실행' : '데모 실행'}</span>
             </a>
           )}
         </div>
