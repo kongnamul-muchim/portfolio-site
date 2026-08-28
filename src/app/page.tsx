@@ -1,27 +1,13 @@
 'use client'
 
 import Link from 'next/link'
-import { useState } from 'react'
-import { projects, getFeaturedProjects, projectTypes } from '@/data/projects'
-import GithubActivityBadge from '@/components/GithubActivityBadge'
+import { getFeaturedProjects, projects } from '@/data/projects'
 import Reveal from '@/components/Reveal'
+import ProjectCard from '@/components/ProjectCard'
 import OrnateDetector from '@/components/OrnateDetector'
 
 export default function Home() {
   const featuredProjects = getFeaturedProjects()
-  const allProjects = projects
-  const [activeFilter, setActiveFilter] = useState('all')
-
-  const filters = [
-    { value: 'all', label: 'All', count: allProjects.length },
-    { value: 'unity', label: 'Unity', count: allProjects.filter(p => p.type === 'unity').length },
-    { value: 'web', label: 'Web', count: allProjects.filter(p => p.type === 'web').length },
-    { value: 'server', label: 'Server', count: allProjects.filter(p => p.type === 'server').length },
-  ]
-
-  const filteredProjects = activeFilter === 'all'
-    ? allProjects
-    : allProjects.filter(p => p.type === activeFilter)
 
   return (
     <div className="portfolio-page min-h-screen">
@@ -79,7 +65,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Featured Works — 카드 그리드 */}
+      {/* Featured Works — 대표 작품 (3개) */}
       {featuredProjects.length > 0 && (
         <section className="play-section px-8 sm:px-12 pt-0">
           <div className="max-w-6xl mx-auto">
@@ -92,89 +78,20 @@ export default function Home() {
             <div className="play-grid">
               {featuredProjects.map((project, i) => (
                 <Reveal key={project.id} delay={Math.min(i * 70, 420)}>
-                  <PlayCard project={project} />
+                  <ProjectCard project={project} />
                 </Reveal>
               ))}
             </div>
+            <Reveal delay={300}>
+              <div className="text-center mt-10">
+                <Link href="/projects" className="play-card-cta">
+                  전체 작품 보기 · {projects.filter(p => !p.featured).length}개 더
+                </Link>
+              </div>
+            </Reveal>
           </div>
         </section>
       )}
-
-      {/* All Works — 필터 + 카드 그리드 */}
-      <section className="play-section px-8 sm:px-12 pt-0">
-        <div className="max-w-6xl mx-auto">
-          <Reveal>
-            <div className="play-section-head">
-              <h2>모든 작품</h2>
-              <span className="count">{allProjects.length}</span>
-            </div>
-          </Reveal>
-          <Reveal delay={60}>
-            <div className="filter-tabs">
-              {filters.map((f) => (
-                <button
-                  key={f.value}
-                  onClick={() => setActiveFilter(f.value)}
-                  className={`filter-tab ${activeFilter === f.value ? 'active' : ''}`}
-                >
-                  {f.label} ({f.count})
-                </button>
-              ))}
-            </div>
-          </Reveal>
-          <div className="play-grid">
-            {filteredProjects.map((project, i) => (
-              <Reveal key={project.id} delay={Math.min(i * 50, 350)}>
-                <PlayCard project={project} />
-              </Reveal>
-            ))}
-          </div>
-          {filteredProjects.length === 0 && (
-            <p className="text-center py-12 text-sm" style={{ color: 'var(--color-neutral)' }}>
-              이 필터에 해당하는 작품이 없습니다.
-            </p>
-          )}
-        </div>
-      </section>
     </div>
-  )
-}
-
-function PlayCard({ project }: { project: typeof projects[0] }) {
-  const typeInfo = projectTypes.find(t => t.value === project.type)
-  const defaultImage = '/images/default.jpeg'
-  const hasRealImage = project.image !== '/images/placeholder.svg' && project.image !== defaultImage
-  const displayImage = hasRealImage ? project.image : defaultImage
-
-  return (
-    <Link href={`/projects/${project.id}`} className="play-card">
-      <div className="card-thumb">
-        <img src={displayImage} alt={project.title} loading="lazy" />
-      </div>
-      <div className="card-body">
-        <div className="card-top">
-          <h3>{project.title}</h3>
-          <span className={`play-chip type-${project.type}`}>
-            {typeInfo?.icon} {typeInfo?.label || project.type}
-          </span>
-        </div>
-        <p className="card-desc">{project.description}</p>
-        <div className="card-meta">
-          {project.devPeriod && (
-            <span className="work-period">📅 {project.devPeriod}</span>
-          )}
-          {project.github && (
-            <GithubActivityBadge repo={project.github} />
-          )}
-          {project.technologies.slice(0, 4).map((tech) => (
-            <span key={tech} className="play-chip">{tech}</span>
-          ))}
-          {project.technologies.length > 4 && (
-            <span className="more-tags">+{project.technologies.length - 4}</span>
-          )}
-        </div>
-        <span className="card-cta">View Project →</span>
-      </div>
-    </Link>
   )
 }

@@ -22,6 +22,7 @@ export default function Header() {
   const isCrm = pathname?.startsWith('/crm')
   const isJobs = pathname?.startsWith('/admin/jobs')
   const isAdminUsers = pathname?.startsWith('/admin/users')
+  const isProjects = pathname?.startsWith('/projects')
 
   const linkClass = (active: boolean) =>
     `masthead-link ${active ? 'active' : ''}`
@@ -37,7 +38,7 @@ export default function Header() {
         {/* 우측 — 링크 + 액션 (데스크톱) */}
         <div className="hidden md:flex items-center gap-2">
           <nav className="masthead-nav">
-            <Link href="/" className={linkClass(!isCommunity && !isPlay && pathname === '/')}>
+            <Link href="/projects" className={linkClass(!!isProjects)}>
               Projects
             </Link>
             <Link href="/community" className={linkClass(!!isCommunity)}>
@@ -164,7 +165,7 @@ export default function Header() {
       {/* 모바일 메뉴 */}
       {mobileMenuOpen && (
         <div className="masthead-mobile md:hidden">
-          <Link href="/" onClick={() => setMobileMenuOpen(false)}>
+          <Link href="/projects" onClick={() => setMobileMenuOpen(false)}>
             📂 Projects
           </Link>
           <Link href="/community" onClick={() => setMobileMenuOpen(false)}>
