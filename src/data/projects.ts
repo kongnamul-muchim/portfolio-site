@@ -147,10 +147,8 @@ export const projects: Project[] = [
     image: '/images/portfolio-site.webp',
     technologies: ['Next.js', 'TypeScript', 'Prisma', 'PostgreSQL', 'Docker', 'RAG (pgvector)', 'Cloudflare', 'nginx'],
     github: 'https://github.com/kongnamul-muchim/portfolio-site',
-    demo: 'https://portfolio.olivilo.shop',
     featured: true,
     devPeriod: '2026-05 ~ 현재',
-    hasPlayableDemo: true,
   },
 ]
 
