@@ -209,12 +209,6 @@ h1, h2, h3 {
   --accent: #D946EF;
   --accent-hover: #C026D3;
 }
-.design-color-accent .hero-gradient {
-  background: linear-gradient(135deg, #D946EF, #8B5CF6) !important;
-  -webkit-background-clip: text !important;
-  -webkit-text-fill-color: transparent !important;
-  background-clip: text !important;
-}
 
 /* 5. 3D Tilt Hover */
 .design-tilt-hover .project-card {
@@ -314,6 +308,7 @@ h1, h2, h3 {
   font-size: 1.6rem;
   line-height: 1;
 }
+.play-section-head h1,
 .play-section-head h2 {
   font-family: var(--font-display), 'Pretendard', sans-serif;
   font-size: clamp(1.6rem, 3vw + 0.5rem, 2.4rem);
@@ -866,10 +861,12 @@ html.ornate .play-card:hover .card-thumb {
   border-color: color-mix(in oklch, var(--color-accent) 60%, var(--color-rule));
 }
 /* 섹션 헤더 — 단색 언더라인 */
+html.ornate .play-section-head h1,
 html.ornate .play-section-head h2 {
   position: relative;
   display: inline-block;
 }
+html.ornate .play-section-head h1::after,
 html.ornate .play-section-head h2::after {
   content: '';
   position: absolute;
@@ -985,4 +982,291 @@ html.ornate .detail-spec dt {
 }
 html.ornate .detail-stats > div > div:first-child {
   color: var(--color-accent);
+}
+
+
+/* ─────────────────────────────────────────────
+   RoleEvidence — 문제 → 결정 → 검증 → 한계
+   장식 없음. 규칙선과 숫자만 쓴다.
+   ───────────────────────────────────────────── */
+.evidence-block {
+  border-top: 1px solid var(--color-rule);
+  padding-top: 1.5rem;
+}
+
+.ev-label {
+  font-family: var(--font-mono, ui-monospace, SFMono-Regular, Menlo, monospace);
+  font-size: 0.6875rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-neutral);
+  margin-bottom: 0.75rem;
+}
+
+/* 왜 만들었나 */
+.ev-problem {
+  margin-bottom: 2rem;
+}
+.ev-problem-text {
+  font-size: 0.9375rem;
+  line-height: 1.75;
+  color: var(--color-ink);
+  border-left: 2px solid var(--color-accent);
+  padding-left: 0.9rem;
+}
+
+/* 내가 내린 결정 */
+.ev-section {
+  margin-bottom: 2rem;
+}
+.ev-section:last-child {
+  margin-bottom: 0;
+}
+.ev-decisions {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.ev-decision {
+  padding: 0.9rem 0 0.9rem 0;
+  border-top: 1px solid var(--color-rule);
+}
+.ev-decision:first-child {
+  border-top: none;
+  padding-top: 0;
+}
+.ev-decision-q {
+  display: flex;
+  gap: 0.6rem;
+  align-items: baseline;
+  font-size: 0.8125rem;
+  color: var(--color-neutral);
+  margin-bottom: 0.4rem;
+}
+.ev-num {
+  font-family: var(--font-mono, ui-monospace, SFMono-Regular, Menlo, monospace);
+  font-size: 0.6875rem;
+  color: var(--color-accent-ink);
+  flex-shrink: 0;
+}
+.ev-decision-chose {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--color-ink);
+  line-height: 1.6;
+  margin-bottom: 0.35rem;
+}
+.ev-decision-why {
+  font-size: 0.875rem;
+  color: var(--color-muted);
+  line-height: 1.7;
+}
+.ev-decision-alt {
+  margin-top: 0.35rem;
+  font-size: 0.8125rem;
+  color: var(--color-neutral);
+  line-height: 1.6;
+}
+
+/* 검증한 숫자 */
+.ev-stats {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0;
+  margin: 0;
+  border-top: 1px solid var(--color-rule);
+}
+@media (min-width: 640px) {
+  .ev-stats {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+.ev-stat {
+  padding: 0.75rem 0.75rem 0.75rem 0;
+  border-bottom: 1px solid var(--color-rule);
+  min-width: 0;
+}
+.ev-stat-label {
+  font-size: 0.6875rem;
+  color: var(--color-neutral);
+  margin-bottom: 0.2rem;
+}
+.ev-stat-value {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--color-ink);
+  line-height: 1.25;
+  font-variant-numeric: tabular-nums;
+}
+.ev-stat-note {
+  font-size: 0.6875rem;
+  color: var(--color-neutral);
+  margin-top: 0.15rem;
+  line-height: 1.4;
+}
+
+/* 한계 */
+.ev-limits {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.ev-limits li {
+  position: relative;
+  padding-left: 1rem;
+  margin-bottom: 0.5rem;
+  font-size: 0.875rem;
+  line-height: 1.7;
+  color: var(--color-muted);
+}
+.ev-limits li::before {
+  content: "—";
+  position: absolute;
+  left: 0;
+  color: var(--color-neutral);
+}
+
+
+/* ─────────────────────────────────────────────
+   직군별 페이지 (/game, /backend)
+   ───────────────────────────────────────────── */
+.role-title {
+  font-size: clamp(1.6rem, 4vw, 2.6rem);
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  color: var(--color-ink);
+  margin-bottom: 1rem;
+  font-weight: 800;
+}
+
+.role-lead {
+  max-width: 44rem;
+  font-size: 0.9375rem;
+  line-height: 1.85;
+  color: var(--color-muted);
+  margin-bottom: 2.5rem;
+}
+.role-lead strong {
+  color: var(--color-ink);
+  font-weight: 600;
+}
+
+.role-proofs {
+  border-top: 1px solid var(--color-rule);
+  margin-bottom: 1rem;
+}
+.role-proof {
+  padding: 1.1rem 0;
+  border-bottom: 1px solid var(--color-rule);
+}
+.role-proof-title {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--color-ink);
+}
+.role-proof-ev {
+  margin-top: 0.5rem;
+  font-family: var(--font-mono, ui-monospace, SFMono-Regular, Menlo, monospace);
+  font-size: 0.6875rem;
+  letter-spacing: 0.02em;
+  color: var(--color-accent-ink);
+}
+
+.role-foot {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.5rem;
+  margin-top: 2.5rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--color-rule);
+}
+
+/* 홈 — 직군별 입구 */
+.role-entries {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 2rem;
+}
+.role-entry {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  padding: 0.7rem 1rem;
+  border: 1px solid var(--color-rule);
+  background: var(--color-paper-2);
+  text-decoration: none;
+  transition: border-color 160ms ease, transform 160ms ease;
+}
+.role-entry:hover {
+  border-color: var(--color-accent);
+  transform: translateY(-1px);
+}
+.role-entry-label {
+  font-family: var(--font-mono, ui-monospace, SFMono-Regular, Menlo, monospace);
+  font-size: 0.625rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-neutral);
+}
+.role-entry-title {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--color-ink);
+}
+
+
+/* ── AI 활용 페이지 (/ai) ── */
+.ai-split {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0;
+  border-top: 1px solid var(--color-rule);
+  border-bottom: 1px solid var(--color-rule);
+  margin-bottom: 1rem;
+}
+@media (min-width: 720px) {
+  .ai-split {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+.ai-col {
+  padding: 1.25rem 0;
+}
+@media (min-width: 720px) {
+  .ai-col + .ai-col {
+    padding-left: 1.5rem;
+    border-left: 1px solid var(--color-rule);
+  }
+  .ai-col:first-child {
+    padding-right: 1.5rem;
+  }
+}
+.ai-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.ai-list li {
+  position: relative;
+  padding-left: 1rem;
+  margin-bottom: 0.45rem;
+  font-size: 0.875rem;
+  line-height: 1.65;
+  color: var(--color-muted);
+}
+.ai-list li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.6em;
+  width: 5px;
+  height: 5px;
+  background: var(--color-neutral);
+}
+.ai-col-me .ai-list li {
+  color: var(--color-ink);
+}
+.ai-col-me .ai-list li::before {
+  background: var(--color-accent);
 }

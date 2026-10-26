@@ -61,7 +61,7 @@ export default function Header() {
               onClick={() => setProjectTreeOpen(!projectTreeOpen)}
               className={`masthead-link ${projectTreeOpen || isPlay ? 'active' : ''}`}
             >
-              Play Demo
+              데모 실행
             </button>
           </nav>
           <button
@@ -142,7 +142,7 @@ export default function Header() {
         >
           <div className="max-w-6xl mx-auto px-6 py-4">
             <p className="text-xs mb-2" style={{ color: 'var(--color-neutral)' }}>
-              브라우저에서 바로 플레이할 수 있는 데모예요
+              브라우저에서 바로 실행해볼 수 있는 데모예요
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-1">
               {playableDemos.map(item => (
@@ -185,7 +185,7 @@ export default function Header() {
             </>
           )}
           <p className="text-xs mt-2 mb-1" style={{ color: 'var(--color-neutral)' }}>
-            Play Demos
+            직접 실행해볼 수 있는 데모
           </p>
           {playableDemos.map(p => (
             <a key={p.id} href={p.demo} target="_blank" rel="noopener noreferrer" onClick={() => setMobileMenuOpen(false)}>

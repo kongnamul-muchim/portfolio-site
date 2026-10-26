@@ -12,7 +12,7 @@ export default function ProjectsPage() {
         <div className="max-w-6xl mx-auto">
           <Reveal>
             <div className="play-section-head">
-              <h2>프로젝트</h2>
+              <h1>프로젝트</h1>
               <span className="count">전체 {projects.length}</span>
             </div>
           </Reveal>

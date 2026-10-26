@@ -2,6 +2,7 @@ import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { projects, getProjectBySlug, projectTypes } from '@/data/projects'
 import GithubActivityBadge from '@/components/GithubActivityBadge'
+import RoleEvidence from '@/components/RoleEvidence'
 
 export function generateStaticParams() {
   return projects.map((project) => ({
@@ -9,11 +10,34 @@ export function generateStaticParams() {
   }))
 }
 
+export function generateMetadata({ params }: { params: { slug: string } }) {
+  const project = getProjectBySlug(params.slug)
+  if (!project) {
+    return { title: '프로젝트를 찾을 수 없습니다 | GuGu.dev' }
+  }
+  const desc = project.description.replace(/\s+/g, ' ').slice(0, 150)
+  return {
+    title: `${project.title} | GuGu.dev`,
+    description: desc,
+    openGraph: {
+      title: `${project.title} | GuGu.dev`,
+      description: desc,
+      images: project.image ? [project.image] : [],
+    },
+    twitter: {
+      card: 'summary_large_image' as const,
+      title: `${project.title} | GuGu.dev`,
+      description: desc,
+      images: project.image ? [project.image] : [],
+    },
+  }
+}
+
 export default function ProjectPage({ params }: { params: { slug: string } }) {
   const project = getProjectBySlug(params.slug)
   if (!project) notFound()
 
-  const defaultImage = '/images/defult.jpeg'
+  const defaultImage = '/images/default.jpeg'
   const hasRealImage = project.image !== '/images/placeholder.svg' && project.image !== defaultImage
   const displayImage = hasRealImage ? project.image : defaultImage
   const typeInfo = projectTypes.find(t => t.value === project.type)
@@ -55,16 +79,16 @@ export default function ProjectPage({ params }: { params: { slug: string } }) {
           <dl className="detail-spec border-t border-gray-100 dark:border-gray-800 pt-4">
             {project.devPeriod && (
               <div className="flex py-1.5">
-                <dt className="w-20 sm:w-24 shrink-0 text-xs font-medium text-gray-400 dark:text-gray-500">개발 기간</dt>
+                <dt className="w-20 sm:w-24 shrink-0 text-xs font-medium text-gray-600 dark:text-gray-300">개발 기간</dt>
                 <dd className="text-xs text-gray-600 dark:text-[#9CA3AF]">{project.devPeriod}</dd>
               </div>
             )}
             <div className="flex py-1.5">
-              <dt className="w-20 sm:w-24 shrink-0 text-xs font-medium text-gray-400 dark:text-gray-500">게임 타입</dt>
+              <dt className="w-20 sm:w-24 shrink-0 text-xs font-medium text-gray-600 dark:text-gray-300">게임 타입</dt>
               <dd className="text-xs text-gray-600 dark:text-[#9CA3AF]">{typeInfo?.label || project.type}</dd>
             </div>
             <div className="flex py-1.5">
-              <dt className="w-20 sm:w-24 shrink-0 text-xs font-medium text-gray-400 dark:text-gray-500">주요 기술</dt>
+              <dt className="w-20 sm:w-24 shrink-0 text-xs font-medium text-gray-600 dark:text-gray-300">주요 기술</dt>
               <dd className="text-xs text-gray-600 dark:text-[#9CA3AF] leading-relaxed">{project.technologies.join(' · ')}</dd>
             </div>
           </dl>
@@ -101,7 +125,7 @@ export default function ProjectPage({ params }: { params: { slug: string } }) {
                     <div className="text-lg sm:text-xl font-bold text-gray-900 dark:text-[#E5E7EB] leading-tight">
                       {s.value}
                     </div>
-                    <div className="text-[10px] sm:text-[11px] text-gray-400 dark:text-gray-500 mt-1">
+                    <div className="text-[10px] sm:text-[11px] text-gray-600 dark:text-gray-300 mt-1">
                       {s.label}
                     </div>
                   </div>
@@ -119,7 +143,10 @@ export default function ProjectPage({ params }: { params: { slug: string } }) {
               </div>
             )}
           </div>
-          <h2 className="text-lg font-semibold text-gray-900 dark:text-[#E5E7EB] mb-5">
+
+          <RoleEvidence project={project} />
+
+          <h2 className="text-lg font-semibold text-gray-900 dark:text-[#E5E7EB] mb-5 mt-8">
             Project Details
           </h2>
           <div className="space-y-6 text-gray-600 dark:text-[#9CA3AF] text-sm leading-relaxed min-w-0">
@@ -212,7 +239,7 @@ const keyStats: Record<string, { value: string; label: string }[]> = {
   ],
   'afk': [
     { value: '6주', label: '기획 → 완성' },
-    { value: '100+', label: '스테이지' },
+    { value: '20', label: '스테이지' },
     { value: '4종', label: '장비 × 5단계' },
     { value: 'CSV', label: '밸런스 파이프라인' },
   ],
@@ -230,7 +257,7 @@ const keyStats: Record<string, { value: string; label: string }[]> = {
   'minigame-collection': [
     { value: '6종', label: '미니게임' },
     { value: '2종', label: 'AI 대전 (오목/체스)' },
-    { value: '40%', label: '코드 재사용률' },
+    { value: '7개', label: '테스트 프로젝트' },
   ],
   'aichat': [
     { value: 'RAG', label: '문서 검색 채팅' },
@@ -238,10 +265,10 @@ const keyStats: Record<string, { value: string; label: string }[]> = {
     { value: '10회/일', label: '사용량 제한' },
   ],
   'resonance': [
-    { value: '3,000줄', label: 'Vanilla JS' },
+    { value: '9,100줄', label: 'Vanilla JS' },
     { value: '6개', label: '직업' },
-    { value: '68종', label: '유물' },
-    { value: '40+', label: '스킬' },
+    { value: '129종', label: '유물' },
+    { value: '54종', label: '스킬' },
   ],
   'hide-and-ink': [
     { value: '4인', label: '팀 프로젝트' },
@@ -283,15 +310,15 @@ function CollapsibleCode({ summary, children }: { summary: string; children: Rea
 
 function KeyAchievement({ slug }: { slug: string }) {
   const highlights: Record<string, string> = {
-    'afk': '6주 장기 프로젝트. DI Container + Event-driven 구조로 자동 전투/장비 합성/환생 시스템 구현. CSV 파이프라인으로 100+ 스테이지 밸런스 조절.',
+    'afk': '6주 장기 프로젝트. DI Container + Event-driven 구조로 자동 전투/장비 합성/환생 시스템 구현. 스테이지·아이템·설정값을 CSV로 분리해, 코드를 고치지 않고 밸런스를 조절할 수 있게 했습니다.',
     'unity-minigames': '블록퍼즐부터 매치3까지 7개 장르를 동일한 Core/Shell + DI 아키텍처로 구현. 순수 C# 게임 로직을 Unity View와 분리해 장르가 달라도 재사용 가능한 구조를 증명.',
     'aichat': 'DeepSeek V4 + pgvector 기반 RAG 시스템. Docker 컨테이너 분리 + VPS 직배포 운영. Cloudflare Proxy로 백엔드 IP 은닉.',
     'cookie-clicker': '강화·스킬트리·프레스티지로 진짜 성장 사이클을 설계한 인크리멘털 게임. 새로고침해도 진행도가 유지되는 저장 구조를 직접 구현.',
-    'minigame-collection': 'Blazor WebAssembly + SOLID 원칙. 6종 게임 공통 Core 라이브러리로 코드 재사용 40% 달성.',
+    'minigame-collection': 'Blazor WebAssembly + SOLID 원칙. 6종 게임이 공통 Core 라이브러리를 공유하고, 게임별 테스트 프로젝트 7개로 규칙을 검증합니다.',
     'community-board': 'Next.js + Prisma 풀스택. 포트폴리오 사이트 자체가 이 프로젝트의 확장판. 실제 회원가입/로그인/게시글 운영 중.',
-    'resonance': '3,000줄 Vanilla JS 턴제 전략 RPG. 6개 직업, 68종 유물(직업전용 18종), 잔향 레벨5+자동합성 시스템. 매주 업데이트 중.',
+    'resonance': 'Vanilla JS 턴제 전략 RPG. 6개 직업, 스킬 54종, 잔향 54종, 유물 129종. 프레임워크 없이 DI 패턴과 이벤트 버스로 상태 흐름을 직접 통제했습니다.',
     'hide-and-ink': '4인 팀 프로젝트의 시스템 아키텍트 & 코어 프로그래머. 전체 아키텍처 설계, DI Container 기반 의존성 분리, 핵심 상태머신(FSM) 구현. README에 팀원 역할 바운더리 정의로 Git 충돌 최소화. 800+ 커밋의 장기 팀 협업 경험.',
-    'spirit-merge': '10일 만에 기획부터 완성까지. 머지+자동전투+파견 3개 루프가 맞물리는 방치형 RPG. 88개 스크립트를 Core/Systems 13개 서비스로 SRP 분리, 원자적 쓰기+백업 자동 저장(오프라인 경과 반영), Unity TCP CLI로 14개 시스템 통합 검증, WebGL 브라우저 실기동.',
+    'spirit-merge': '10일 만에 기획부터 완성까지. 머지+자동전투+파견 3개 루프가 맞물리는 방치형 RPG. 88개 스크립트를 Core/Systems 13개 서비스로 SRP 분리, 원자적 쓰기+백업 자동 저장(오프라인 경과 반영), Unity TCP CLI 검증 명령 67개로 상태 확인, WebGL 브라우저 실기동.',
     'portfolio-site': '지금 보고 있는 이 사이트 자체. Next.js App Router + Prisma + PostgreSQL + Docker로 직접 구축·운영. 커뮤니티부터 RAG AI 챗봇, 채용공고 관리까지 전 기능을 통합한 풀스택 앱.',
   }
   return <>{highlights[slug] || '자세한 정보는 아래 Project Details를 확인해주세요.'}</>
@@ -462,7 +489,7 @@ function ProjectDetailContent({ slug }: { slug: string }) {
     'resonance': (
       <div className="space-y-4">
         <h3 className="text-base font-semibold text-gray-900 dark:text-[#E5E7EB]">Game Overview</h3>
-        <p>Vanilla JavaScript로 제작 중인 턴제 전략 RPG입니다. 6개 직업(⚔️기사/🗡️추적자/🔮메아리술사/🌑어둠의메아리/✨잊혀진서약/🩸영원한악몽), 40+ 스킬, 7종 잔향 시스템, 68종 유물 시스템을 갖추고 있습니다. DI 패턴 + Event-driven 아키텍처로 3,000줄 내외의 코드에 게임 로직을 체계적으로 구성했습니다.</p>
+        <p>Vanilla JavaScript로 완성한 턴제 전략 RPG입니다. 6개 직업(⚔️기사/🗡️추적자/🔮메아리술사/🌑어둠의메아리/✨잊혀진서약/🩸영원한악몽), 54종 스킬, 54종 잔향 시스템, 129종 유물 시스템을 갖추고 있습니다. DI 패턴 + Event-driven 아키텍처로 약 9,100줄의 코드에 게임 로직을 체계적으로 구성했습니다.</p>
 
         <h3 className="text-base font-semibold text-gray-900 dark:text-[#E5E7EB]">Current Features (v2.0)</h3>
         <CollapsibleCode summary="프로젝트 구조 보기">
@@ -470,12 +497,12 @@ function ProjectDetailContent({ slug }: { slug: string }) {
 {`resonance/
 ├── js/
 │   ├── data/
-│   │   ├── skills.js       # 40+ 스킬 (기본/강한공격/방어/버프)
-│   │   ├── resonances.js   # 7종 잔향 + 합성 레시피 (Lv.10, 등급, 자동합성)
-│   │   ├── monsters.js      # 30+ 일반몹/보스
+│   │   ├── skills.js       # 54종 스킬 (기본/강한공격/방어/버프)
+│   │   ├── resonances.js   # 54종 잔향 + 합성 레시피 (Lv.8, 등급, 자동합성)
+│   │   ├── monsters.js      # 일반몹/보스 데이터
 │   │   ├── events.js        # 랜덤 이벤트 시스템
 │   │   ├── characters.js  # 6개 직업군 정의
-│   │   ├── relics.js        # 68종 유물 (일반/희귀/에픽/유일)
+│   │   ├── relics.js        # 129종 유물 (일반/희귀/에픽/유일)
 │   │   └── codex.js         # 도감 데이터
 │   ├── game.js              # Core 엔진 (DI + Event system)
 │   └── ui.js                # View 레이어 (DOM 조작)
@@ -488,9 +515,9 @@ function ProjectDetailContent({ slug }: { slug: string }) {
           <li><strong>DI Pattern (Vanilla JS)</strong> — 순수 JavaScript로 의존성 주입 구현. GameEngine, UIManager 인터페이스 기반 분리</li>
           <li><strong>Event-driven Architecture</strong> — onTurnStart/onAttack/onEvade/onDamageTaken 등 15+ 이벤트 훅으로 로직 분리</li>
           <li><strong>6 Playable Classes</strong> — 기사(탱커반격), 추적자(회피딜러), 메아리술사(마법사), 어둠의메아리(암살자), 잊혀진서약(힐러탱커), 영원한악몽(광전사) — 각각 고유 스킬셋 + 전용 유물 3종</li>
-          <li><strong>Resonance System</strong> — 7종 잔향, 최대 레벨 10, 만렙 도달 시 자동 합성. 합성잔향은 슬롯을 소모하지 않음</li>
+          <li><strong>Resonance System</strong> — 54종 잔향, 최대 레벨 8, 만렙 도달 시 자동 합성. 합성잔향은 슬롯을 소모하지 않음</li>
           <li><strong>Resonance Tier System</strong> — 잔향 획득 시 등급 롤링(🟢일반50%+1/🔵희귀30%+2/🟣에픽15%+3/🟡전설5%+4). 전설 등급은 한 방에 4레벨 상승!</li>
-          <li><strong>Relic System (68종)</strong> — 🟢일반(스탯) / 🔵희귀(특수효과+디메리트) / 🟣에픽(게임체인저) / 🟡유일(직업전용×18) 4등급</li>
+          <li><strong>Relic System (129종)</strong> — 🟢일반(스탯) / 🔵희귀(특수효과+디메리트) / 🟣에픽(게임체인저) / 🟡유일(직업전용×18) 4등급</li>
           <li><strong>Class Unique Relics</strong> — 각 직업별 3개 전용 유물. 해당 직업으로 플레이 시에만 이벤트에서 등장 (예: 기사 전용 유물은 기사만 획득 가능)</li>
           <li><strong>Codex/Encyclopedia</strong> — 몬스터/스킬/잔향/유물 도감 자동 기록 (localStorage)</li>
           <li><strong>Save/Load</strong> — localStorage 기반 세이브/로드, 이어하기 지원</li>
@@ -501,10 +528,10 @@ function ProjectDetailContent({ slug }: { slug: string }) {
         <p>명확한 리스크/리턴 분배를 핵심 설계 원칙으로 합니다. 방어 스킬에 쿨타임을 두어 무한 방어를 방지하고, 고위력 스킬은 긴 쿨타임으로 밸런스를 맞춥니다. 데이터 기반 시뮬레이션으로 정량적 밸런스를 조정합니다.</p>
 
         <h3 className="text-base font-semibold text-gray-900 dark:text-[#E5E7EB]">Status</h3>
-        <div className="bg-amber-50 dark:bg-[#1a1500] border border-amber-200 dark:border-[#3a2a00] rounded-lg p-4">
-          <p className="text-xs text-amber-700 dark:text-amber-400">
-            🔨 <strong>제작중</strong> — 지속적인 밸런스 패치, 신규 스킬/직업/콘텐츠 업데이트 중입니다.<br />
-            최신 변경사항은 게임 내 또는 GitHub Commit History를 참고해주세요.
+        <div className="bg-emerald-50 dark:bg-[#0c1a12] border border-emerald-200 dark:border-[#12351f] rounded-lg p-4">
+          <p className="text-xs text-emerald-700 dark:text-emerald-400">
+            ✅ <strong>완성</strong> — 6개 직업 엔딩, 54종 스킬, 54종 잔향, 129종 유물까지 모두 구현되어 플레이 가능한 상태입니다.<br />
+            아래 &lsquo;게임 실행&rsquo; 버튼에서 바로 확인하실 수 있습니다.
           </p>
         </div>
       </div>

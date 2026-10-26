@@ -124,7 +124,7 @@ export default function PostDetailPage() {
     return (
       <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
         <div className="text-center">
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">{error || '게시글을 찾을 수 없습니다.'}</h1>
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">{error || '게시글을 찾을 수 없습니다.'}</h2>
           <Link href="/community" className="text-blue-600 dark:text-blue-400 hover:underline">목록으로 돌아가기</Link>
         </div>
       </div>

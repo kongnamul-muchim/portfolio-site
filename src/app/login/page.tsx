@@ -13,7 +13,7 @@ function LoginForm() {
   const [loading, setLoading] = useState(false)
   const router = useRouter()
   const searchParams = useSearchParams()
-  const callbackUrl = searchParams.get('callbackUrl') || '/'
+  const callbackUrl = searchParams?.get('callbackUrl') || '/'
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -51,11 +51,14 @@ function LoginForm() {
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              <label htmlFor="login-nickname" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 닉네임
               </label>
               <input
+                id="login-nickname"
+                name="nickname"
                 type="text"
+                autoComplete="username"
                 value={nickname}
                 onChange={(e) => setNickname(e.target.value)}
                 className="input-field"
@@ -65,11 +68,14 @@ function LoginForm() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              <label htmlFor="login-password" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 비밀번호
               </label>
               <input
+                id="login-password"
+                name="password"
                 type="password"
+                autoComplete="current-password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 className="input-field"

@@ -41,7 +41,7 @@ export const updateCategorySchema = z.object({
 })
 
 export const reactionSchema = z.object({
-  type: z.enum(['LIKE' as const, 'DISLIKE' as const], { errorMap: () => ({ message: '유효하지 않은 반응 타입입니다.' }) }),
+  type: z.enum(['LIKE', 'DISLIKE'], { message: '유효하지 않은 반응 타입입니다.' }),
   postId: z.string().optional(),
   commentId: z.string().optional()
 }).refine(data => data.postId || data.commentId, {

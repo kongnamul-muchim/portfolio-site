@@ -85,11 +85,14 @@ export default function SignupPage() {
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              <label htmlFor="signup-nickname" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 닉네임
               </label>
               <input
+                id="signup-nickname"
+                name="nickname"
                 type="text"
+                autoComplete="username"
                 value={nickname}
                 onChange={(e) => { setNickname(e.target.value); setErrors(prev => ({ ...prev, nickname: '' })) }}
                 className={`input-field ${errors.nickname ? 'border-red-500 focus:ring-red-500' : ''}`}
@@ -100,11 +103,14 @@ export default function SignupPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              <label htmlFor="signup-password" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 비밀번호
               </label>
               <input
+                id="signup-password"
+                name="new-password"
                 type="password"
+                autoComplete="new-password"
                 value={password}
                 onChange={(e) => { setPassword(e.target.value); setErrors(prev => ({ ...prev, password: '' })) }}
                 className={`input-field ${errors.password ? 'border-red-500 focus:ring-red-500' : ''}`}
@@ -114,11 +120,14 @@ export default function SignupPage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              <label htmlFor="signup-password-confirm" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 비밀번호 확인
               </label>
               <input
+                id="signup-password-confirm"
+                name="confirm-password"
                 type="password"
+                autoComplete="new-password"
                 value={confirmPassword}
                 onChange={(e) => { setConfirmPassword(e.target.value); setErrors(prev => ({ ...prev, confirmPassword: '' })) }}
                 className={`input-field ${errors.confirmPassword ? 'border-red-500 focus:ring-red-500' : ''}`}

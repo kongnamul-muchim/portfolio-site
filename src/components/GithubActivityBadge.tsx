@@ -23,10 +23,12 @@ export default function GithubActivityBadge({ repo }: { repo: string }) {
   // 30일 넘은 프로젝트는 badge 숨김 (완성된 게임은 오래돼도 정상)
   if (!data || !data.lastUpdate || data.days > MAX_DAYS) return null;
 
+  // 커밋 메시지는 노출하지 않는다 — 방문자에게 의미 없는 내부 작업 문구가
+  // 그대로 보이면 오해를 만들 수 있어서, 마지막 활동 시점만 보여준다.
   return (
-    <div className="flex items-center gap-1.5 text-[11px] text-gray-400 dark:text-[#6B7280] mb-3">
+    <div className="flex items-center gap-1.5 text-[11px] text-gray-600 dark:text-[#9CA3AF] mb-3">
       <span className="shrink-0">🔄</span>
-      <span className="truncate">{data.ago} · {data.lastUpdate}</span>
+      <span className="truncate">최근 커밋 {data.ago}</span>
     </div>
   );
 }

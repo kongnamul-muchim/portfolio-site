@@ -24,6 +24,16 @@ export default function Footer() {
           독학으로 Unity에서 시작해 게임 · AI · 인프라까지 확장한 프로덕트 엔지니어.
           만들고, 운영하고, 기록합니다.
         </p>
+        <p className="tagline" style={{ marginTop: '0.5rem' }}>
+          채용·협업 문의는{' '}
+          <a
+            href="mailto:rlaehdduf04@gmail.com"
+            style={{ textDecoration: 'underline', textUnderlineOffset: '3px', fontWeight: 600 }}
+          >
+            rlaehdduf04@gmail.com
+          </a>{' '}
+          로 연락 주세요.
+        </p>
         <div className="meta">
           <a
             href="https://github.com/kongnamul-muchim"
@@ -32,7 +42,7 @@ export default function Footer() {
           >
             GitHub
           </a>
-          <a href="#contact-section">Contact</a>
+          <a href="mailto:rlaehdduf04@gmail.com">Email</a>
           <span className="copyright">
             © {new Date().getFullYear()} GuGu · Built with Next.js & Tailwind CSS
           </span>

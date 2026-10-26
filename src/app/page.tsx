@@ -31,6 +31,22 @@ export default function Home() {
           <span className="marquee-badge">🐳 Docker 자체 운영</span>
           <span className="marquee-badge">☁️ Cloudflare + nginx</span>
         </div>
+
+        {/* 직군별 입구 — 지원하는 회사에 맞춰 순서를 바꿔 보여준다 */}
+        <div className="role-entries">
+          <Link href="/game" className="role-entry">
+            <span className="role-entry-label">For Game Client</span>
+            <span className="role-entry-title">게임 클라이언트 직군으로 보기 →</span>
+          </Link>
+          <Link href="/backend" className="role-entry">
+            <span className="role-entry-label">For AI Backend</span>
+            <span className="role-entry-title">AI 백엔드 직군으로 보기 →</span>
+          </Link>
+          <Link href="/ai" className="role-entry">
+            <span className="role-entry-label">How I Use AI</span>
+            <span className="role-entry-title">AI를 어디까지 썼나 →</span>
+          </Link>
+        </div>
       </section>
 
       {/* About */}

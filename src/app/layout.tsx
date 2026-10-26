@@ -15,18 +15,21 @@ const blackHanSans = Black_Han_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "Portfolio | Game + AI + Infrastructure Engineer",
+  title: {
+    default: 'GuGu.dev — 게임 · AI · 인프라 엔지니어',
+    template: '%s',
+  },
   description: "Unity 게임, AI 시스템, 자체 서버 운영까지 전 스택을 다루는 프로덕트 엔지니어 포트폴리오",
   metadataBase: new URL("https://portfolio.olivilo.shop"),
   openGraph: {
     type: "website",
-    title: "Portfolio | Game + AI + Infrastructure Engineer",
+    title: "GuGu.dev — 게임 · AI · 인프라 엔지니어",
     description: "Unity 게임 개발, RAG AI 챗봇, Docker 기반 자체 서버 운영 — 전 스택을 직접 다루는 프로덕트 엔지니어",
     images: ["/images/resonance.png"],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Portfolio | Game + AI + Infrastructure Engineer",
+    title: "GuGu.dev — 게임 · AI · 인프라 엔지니어",
     description: "Unity 게임 개발, RAG AI 챗봇, Docker 기반 자체 서버 운영 — 전 스택을 직접 다루는 프로덕트 엔지니어",
     images: ["/images/resonance.png"],
   },
@@ -39,6 +42,15 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ko" suppressHydrationWarning>
+      <head>
+        {/* 첫 페인트 전에 테마 클래스를 확정 → 다크모드 깜빡임 방지.
+            body 를 서버에서 그대로 렌더하기 때문에(SEO), 이 스크립트로 색만 먼저 맞춥니다. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var t=localStorage.getItem('theme');var d=t?t==='dark':window.matchMedia('(prefers-color-scheme: dark)').matches;document.documentElement.classList.toggle('dark',d);}catch(e){}})();`,
+          }}
+        />
+      </head>
       <body className={`${blackHanSans.variable} antialiased min-h-screen`} style={{ background: 'var(--color-paper)', color: 'var(--color-ink)' }}>
         <ThemeProvider>
           <Providers>

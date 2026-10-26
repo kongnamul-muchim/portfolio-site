@@ -566,7 +566,14 @@ export default function ChatPage() {
         </button>
         <div className="text-xs text-gray-400 whitespace-nowrap">
           {quota.is_admin || adminToken ? (
-            <span className="text-yellow-500 cursor-pointer" onClick={logoutAdmin}>👑 관리자</span>
+            <button
+              type="button"
+              className="text-yellow-500 cursor-pointer bg-transparent border-0 p-0"
+              onClick={logoutAdmin}
+              aria-label="관리자 로그아웃"
+            >
+              👑 관리자
+            </button>
           ) : quotaUnknown ? (
             <span className="text-red-400">⚠️ 서버 연결 실패</span>
           ) : (
@@ -645,10 +652,10 @@ export default function ChatPage() {
               <div className="text-xs font-medium text-purple-500 dark:text-[#8888dd] mb-2">
                 🌙 {displayName}
               </div>
-              <div className="flex gap-1.5">
-                <span className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" />
-                <span className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }} />
-                <span className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0.4s' }} />
+              <div className="flex gap-1.5" role="status" aria-label="답변 작성 중">
+                <span className="w-2 h-2 bg-gray-400 rounded-full animate-pulse" />
+                <span className="w-2 h-2 bg-gray-400 rounded-full animate-pulse" style={{ animationDelay: '0.2s' }} />
+                <span className="w-2 h-2 bg-gray-400 rounded-full animate-pulse" style={{ animationDelay: '0.4s' }} />
               </div>
             </div>
           </div>
@@ -683,16 +690,24 @@ export default function ChatPage() {
           <button
             onClick={sendMessage}
             disabled={loading || !input.trim() || isQuotaBlocked}
+            aria-label="메시지 전송"
             className="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#4a3f8a] to-[#3a3faa] text-white flex items-center justify-center hover:shadow-lg hover:shadow-purple-500/20 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
           >
-            ➤
+            <span aria-hidden="true">➤</span>
           </button>
         </div>
         <p className="text-xs text-gray-500 mt-2 text-center">
           🔑 세션 ID: {sessionId.current.slice(0, 8)}...
           {quota.is_admin || adminToken ? ' | 👑 무제한' : quotaUnknown ? ' | ⚠️ 서버 연결 실패' : ` | 💬 ${quota.remaining}/${quota.limit}회 남음`}
           {adminToken && (
-            <span className="ml-2 text-purple-400 cursor-pointer" onClick={openSettings}>⚙ 설정</span>
+            <button
+              type="button"
+              className="ml-2 text-purple-400 cursor-pointer bg-transparent border-0 p-0"
+              onClick={openSettings}
+              aria-label="채팅 설정 열기"
+            >
+              ⚙ 설정
+            </button>
           )}
         </p>
       </div>

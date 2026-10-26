@@ -27,6 +27,7 @@ export default function ProjectGrid() {
             <button
               key={f.value}
               onClick={() => setActiveFilter(f.value)}
+              aria-pressed={activeFilter === f.value}
               className={`filter-tab ${activeFilter === f.value ? 'active' : ''}`}
             >
               {f.label} ({f.count})
