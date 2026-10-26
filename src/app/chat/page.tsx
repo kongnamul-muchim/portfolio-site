@@ -71,7 +71,12 @@ export default function ChatPage() {
   const [error, setError] = useState<string | null>(null);
   const [memoryBar, setMemoryBar] = useState('💫 별빛 도서관에 오신 걸 환영합니다');
   const containerRef = useRef<HTMLDivElement>(null);
-  const sessionId = useRef(getSessionId());
+  // 세션 ID 는 localStorage 기반이라 서버에서는 '' 이고 클라이언트에서만 생성됩니다.
+  // 렌더 중에 만들면 SSR HTML 과 달라져 hydration 불일치가 나므로 mount 후 state 로 넣습니다.
+  const [sessionId, setSessionId] = useState('');
+  useEffect(() => {
+    setSessionId(getSessionId());
+  }, []);
 
   // Settings modal state
   const [settingsOpen, setSettingsOpen] = useState(false);
@@ -170,7 +175,7 @@ export default function ChatPage() {
     try {
       const body: Record<string, unknown> = {
         question: text,
-        session_id: sessionId.current,
+        session_id: sessionId || getSessionId(),
         character_id: 1,
       };
 
@@ -697,7 +702,7 @@ export default function ChatPage() {
           </button>
         </div>
         <p className="text-xs text-gray-500 mt-2 text-center">
-          🔑 세션 ID: {sessionId.current.slice(0, 8)}...
+          🔑 세션 ID: {sessionId ? `${sessionId.slice(0, 8)}...` : '—'}
           {quota.is_admin || adminToken ? ' | 👑 무제한' : quotaUnknown ? ' | ⚠️ 서버 연결 실패' : ` | 💬 ${quota.remaining}/${quota.limit}회 남음`}
           {adminToken && (
             <button
