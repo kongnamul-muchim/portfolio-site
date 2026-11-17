@@ -22,11 +22,7 @@ export default function WritePage() {
   const router = useRouter()
   const { status } = useSession()
 
-  useEffect(() => {
-    fetchCategories()
-  }, [])
-
-  const fetchCategories = async () => {
+  async function fetchCategories() {
     try {
       const res = await fetch('/api/categories')
       if (res.ok) {
@@ -36,6 +32,11 @@ export default function WritePage() {
       // ignore
     }
   }
+
+  // 함수 정의 뒤에서 호출해야 린트/런타임 모두 안전하다
+  useEffect(() => {
+    fetchCategories()
+  }, [])
 
   if (status === 'loading') {
     return (

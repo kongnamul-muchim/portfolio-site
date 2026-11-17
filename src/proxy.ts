@@ -41,7 +41,8 @@ const adminPaths = [
   '/crm',
 ]
 
-export async function middleware(req: NextRequest) {
+// Next.js 16 부터 middleware 파일 규칙이 proxy 로 바뀌었다 (동작은 동일).
+export default async function proxy(req: NextRequest) {
   const pathname = req.nextUrl.pathname
 
   // 로그인 콜백(POST) 만 시도 횟수를 센다

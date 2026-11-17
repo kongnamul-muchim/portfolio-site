@@ -7,7 +7,7 @@ const VPS_ADMIN_PW = process.env.ADMIN_TOKEN || '';
 
 export async function DELETE(
   _req: NextRequest,
-  { params }: { params: { doc_id: string } }
+  { params }: { params: Promise<{ doc_id: string }> }
 ) {
   // Check admin auth via JWT token
   const token = await getToken({ req: _req });
@@ -15,11 +15,13 @@ export async function DELETE(
     return NextResponse.json({ error: '관리자 권한이 필요합니다.' }, { status: 403 });
   }
 
-  try {
-    const adminToken = _req.headers.get('X-Admin-Token') || '';
-    const vpsToken = isAdminAlias(adminToken) ? VPS_ADMIN_PW : adminToken;
+  const { doc_id } = await params
 
-    const url = `${VPS_API}/documents/${params.doc_id}?admin_token=${vpsToken}`;
+  try {
+    const adminToken = _req.headers.get('X-Admin-Token') || ''
+    const vpsToken = isAdminAlias(adminToken) ? VPS_ADMIN_PW : adminToken
+
+    const url = `${VPS_API}/documents/${doc_id}?admin_token=${vpsToken}`;
     const response = await fetch(url, { method: 'DELETE' });
     const data = await response.json();
     return NextResponse.json(data, { status: response.status });

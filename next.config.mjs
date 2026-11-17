@@ -27,10 +27,8 @@ const securityHeaders = [
 ]
 
 const nextConfig = {
-  // 빌드 실패를 숨기지 않는다 — 타입/린트 오류가 있으면 배포가 멈춘다
-  eslint: {
-    ignoreDuringBuilds: false
-  },
+  // Next 16 부터 빌드 시 린트는 실행되지 않는다(별도 `npm run lint`).
+  // 타입 오류는 여전히 배포를 멈춘다.
   typescript: {
     ignoreBuildErrors: false
   },

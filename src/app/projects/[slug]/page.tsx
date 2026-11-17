@@ -10,8 +10,9 @@ export function generateStaticParams() {
   }))
 }
 
-export function generateMetadata({ params }: { params: { slug: string } }) {
-  const project = getProjectBySlug(params.slug)
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params
+  const project = getProjectBySlug(slug)
   if (!project) {
     return { title: '프로젝트를 찾을 수 없습니다 | GuGu.dev' }
   }
@@ -33,8 +34,9 @@ export function generateMetadata({ params }: { params: { slug: string } }) {
   }
 }
 
-export default function ProjectPage({ params }: { params: { slug: string } }) {
-  const project = getProjectBySlug(params.slug)
+export default async function ProjectPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params
+  const project = getProjectBySlug(slug)
   if (!project) notFound()
 
   const defaultImage = '/images/default.jpeg'
