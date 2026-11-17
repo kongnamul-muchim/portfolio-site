@@ -8,11 +8,15 @@ const reactionService = new ReactionService()
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const session = await getServerSession(req, res, authOptions)
-  if (!session) {
-    return res.status(401).json({ error: '로그인이 필요합니다.' })
-  }
 
+  // 조회(GET)는 비로그인 방문자도 가능해야 한다. 카운트는 공개 정보이고,
+  // 로그인 여부는 userReaction 하나로만 갈린다. (기존에는 GET까지 401로 막혀
+  // 아래 userReaction 분기가 도달 불가능한 코드였다)
   if (req.method === 'POST') {
+    if (!session) {
+      return res.status(401).json({ error: '로그인이 필요합니다.' })
+    }
+
     const validated = reactionSchema.safeParse(req.body)
     if (!validated.success) {
       return res.status(400).json({ error: validated.error.issues[0].message })
