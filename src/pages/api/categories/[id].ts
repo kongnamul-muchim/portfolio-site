@@ -1,6 +1,5 @@
+import { getValidSession } from '@/lib/auth/valid-session'
 import type { NextApiRequest, NextApiResponse } from 'next'
-import { getServerSession } from 'next-auth'
-import { authOptions } from '@/lib/auth/auth'
 import { CategoryService } from '@/services/category.service'
 import { updateCategorySchema } from '@/validators'
 
@@ -21,7 +20,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   if (req.method === 'PUT') {
-    const session = await getServerSession(req, res, authOptions)
+    const session = await getValidSession(req, res)
     if (!session || session.user.role !== 'admin') {
       return res.status(403).json({ error: '관리자 권한이 필요합니다.' })
     }
@@ -47,7 +46,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   if (req.method === 'DELETE') {
-    const session = await getServerSession(req, res, authOptions)
+    const session = await getValidSession(req, res)
     if (!session || session.user.role !== 'admin') {
       return res.status(403).json({ error: '관리자 권한이 필요합니다.' })
     }

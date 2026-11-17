@@ -1,3 +1,4 @@
+import { getValidToken } from '@/lib/auth/valid-token'
 import { isAdminAlias } from '@/lib/auth/admin-alias'
 import { NextRequest, NextResponse } from 'next/server';
 import { getToken } from 'next-auth/jwt';
@@ -19,7 +20,7 @@ export async function POST(req: NextRequest) {
 
     // If admin_token is provided, require admin session
     if (isAdminAlias(body.admin_token)) {
-      const token = await getToken({ req });
+      const token = await getValidToken(req);
       if (!token || token.role !== 'admin') {
         return NextResponse.json({ error: '관리자 권한이 필요합니다.' }, { status: 403 });
       }
@@ -54,7 +55,7 @@ export async function GET(req: NextRequest) {
   let adminToken = req.nextUrl.searchParams.get('admin_token');
   if (isAdminAlias(adminToken)) {
     // Require admin session for privileged access
-    const token = await getToken({ req });
+    const token = await getValidToken(req);
     if (!token || token.role !== 'admin') {
       return NextResponse.json({ error: '관리자 권한이 필요합니다.' }, { status: 403 });
     }

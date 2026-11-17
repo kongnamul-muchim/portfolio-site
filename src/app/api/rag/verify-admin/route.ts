@@ -1,6 +1,6 @@
+import { getValidToken } from '@/lib/auth/valid-token'
 import { isAdminAlias } from '@/lib/auth/admin-alias'
 import { NextRequest, NextResponse } from 'next/server'
-import { getToken } from 'next-auth/jwt'
 
 /**
  * 관리자 별칭 암호 검증 전용 엔드포인트.
@@ -20,7 +20,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ ok: false, error: '암호가 틀렸습니다.' }, { status: 403 })
   }
 
-  const session = await getToken({ req })
+  const session = await getValidToken(req)
   if (!session || session.role !== 'admin') {
     return NextResponse.json(
       { ok: false, error: '관리자 계정으로 로그인한 뒤 다시 시도해 주세요.' },

@@ -1,5 +1,5 @@
+import { getValidToken } from '@/lib/auth/valid-token'
 import { NextRequest, NextResponse } from 'next/server'
-import { getToken } from 'next-auth/jwt'
 import { randomBytes } from 'crypto'
 import bcrypt from 'bcryptjs'
 import { prisma } from '@/lib/db/prisma'
@@ -17,7 +17,7 @@ function makeTempPassword() {
 }
 
 export async function POST(req: NextRequest, ctx: { params: Promise<{ id: string }> }) {
-  const token = await getToken({ req })
+  const token = await getValidToken(req)
   if (!token || token.role !== 'admin') {
     return NextResponse.json({ error: '관리자 권한이 필요합니다.' }, { status: 403 })
   }

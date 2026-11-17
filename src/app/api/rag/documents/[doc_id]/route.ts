@@ -1,3 +1,4 @@
+import { getValidToken } from '@/lib/auth/valid-token'
 import { isAdminAlias } from '@/lib/auth/admin-alias'
 import { NextRequest, NextResponse } from 'next/server';
 import { getToken } from 'next-auth/jwt';
@@ -10,7 +11,7 @@ export async function DELETE(
   { params }: { params: Promise<{ doc_id: string }> }
 ) {
   // Check admin auth via JWT token
-  const token = await getToken({ req: _req });
+  const token = await getValidToken(_req);
   if (!token || token.role !== 'admin') {
     return NextResponse.json({ error: '관리자 권한이 필요합니다.' }, { status: 403 });
   }

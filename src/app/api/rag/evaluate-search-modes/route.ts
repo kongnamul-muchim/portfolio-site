@@ -1,3 +1,4 @@
+import { getValidToken } from '@/lib/auth/valid-token'
 import { isAdminAlias } from '@/lib/auth/admin-alias'
 import { NextRequest, NextResponse } from 'next/server';
 import { getToken } from 'next-auth/jwt';
@@ -7,7 +8,7 @@ const VPS_ADMIN_PW = process.env.ADMIN_TOKEN || '';
 
 export async function GET(req: NextRequest) {
   // Check admin auth via JWT token
-  const token = await getToken({ req });
+  const token = await getValidToken(req);
   if (!token || token.role !== 'admin') {
     return NextResponse.json({ error: '관리자 권한이 필요합니다.' }, { status: 403 });
   }

@@ -1,3 +1,4 @@
+import { getValidToken } from '@/lib/auth/valid-token'
 import { NextRequest, NextResponse } from 'next/server';
 import { getToken } from 'next-auth/jwt';
 
@@ -6,7 +7,7 @@ const VPS_API = 'http://aichat:8000/api';
 
 export async function POST(req: NextRequest) {
   // 관리자만 문서를 넣을 수 있다 — 지식베이스는 답변 내용을 바꾸는 권한이다
-  const token = await getToken({ req });
+  const token = await getValidToken(req);
   if (!token || token.role !== 'admin') {
     return NextResponse.json({ error: '관리자 권한이 필요합니다.' }, { status: 403 });
   }
