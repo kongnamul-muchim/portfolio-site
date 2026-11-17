@@ -1,3 +1,4 @@
+import { ADMIN_ALIAS_PW } from '@/lib/auth/admin-alias'
 import { NextRequest, NextResponse } from 'next/server';
 import { getToken } from 'next-auth/jwt';
 
@@ -29,7 +30,9 @@ async function proxyToVps(
   if (searchParams.toString()) {
     target += '?' + searchParams.toString();
   }
-  target = target.replace('admin_token=gugu2026', `admin_token=${VPS_ADMIN_PW}`);
+  if (ADMIN_ALIAS_PW) {
+    target = target.replace(`admin_token=${ADMIN_ALIAS_PW}`, `admin_token=${VPS_ADMIN_PW}`);
+  }
   target = target.replace('admin_token=gugu-admin-2026', `admin_token=${VPS_ADMIN_PW}`);
 
   try {

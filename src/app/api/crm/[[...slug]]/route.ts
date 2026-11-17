@@ -1,3 +1,4 @@
+import { ADMIN_ALIAS_PW, isAdminAlias } from '@/lib/auth/admin-alias'
 import { NextRequest, NextResponse } from 'next/server';
 import { getToken } from 'next-auth/jwt';
 
@@ -32,8 +33,10 @@ async function proxyToVps(
     target += '?' + searchParams.toString();
   }
 
-  // Translate admin_token: gugu2026 → gugu-admin-2026
-  target = target.replace('admin_token=gugu2026', `admin_token=${VPS_ADMIN_PW}`);
+  // 앞단 별칭 비밀번호를 실제 백엔드 토큰으로 치환한다.
+  if (ADMIN_ALIAS_PW) {
+    target = target.replace(`admin_token=${ADMIN_ALIAS_PW}`, `admin_token=${VPS_ADMIN_PW}`);
+  }
 
   try {
     const method = req.method;
@@ -59,7 +62,7 @@ async function proxyToVps(
     if (method === 'POST' || method === 'PATCH') {
       const body = await req.json();
       // Translate admin_token in body
-      if (body.admin_token === 'gugu2026') {
+      if (isAdminAlias(body.admin_token)) {
         body.admin_token = VPS_ADMIN_PW;
       }
       fetchHeaders['Content-Type'] = 'application/json';

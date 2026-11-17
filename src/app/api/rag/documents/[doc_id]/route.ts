@@ -1,9 +1,9 @@
+import { isAdminAlias } from '@/lib/auth/admin-alias'
 import { NextRequest, NextResponse } from 'next/server';
 import { getToken } from 'next-auth/jwt';
 
 const VPS_API = 'http://aichat:8000/api';
 const VPS_ADMIN_PW = process.env.ADMIN_TOKEN || '';
-const NEW_PW = 'gugu2026';
 
 export async function DELETE(
   _req: NextRequest,
@@ -17,7 +17,7 @@ export async function DELETE(
 
   try {
     const adminToken = _req.headers.get('X-Admin-Token') || '';
-    const vpsToken = adminToken === NEW_PW ? VPS_ADMIN_PW : adminToken;
+    const vpsToken = isAdminAlias(adminToken) ? VPS_ADMIN_PW : adminToken;
 
     const url = `${VPS_API}/documents/${params.doc_id}?admin_token=${vpsToken}`;
     const response = await fetch(url, { method: 'DELETE' });

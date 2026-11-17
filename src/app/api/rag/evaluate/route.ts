@@ -1,3 +1,4 @@
+import { isAdminAlias } from '@/lib/auth/admin-alias'
 import { NextRequest, NextResponse } from 'next/server';
 import { getToken } from 'next-auth/jwt';
 
@@ -12,7 +13,7 @@ export async function GET(req: NextRequest) {
   }
 
   const adminToken = req.nextUrl.searchParams.get('admin_token');
-  const token2 = adminToken === 'gugu2026' ? VPS_ADMIN_PW : adminToken;
+  const token2 = isAdminAlias(adminToken) ? VPS_ADMIN_PW : adminToken;
   const chunkSize = req.nextUrl.searchParams.get('chunk_size') || '1000';
   const topK = req.nextUrl.searchParams.get('top_k') || '5';
 

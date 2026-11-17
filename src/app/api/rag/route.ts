@@ -1,3 +1,4 @@
+import { isAdminAlias } from '@/lib/auth/admin-alias'
 import { NextRequest, NextResponse } from 'next/server';
 import { getToken } from 'next-auth/jwt';
 
@@ -5,7 +6,7 @@ const VPS_API = 'http://aichat:8000/api';
 const VPS_ADMIN_PW = process.env.ADMIN_TOKEN || '';
 
 function translatePassword(body: Record<string, unknown>): Record<string, unknown> {
-  if (body.admin_token === 'gugu2026') {
+  if (isAdminAlias(body.admin_token)) {
     return { ...body, admin_token: VPS_ADMIN_PW };
   }
   return body;
@@ -16,7 +17,7 @@ export async function POST(req: NextRequest) {
     let body = await req.json();
 
     // If admin_token is provided, require admin session
-    if (body.admin_token === 'gugu2026') {
+    if (isAdminAlias(body.admin_token)) {
       const token = await getToken({ req });
       if (!token || token.role !== 'admin') {
         return NextResponse.json({ error: '관리자 권한이 필요합니다.' }, { status: 403 });
@@ -48,7 +49,7 @@ export async function POST(req: NextRequest) {
 
 export async function GET(req: NextRequest) {
   let adminToken = req.nextUrl.searchParams.get('admin_token');
-  if (adminToken === 'gugu2026') {
+  if (isAdminAlias(adminToken)) {
     // Require admin session for privileged access
     const token = await getToken({ req });
     if (!token || token.role !== 'admin') {

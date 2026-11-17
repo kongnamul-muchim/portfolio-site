@@ -1,36 +1,77 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# GuGu.dev — 포트폴리오 사이트
 
-## Getting Started
+개인 포트폴리오 + 커뮤니티 + AI 문서 검색(RAG)을 한 서비스로 운영하는 사이트입니다.
+Next.js App Router 기반이며, 실제로 VPS에서 Docker로 돌아갑니다.
 
-First, run the development server:
+- 운영: https://portfolio.olivilo.shop
+- 문의: rlaehdduf04@gmail.com
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## 구성
+
+| 영역 | 내용 |
+|---|---|
+| 포트폴리오 | 프로젝트 목록/상세, 역할 근거, GitHub 최근 활동 배지 |
+| 커뮤니티 | 게시글·댓글·반응·카테고리, NextAuth 로그인 |
+| AI 채팅 | RAG 검색 API(`/api/rag`) 프록시. 문서 업로드·색인 |
+| 관리자 | 지원 공고(CRM) 프록시, 사용자/문서 관리 |
+
+## 기술 스택
+
+- **프레임워크**: Next.js 14 (App Router) + Pages Router API 일부
+- **언어**: TypeScript
+- **DB**: PostgreSQL + Prisma
+- **인증**: NextAuth (JWT 세션)
+- **스타일**: Tailwind CSS
+- **인프라**: Docker, nginx, Cloudflare
+
+## 구조
+
+```
+src/
+├── app/            # App Router 페이지 + API 라우트
+│   ├── api/        # rag, crm, jobs, visitors, github
+│   ├── projects/   # 포트폴리오 목록·상세
+│   ├── community/  # 게시판
+│   └── chat/       # AI 채팅
+├── pages/api/      # 레거시 Pages Router API (posts, comments, reactions, upload)
+├── components/     # UI 컴포넌트
+├── lib/auth/       # 인증 유틸
+├── services/       # 도메인 서비스 계층
+└── data/           # 프로젝트 메타데이터
+prisma/schema.prisma
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 로컬 실행
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+npm ci
+cp .env.example .env   # 값 채우기
+npx prisma generate
+npm run dev            # http://localhost:3000
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 환경변수
 
-## Learn More
+| 키 | 용도 |
+|---|---|
+| `DATABASE_URL` | PostgreSQL 접속 문자열 |
+| `NEXTAUTH_SECRET` / `NEXTAUTH_URL` | 세션 서명·콜백 주소 |
+| `ADMIN_TOKEN` | 내부 RAG/CRM 백엔드 관리자 토큰 |
+| `RAG_ADMIN_PW` | 관리자 화면에서 입력하는 앞단 별칭 비밀번호 (미설정 시 관리자 로그인 잠김) |
 
-To learn more about Next.js, take a look at the following resources:
+## 배포
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+docker build -t portfolio .
+docker run -d -p 3001:3000 --env-file .env.production portfolio
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+운영은 테스트(3002) → 운영(3001) 순서로 확인 후 반영합니다.
 
-## Deploy on Vercel
+## 검증
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```bash
+npx tsc --noEmit
+npx next lint
+npm run build
+```
