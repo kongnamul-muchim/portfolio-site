@@ -12,20 +12,26 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: '관리자 권한이 필요합니다.' }, { status: 403 });
   }
 
-  const adminToken = req.nextUrl.searchParams.get('admin_token');
+  // 헤더 우선(URL 에 비밀번호가 남지 않도록). 쿼리는 구버전 호환용.
+  const adminToken = req.headers.get('x-admin-token') || req.nextUrl.searchParams.get('admin_token');
   const token2 = isAdminAlias(adminToken) ? VPS_ADMIN_PW : adminToken;
   const topK = req.nextUrl.searchParams.get('top_k') || '5';
 
   try {
     const response = await fetch(
-      `${VPS_API}/admin/evaluate-search-modes?top_k=${topK}&admin_token=${token2}`,
-      { signal: AbortSignal.timeout(30000) },
+      `${VPS_API}/admin/evaluate-search-modes?top_k=${topK}`,
+      {
+        // 관리자 토큰은 URL이 아니라 헤더로 보낸다(로그 노출 방지).
+        headers: { 'X-Admin-Token': token2 || '' },
+        signal: AbortSignal.timeout(30000),
+      },
     );
     const data = await response.json();
     return NextResponse.json(data, { status: response.status });
   } catch (error) {
+    console.error('[rag-proxy]', error)
     return NextResponse.json(
-      { detail: '서버 연결 오류', error: String(error) },
+      { detail: '서버 연결 오류' },
       { status: 500 }
     );
   }

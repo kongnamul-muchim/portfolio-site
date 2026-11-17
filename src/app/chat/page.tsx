@@ -336,7 +336,9 @@ export default function ChatPage() {
     setEvalLoading(true);
     setEvalResults(null);
     try {
-      const res = await fetch(`/api/rag/evaluate?chunk_size=${evalChunkSize}&top_k=${evalTopK}&admin_token=${adminToken}`);
+      const res = await fetch(`/api/rag/evaluate?chunk_size=${evalChunkSize}&top_k=${evalTopK}`, {
+        headers: { 'x-admin-token': adminToken || '' },
+      });
       if (!res.ok) throw Error('평가 실패');
       const data = await res.json();
       const rows = data.results || [];
@@ -361,7 +363,9 @@ export default function ChatPage() {
     setModeCompareLoading(true);
     setModeCompareData(null);
     try {
-      const res = await fetch(`/api/rag/evaluate-search-modes?top_k=${modeTopK}&admin_token=${adminToken}`);
+      const res = await fetch(`/api/rag/evaluate-search-modes?top_k=${modeTopK}`, {
+        headers: { 'x-admin-token': adminToken || '' },
+      });
       if (!res.ok) throw Error('비교 실패');
       const data: ModeCompareData = await res.json();
       setModeCompareData(data);

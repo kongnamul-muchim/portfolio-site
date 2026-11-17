@@ -1,6 +1,7 @@
 import { isAdminAlias } from '@/lib/auth/admin-alias'
 import { NextRequest, NextResponse } from 'next/server';
 import { getToken } from 'next-auth/jwt';
+import { getClientIp } from '@/lib/client-ip';
 
 const VPS_API = 'http://aichat:8000/api';
 const VPS_ADMIN_PW = process.env.ADMIN_TOKEN || '';
@@ -25,7 +26,8 @@ export async function POST(req: NextRequest) {
     }
 
     body = translatePassword(body);
-    const clientIp = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || req.headers.get('x-real-ip') || 'unknown';
+    // XFF 첫 값은 클라이언트가 위조할 수 있어 일일 한도 우회에 쓰였다. 신뢰 가능한 IP만 넘긴다.
+    const clientIp = getClientIp(req);
 
     const response = await fetch(`${VPS_API}/chat`, {
       method: 'POST',
@@ -40,8 +42,9 @@ export async function POST(req: NextRequest) {
     const data = await response.json();
     return NextResponse.json(data, { status: response.status });
   } catch (error) {
+    console.error('[rag-proxy]', error)
     return NextResponse.json(
-      { detail: '서버 연결 오류', error: String(error) },
+      { detail: '서버 연결 오류' },
       { status: 500 }
     );
   }

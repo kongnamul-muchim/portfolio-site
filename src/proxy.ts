@@ -1,5 +1,6 @@
 import { getToken } from 'next-auth/jwt'
 import { NextRequest, NextResponse } from 'next/server'
+import { getClientIp } from '@/lib/client-ip'
 
 // ── 로그인 시도 제한 ─────────────────────────────────────────
 // 같은 IP 가 짧은 시간에 비밀번호를 계속 넣는 것을 막는다(무차별 대입 방지).
@@ -47,10 +48,8 @@ export default async function proxy(req: NextRequest) {
 
   // 로그인 콜백(POST) 만 시도 횟수를 센다
   if (pathname === '/api/auth/callback/credentials' && req.method === 'POST') {
-    const ip =
-      req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ||
-      req.headers.get('x-real-ip') ||
-      'unknown'
+    // XFF 첫 값을 쓰면 위조로 제한을 우회할 수 있다(재현 확인). 신뢰 가능한 값만 쓴다.
+    const ip = getClientIp(req)
     if (isLoginRateLimited(ip)) {
       return NextResponse.json(
         { error: '로그인 시도가 너무 많습니다. 5분 뒤에 다시 시도해 주세요.' },

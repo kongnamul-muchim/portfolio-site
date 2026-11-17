@@ -21,13 +21,18 @@ export async function DELETE(
     const adminToken = _req.headers.get('X-Admin-Token') || ''
     const vpsToken = isAdminAlias(adminToken) ? VPS_ADMIN_PW : adminToken
 
-    const url = `${VPS_API}/documents/${doc_id}?admin_token=${vpsToken}`;
-    const response = await fetch(url, { method: 'DELETE' });
+    // 토큰을 쿼리스트링에 넣으면 aichat 액세스 로그에 관리자 비밀번호가 그대로 남는다.
+    // 헤더로만 전달한다(aichat 는 X-Admin-Token 우선 지원).
+    const response = await fetch(`${VPS_API}/documents/${doc_id}`, {
+      method: 'DELETE',
+      headers: { 'X-Admin-Token': vpsToken },
+    });
     const data = await response.json();
     return NextResponse.json(data, { status: response.status });
   } catch (error) {
+    console.error('[rag-proxy]', error)
     return NextResponse.json(
-      { detail: '삭제 프록시 오류', error: String(error) },
+      { detail: '삭제 프록시 오류' },
       { status: 500 }
     );
   }
