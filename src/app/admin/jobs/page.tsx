@@ -160,6 +160,7 @@ export default function AdminJobsPage() {
           <div className="flex flex-wrap items-center gap-3">
             <input
               type="text"
+              aria-label="수집 키워드"
               value={keyword}
               onChange={e => setKeyword(e.target.value)}
               placeholder="검색어 (비우면 스마트 크롤링)"
@@ -213,12 +214,14 @@ export default function AdminJobsPage() {
         <div className="flex flex-wrap items-center gap-3 mb-4">
           <input
             type="text"
+            aria-label="공고 검색"
             value={search}
             onChange={e => { setSearch(e.target.value); setPage(1) }}
             placeholder="🔍 제목/회사 검색"
             className="px-3 py-2 rounded-lg border border-gray-300 dark:border-[#374151] bg-white dark:bg-[#111827] text-sm"
           />
           <select
+            aria-label="출처 필터"
             value={sourceFilter}
             onChange={e => { setSourceFilter(e.target.value); setPage(1) }}
             className="px-3 py-2 rounded-lg border border-gray-300 dark:border-[#374151] bg-white dark:bg-[#111827] text-sm"
@@ -230,6 +233,7 @@ export default function AdminJobsPage() {
             <option value="wanted">원티드</option>
           </select>
           <select
+            aria-label="지역 필터"
             value={locationFilter}
             onChange={e => { setLocationFilter(e.target.value); setPage(1) }}
             className="px-3 py-2 rounded-lg border border-gray-300 dark:border-[#374151] bg-white dark:bg-[#111827] text-sm max-w-[140px]"
@@ -240,6 +244,7 @@ export default function AdminJobsPage() {
             ))}
           </select>
           <select
+            aria-label="정렬 기준"
             value={sort}
             onChange={e => setSort(e.target.value)}
             className="px-3 py-2 rounded-lg border border-gray-300 dark:border-[#374151] bg-white dark:bg-[#111827] text-sm"

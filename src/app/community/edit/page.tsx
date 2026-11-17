@@ -111,10 +111,10 @@ export default function EditPostPage() {
           
           {error && <div className="bg-red-100 text-red-600 p-3 rounded mb-4">{error}</div>}
           
-          <form onSubmit={handleSubmit}>
+          <form method="post" onSubmit={handleSubmit}>
             <div className="mb-4">
-              <label className="block mb-2 font-medium">제목</label>
-              <input
+              <label htmlFor="edit-fld-1" className="block mb-2 font-medium">제목</label>
+              <input id="edit-fld-1"
                 type="text"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
@@ -125,8 +125,8 @@ export default function EditPostPage() {
             </div>
             
             <div className="mb-6">
-              <label className="block mb-2 font-medium">내용</label>
-              <textarea
+              <label htmlFor="edit-fld-2" className="block mb-2 font-medium">내용</label>
+              <textarea id="edit-fld-2"
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
                 className="w-full border rounded px-3 py-2 h-64 resize-none"

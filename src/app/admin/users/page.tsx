@@ -109,6 +109,7 @@ export default function AdminUsersPage() {
         <div className="mb-4">
           <input
             type="text"
+            aria-label="회원 검색 (닉네임 또는 이메일)"
             value={search}
             onChange={e => setSearch(e.target.value)}
             placeholder="🔍 닉네임 또는 이메일 검색"

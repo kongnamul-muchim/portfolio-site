@@ -310,7 +310,7 @@ function CommentsSection({
       <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-4">댓글 {comments.length}개</h2>
 
       {session ? (
-        <form onSubmit={handleSubmit} className="mb-6">
+        <form method="post" onSubmit={handleSubmit} className="mb-6">
           <textarea
             value={content}
             onChange={(e) => setContent(e.target.value)}

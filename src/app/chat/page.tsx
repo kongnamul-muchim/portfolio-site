@@ -448,18 +448,18 @@ export default function ChatPage() {
 
             <div className="space-y-3">
               <div>
-                <label className="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">캐릭터 이름</label>
-                <input type="text" value={editName} onChange={e => setEditName(e.target.value)} placeholder="루나" maxLength={20}
+                <label htmlFor="chat-fld-1" className="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">캐릭터 이름</label>
+                <input id="chat-fld-1" type="text" value={editName} onChange={e => setEditName(e.target.value)} placeholder="루나" maxLength={20}
                   className="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-[#2a2a4a] bg-gray-50 dark:bg-[#0f0f1a] text-sm outline-none focus:border-purple-400" />
               </div>
               <div>
-                <label className="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">성격</label>
-                <textarea value={editPersonality} onChange={e => setEditPersonality(e.target.value)} placeholder="부드럽고 따뜻한 성격의 AI 사서예요..." rows={2}
+                <label htmlFor="chat-fld-2" className="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">성격</label>
+                <textarea id="chat-fld-2" value={editPersonality} onChange={e => setEditPersonality(e.target.value)} placeholder="부드럽고 따뜻한 성격의 AI 사서예요..." rows={2}
                   className="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-[#2a2a4a] bg-gray-50 dark:bg-[#0f0f1a] text-sm outline-none focus:border-purple-400 resize-none" />
               </div>
               <div>
-                <label className="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">말투</label>
-                <select value={editSpeech} onChange={e => setEditSpeech(e.target.value)}
+                <label htmlFor="chat-fld-3" className="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">말투</label>
+                <select id="chat-fld-3" value={editSpeech} onChange={e => setEditSpeech(e.target.value)}
                   className="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-[#2a2a4a] bg-gray-50 dark:bg-[#0f0f1a] text-sm outline-none focus:border-purple-400">
                   <option value="">기본 (~예요/~에요체)</option>
                   <option value="반말로 편하게 말해줘">반말 (~야/~다)</option>
@@ -470,18 +470,18 @@ export default function ChatPage() {
                 </select>
               </div>
               <div>
-                <label className="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">좋아하는 것</label>
-                <input type="text" value={editLikes} onChange={e => setEditLikes(e.target.value)} placeholder="별빛, 책, 대화, 음악..."
+                <label htmlFor="chat-fld-4" className="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">좋아하는 것</label>
+                <input id="chat-fld-4" type="text" value={editLikes} onChange={e => setEditLikes(e.target.value)} placeholder="별빛, 책, 대화, 음악..."
                   className="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-[#2a2a4a] bg-gray-50 dark:bg-[#0f0f1a] text-sm outline-none focus:border-purple-400" />
               </div>
               <div>
-                <label className="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">싫어하는 것</label>
-                <input type="text" value={editDislikes} onChange={e => setEditDislikes(e.target.value)} placeholder="거짓말, 무례한 말..."
+                <label htmlFor="chat-fld-5" className="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">싫어하는 것</label>
+                <input id="chat-fld-5" type="text" value={editDislikes} onChange={e => setEditDislikes(e.target.value)} placeholder="거짓말, 무례한 말..."
                   className="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-[#2a2a4a] bg-gray-50 dark:bg-[#0f0f1a] text-sm outline-none focus:border-purple-400" />
               </div>
               <div>
-                <label className="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">나와의 관계 설정</label>
-                <input type="text" value={editRelationship} onChange={e => setEditRelationship(e.target.value)} placeholder="예) 오랜 친구, 선생님과 제자, 동료..."
+                <label htmlFor="chat-fld-6" className="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">나와의 관계 설정</label>
+                <input id="chat-fld-6" type="text" value={editRelationship} onChange={e => setEditRelationship(e.target.value)} placeholder="예) 오랜 친구, 선생님과 제자, 동료..."
                   className="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-[#2a2a4a] bg-gray-50 dark:bg-[#0f0f1a] text-sm outline-none focus:border-purple-400" />
               </div>
             </div>
@@ -500,8 +500,8 @@ export default function ChatPage() {
                   <p className="text-xs text-gray-500 dark:text-gray-400 mb-3">파라미터별 RAG 성능을 측정합니다.</p>
                   <div className="flex gap-2 mb-3">
                     <div className="flex-1">
-                      <label className="block text-xs text-gray-500 mb-1">Chunk Size</label>
-                      <select value={evalChunkSize} onChange={e => setEvalChunkSize(e.target.value)}
+                      <label htmlFor="chat-fld-7" className="block text-xs text-gray-500 mb-1">Chunk Size</label>
+                      <select id="chat-fld-7" value={evalChunkSize} onChange={e => setEvalChunkSize(e.target.value)}
                         className="w-full px-2 py-1.5 rounded-lg border border-gray-300 dark:border-[#2a2a4a] bg-gray-50 dark:bg-[#0f0f1a] text-xs outline-none">
                         <option value="500">500</option>
                         <option value="1000">1000</option>
@@ -509,8 +509,8 @@ export default function ChatPage() {
                       </select>
                     </div>
                     <div className="flex-1">
-                      <label className="block text-xs text-gray-500 mb-1">Top-K</label>
-                      <select value={evalTopK} onChange={e => setEvalTopK(e.target.value)}
+                      <label htmlFor="chat-fld-8" className="block text-xs text-gray-500 mb-1">Top-K</label>
+                      <select id="chat-fld-8" value={evalTopK} onChange={e => setEvalTopK(e.target.value)}
                         className="w-full px-2 py-1.5 rounded-lg border border-gray-300 dark:border-[#2a2a4a] bg-gray-50 dark:bg-[#0f0f1a] text-xs outline-none">
                         <option value="3">3</option>
                         <option value="5">5</option>
@@ -541,8 +541,8 @@ export default function ChatPage() {
                   <h3 className="text-base font-bold mb-1">🔍 검색 방식 비교</h3>
                   <p className="text-xs text-gray-500 dark:text-gray-400 mb-3">Vector vs BM25 vs Hybrid 성능 비교</p>
                   <div className="mb-3">
-                    <label className="block text-xs text-gray-500 mb-1">Top-K</label>
-                    <select value={modeTopK} onChange={e => setModeTopK(e.target.value)}
+                    <label htmlFor="chat-fld-9" className="block text-xs text-gray-500 mb-1">Top-K</label>
+                    <select id="chat-fld-9" value={modeTopK} onChange={e => setModeTopK(e.target.value)}
                       className="w-full px-2 py-1.5 rounded-lg border border-gray-300 dark:border-[#2a2a4a] bg-gray-50 dark:bg-[#0f0f1a] text-xs outline-none">
                       <option value="3">3</option>
                       <option value="5">5</option>
@@ -725,6 +725,7 @@ export default function ChatPage() {
         <div className="flex gap-3 items-end">
           <div className="flex-1 relative bg-gray-100 dark:bg-[#14142e] rounded-2xl border border-gray-200 dark:border-[#2a2a4a] focus-within:border-purple-400 transition-colors">
             <textarea
+              aria-label="메시지 입력"
               value={input}
               onChange={e => setInput(e.target.value)}
               onKeyDown={e => {

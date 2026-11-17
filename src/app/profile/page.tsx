@@ -213,12 +213,12 @@ export default function ProfilePage() {
 
         {activeTab === 'profile' && profile && (
           <div className="bg-white dark:bg-[#111827] border border-gray-200 dark:border-[#1F2937] rounded-xl p-6">
-            <form onSubmit={handleUpdateProfile} className="space-y-4">
+            <form method="post" onSubmit={handleUpdateProfile} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-[#D1D5DB] mb-1">
+                <label htmlFor="pf-1" className="block text-sm font-medium text-gray-700 dark:text-[#D1D5DB] mb-1">
                   계정 유형
                 </label>
-                <input
+                <input id="pf-1"
                   type="text"
                   value={profile.email?.includes('@local.port') ? '닉네임 계정' : profile.email}
                   disabled
@@ -226,10 +226,10 @@ export default function ProfilePage() {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-[#D1D5DB] mb-1">
+                <label htmlFor="pf-2" className="block text-sm font-medium text-gray-700 dark:text-[#D1D5DB] mb-1">
                   로그인 아이디
                 </label>
-                <input
+                <input id="pf-2"
                   type="text"
                   value={profile.nickname}
                   disabled
@@ -238,10 +238,10 @@ export default function ProfilePage() {
                 <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">아이디는 가입할 때 정해지며 바꿀 수 없습니다.</p>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-[#D1D5DB] mb-1">
+                <label htmlFor="pf-3" className="block text-sm font-medium text-gray-700 dark:text-[#D1D5DB] mb-1">
                   표시 이름
                 </label>
-                <input
+                <input id="pf-3"
                   type="text"
                   value={displayName}
                   onChange={(e) => setDisplayName(e.target.value)}
@@ -260,12 +260,12 @@ export default function ProfilePage() {
 
         {activeTab === 'password' && (
           <div className="bg-white dark:bg-[#111827] border border-gray-200 dark:border-[#1F2937] rounded-xl p-6">
-            <form onSubmit={handleChangePassword} className="space-y-4">
+            <form method="post" onSubmit={handleChangePassword} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-[#D1D5DB] mb-1">
+                <label htmlFor="pf-4" className="block text-sm font-medium text-gray-700 dark:text-[#D1D5DB] mb-1">
                   현재 비밀번호
                 </label>
-                <input
+                <input id="pf-4"
                   type="password"
                   value={currentPassword}
                   onChange={(e) => setCurrentPassword(e.target.value)}
@@ -274,10 +274,10 @@ export default function ProfilePage() {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-[#D1D5DB] mb-1">
+                <label htmlFor="pf-5" className="block text-sm font-medium text-gray-700 dark:text-[#D1D5DB] mb-1">
                   새 비밀번호
                 </label>
-                <input
+                <input id="pf-5"
                   type="password"
                   value={newPassword}
                   onChange={(e) => setNewPassword(e.target.value)}
@@ -288,10 +288,10 @@ export default function ProfilePage() {
                 <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">8자 이상, 영문·숫자·특수문자 각 1개 이상</p>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-[#D1D5DB] mb-1">
+                <label htmlFor="pf-6" className="block text-sm font-medium text-gray-700 dark:text-[#D1D5DB] mb-1">
                   새 비밀번호 확인
                 </label>
-                <input
+                <input id="pf-6"
                   type="password"
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}

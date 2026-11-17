@@ -83,7 +83,7 @@ export default function SignupPage() {
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form method="post" onSubmit={handleSubmit} className="space-y-4">
             <div>
               <label htmlFor="signup-nickname" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 아이디 (닉네임)

@@ -157,12 +157,12 @@ export default function WritePage() {
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form method="post" onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              <label htmlFor="wr-1" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 카테고리
               </label>
-              <select
+              <select id="wr-1"
                 value={categoryId}
                 onChange={(e) => setCategoryId(e.target.value)}
                 className="input-field"
@@ -175,10 +175,10 @@ export default function WritePage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              <label htmlFor="wr-2" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 제목
               </label>
-              <input
+              <input id="wr-2"
                 type="text"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
@@ -190,10 +190,10 @@ export default function WritePage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              <label htmlFor="wr-3" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 내용
               </label>
-              <textarea
+              <textarea id="wr-3"
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
                 className="input-field h-64 resize-none"
@@ -203,10 +203,10 @@ export default function WritePage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              <label htmlFor="wr-4" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 이미지 첨부 (최대 5장)
               </label>
-              <input
+              <input id="wr-4"
                 type="file"
                 accept="image/*"
                 multiple

@@ -233,12 +233,14 @@ export default function CrmPage() {
         <div className="flex flex-col sm:flex-row gap-3 mb-4">
           <input
             type="text"
+            aria-label="고객 검색 (이름, 이메일, 회사)"
             placeholder="🔍 이름, 이메일, 회사 검색..."
             value={search}
             onChange={e => { setSearch(e.target.value); setPage(1); }}
             className="flex-1 px-4 py-2 rounded-lg border border-gray-300 dark:border-[#374151] bg-white dark:bg-[#1F2937] text-gray-900 dark:text-[#E5E7EB] text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500"
           />
           <select
+            aria-label="상태 필터"
             value={statusFilter}
             onChange={e => { setStatusFilter(e.target.value); setPage(1); }}
             className="px-4 py-2 rounded-lg border border-gray-300 dark:border-[#374151] bg-white dark:bg-[#1F2937] text-gray-900 dark:text-[#E5E7EB] text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500"
@@ -344,38 +346,38 @@ export default function CrmPage() {
               <h2 className="text-lg font-bold text-gray-900 dark:text-[#E5E7EB] mb-4">{editingId ? '고객 수정' : '신규 고객 등록'}</h2>
               <div className="space-y-3">
                 <div>
-                  <label className="block text-xs font-medium text-gray-600 dark:text-[#9CA3AF] mb-1">이름 *</label>
-                  <input value={form.name} onChange={e => setForm(f => ({...f, name: e.target.value}))}
+                  <label htmlFor="crm-fld-1" className="block text-xs font-medium text-gray-600 dark:text-[#9CA3AF] mb-1">이름 *</label>
+                  <input id="crm-fld-1" value={form.name} onChange={e => setForm(f => ({...f, name: e.target.value}))}
                     className="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-[#374151] bg-white dark:bg-[#111827] text-gray-900 dark:text-[#E5E7EB] text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500" />
                 </div>
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="block text-xs font-medium text-gray-600 dark:text-[#9CA3AF] mb-1">이메일</label>
-                    <input value={form.email} onChange={e => setForm(f => ({...f, email: e.target.value}))}
+                    <label htmlFor="crm-fld-2" className="block text-xs font-medium text-gray-600 dark:text-[#9CA3AF] mb-1">이메일</label>
+                    <input id="crm-fld-2" value={form.email} onChange={e => setForm(f => ({...f, email: e.target.value}))}
                       className="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-[#374151] bg-white dark:bg-[#111827] text-gray-900 dark:text-[#E5E7EB] text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500" />
                   </div>
                   <div>
-                    <label className="block text-xs font-medium text-gray-600 dark:text-[#9CA3AF] mb-1">전화번호</label>
-                    <input value={form.phone} onChange={e => setForm(f => ({...f, phone: e.target.value}))}
-                      className="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-[#374151] bg-white dark:bg-[#111827] text-gray-900 dark:text-[#E5E7EB] text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500" />
-                  </div>
-                </div>
-                <div className="grid grid-cols-2 gap-3">
-                  <div>
-                    <label className="block text-xs font-medium text-gray-600 dark:text-[#9CA3AF] mb-1">회사</label>
-                    <input value={form.company} onChange={e => setForm(f => ({...f, company: e.target.value}))}
-                      className="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-[#374151] bg-white dark:bg-[#111827] text-gray-900 dark:text-[#E5E7EB] text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500" />
-                  </div>
-                  <div>
-                    <label className="block text-xs font-medium text-gray-600 dark:text-[#9CA3AF] mb-1">직책</label>
-                    <input value={form.position} onChange={e => setForm(f => ({...f, position: e.target.value}))}
+                    <label htmlFor="crm-fld-3" className="block text-xs font-medium text-gray-600 dark:text-[#9CA3AF] mb-1">전화번호</label>
+                    <input id="crm-fld-3" value={form.phone} onChange={e => setForm(f => ({...f, phone: e.target.value}))}
                       className="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-[#374151] bg-white dark:bg-[#111827] text-gray-900 dark:text-[#E5E7EB] text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500" />
                   </div>
                 </div>
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="block text-xs font-medium text-gray-600 dark:text-[#9CA3AF] mb-1">상태</label>
-                    <select value={form.status} onChange={e => setForm(f => ({...f, status: e.target.value}))}
+                    <label htmlFor="crm-fld-4" className="block text-xs font-medium text-gray-600 dark:text-[#9CA3AF] mb-1">회사</label>
+                    <input id="crm-fld-4" value={form.company} onChange={e => setForm(f => ({...f, company: e.target.value}))}
+                      className="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-[#374151] bg-white dark:bg-[#111827] text-gray-900 dark:text-[#E5E7EB] text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500" />
+                  </div>
+                  <div>
+                    <label htmlFor="crm-fld-5" className="block text-xs font-medium text-gray-600 dark:text-[#9CA3AF] mb-1">직책</label>
+                    <input id="crm-fld-5" value={form.position} onChange={e => setForm(f => ({...f, position: e.target.value}))}
+                      className="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-[#374151] bg-white dark:bg-[#111827] text-gray-900 dark:text-[#E5E7EB] text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500" />
+                  </div>
+                </div>
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label htmlFor="crm-fld-6" className="block text-xs font-medium text-gray-600 dark:text-[#9CA3AF] mb-1">상태</label>
+                    <select id="crm-fld-6" value={form.status} onChange={e => setForm(f => ({...f, status: e.target.value}))}
                       className="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-[#374151] bg-white dark:bg-[#111827] text-gray-900 dark:text-[#E5E7EB] text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500">
                       <option value="lead">잠재고객</option>
                       <option value="contact">상담중</option>
@@ -384,14 +386,14 @@ export default function CrmPage() {
                     </select>
                   </div>
                   <div>
-                    <label className="block text-xs font-medium text-gray-600 dark:text-[#9CA3AF] mb-1">태그 (쉼표 구분)</label>
-                    <input value={form.tags} onChange={e => setForm(f => ({...f, tags: e.target.value}))} placeholder="VIP, 파트너"
+                    <label htmlFor="crm-fld-7" className="block text-xs font-medium text-gray-600 dark:text-[#9CA3AF] mb-1">태그 (쉼표 구분)</label>
+                    <input id="crm-fld-7" value={form.tags} onChange={e => setForm(f => ({...f, tags: e.target.value}))} placeholder="VIP, 파트너"
                       className="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-[#374151] bg-white dark:bg-[#111827] text-gray-900 dark:text-[#E5E7EB] text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500" />
                   </div>
                 </div>
                 <div>
-                  <label className="block text-xs font-medium text-gray-600 dark:text-[#9CA3AF] mb-1">메모</label>
-                  <textarea value={form.memo} onChange={e => setForm(f => ({...f, memo: e.target.value}))} rows={3}
+                  <label htmlFor="crm-fld-8" className="block text-xs font-medium text-gray-600 dark:text-[#9CA3AF] mb-1">메모</label>
+                  <textarea id="crm-fld-8" value={form.memo} onChange={e => setForm(f => ({...f, memo: e.target.value}))} rows={3}
                     className="w-full px-3 py-2 rounded-lg border border-gray-300 dark:border-[#374151] bg-white dark:bg-[#111827] text-gray-900 dark:text-[#E5E7EB] text-sm focus:outline-none focus:ring-2 focus:ring-cyan-500" />
                 </div>
               </div>

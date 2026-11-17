@@ -257,6 +257,12 @@ h1, h2, h3 {
   min-width: 0;
   position: relative;
 }
+/* 각 줄은 독립된 한 줄이어야 한다.
+   inline 으로 두면 세 문장이 한 문단처럼 흘러서 마지막 '자.' 만 다음 줄로 떨어진다. */
+.marquee-display .line {
+  display: block;
+  text-wrap: balance;
+}
 .marquee-display .accent-word {
   color: var(--color-coral-ink);
   position: relative;
@@ -778,6 +784,10 @@ h1, h2, h3 {
   }
   .marquee-display {
     font-size: clamp(2.2rem, 9vw, 3rem);
+  }
+  /* 좁은 화면에서는 강조 줄도 줄바꿈을 허용해야 가로로 넘치지 않는다 */
+  .marquee-display .accent-word {
+    white-space: normal;
   }
   .masthead-issue {
     display: none;
