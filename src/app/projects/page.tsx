@@ -18,7 +18,7 @@ export default function ProjectsPage() {
           </Reveal>
           <Reveal delay={60}>
             <p className="mt-2 text-sm" style={{ color: 'var(--color-neutral)' }}>
-              Unity 게임부터 AI 시스템, 자체 서버 운영까지 — 직접 설계·개발·배포한 전체 작품 목록입니다.
+              Unity 게임부터 AI 시스템, 자체 서버 운영까지 — 기획·검증은 직접, 구현은 AI 코딩 에이전트와 함께한 전체 작품 목록입니다.
             </p>
           </Reveal>
         </div>

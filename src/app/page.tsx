@@ -20,7 +20,7 @@ export default function Home() {
           <span className="line line-3">개발자.</span>
         </h1>
         <p className="marquee-lede">
-          고등학교 졸업 후 독학으로 시작해 Unity 게임과 미니게임 프로토타입을 직접 설계·개발하며 성장했습니다.
+          고등학교 졸업 후 독학으로 시작해 Unity 게임과 미니게임 프로토타입을 기획하고 검증하며 성장했습니다.
           클라이언트에서 백엔드, AI, 인프라까지 전 스택을 다루는,<br />
           <strong>견고하고 확장 가능한 게임 시스템을 설계하는 개발자</strong>입니다.
         </p>

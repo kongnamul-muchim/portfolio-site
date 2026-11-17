@@ -319,13 +319,13 @@ function KeyAchievement({ slug }: { slug: string }) {
     'afk': '6주 장기 프로젝트. DI Container + Event-driven 구조로 자동 전투/장비 합성/환생 시스템 구현. 스테이지·아이템·설정값을 CSV로 분리해, 코드를 고치지 않고 밸런스를 조절할 수 있게 했습니다.',
     'unity-minigames': '블록퍼즐부터 매치3까지 7개 장르를 동일한 Core/Shell + DI 아키텍처로 구현. 순수 C# 게임 로직을 Unity View와 분리해 장르가 달라도 재사용 가능한 구조를 증명.',
     'aichat': 'DeepSeek V4 + pgvector 기반 RAG 시스템. Docker 컨테이너 분리 + VPS 직배포 운영. Cloudflare Proxy로 백엔드 IP 은닉.',
-    'cookie-clicker': '강화·스킬트리·프레스티지로 진짜 성장 사이클을 설계한 인크리멘털 게임. 새로고침해도 진행도가 유지되는 저장 구조를 직접 구현.',
+    'cookie-clicker': '강화·스킬트리·프레스티지로 진짜 성장 사이클을 설계한 인크리멘털 게임. 새로고침해도 진행도가 유지되는 저장 구조를 설계.',
     'minigame-collection': 'Blazor WebAssembly + SOLID 원칙. 6종 게임이 공통 Core 라이브러리를 공유하고, 게임별 테스트 프로젝트 7개로 규칙을 검증합니다.',
     'community-board': 'Next.js + Prisma 풀스택. 포트폴리오 사이트 자체가 이 프로젝트의 확장판. 실제 회원가입/로그인/게시글 운영 중.',
-    'resonance': 'Vanilla JS 턴제 전략 RPG. 6개 직업, 스킬 54종, 잔향 54종, 유물 129종. 프레임워크 없이 DI 패턴과 이벤트 버스로 상태 흐름을 직접 통제했습니다.',
-    'hide-and-ink': '4인 팀 프로젝트의 시스템 아키텍트 & 코어 프로그래머. 전체 아키텍처 설계, DI Container 기반 의존성 분리, 핵심 상태머신(FSM) 구현. README에 팀원 역할 바운더리 정의로 Git 충돌 최소화. 800+ 커밋의 장기 팀 협업 경험.',
+    'resonance': 'Vanilla JS 턴제 전략 RPG. 6개 직업, 스킬 54종, 잔향 54종, 유물 129종. 프레임워크 없이 DI 패턴과 이벤트 버스로 상태가 한 곳에서만 바뀌도록 설계했습니다.',
+    'hide-and-ink': '4인 팀 프로젝트. 전체 구조와 핵심 상태머신(FSM)의 방향을 정하고 검증을 맡았습니다. 구현은 AI 코딩 에이전트와 함께 진행. README에 팀원 역할 바운더리를 정의해 Git 충돌을 줄였고, 800+ 커밋의 장기 협업을 경험했습니다.',
     'spirit-merge': '10일 만에 기획부터 완성까지. 머지+자동전투+파견 3개 루프가 맞물리는 방치형 RPG. 88개 스크립트를 Core/Systems 13개 서비스로 SRP 분리, 원자적 쓰기+백업 자동 저장(오프라인 경과 반영), Unity TCP CLI 검증 명령 67개로 상태 확인, WebGL 브라우저 실기동.',
-    'portfolio-site': '지금 보고 있는 이 사이트 자체. Next.js App Router + Prisma + PostgreSQL + Docker로 직접 구축·운영. 커뮤니티부터 RAG AI 챗봇, 채용공고 관리까지 전 기능을 통합한 풀스택 앱.',
+    'portfolio-site': '지금 보고 있는 이 사이트 자체. Next.js App Router + Prisma + PostgreSQL + Docker로 구성했고 직접 운영 중. 커뮤니티부터 RAG AI 챗봇, 채용공고 관리까지 전 기능을 통합한 풀스택 앱.',
   }
   return <>{highlights[slug] || '자세한 정보는 아래 Project Details를 확인해주세요.'}</>
 }
@@ -442,7 +442,7 @@ function ProjectDetailContent({ slug }: { slug: string }) {
           <li><strong>진행도 유지</strong> — 새로고침/재접속해도 진행 상태가 그대로 유지되는 쾌적한 저장</li>
         </ul>
         <h3 className="text-base font-semibold text-gray-900 dark:text-[#E5E7EB]">Why This Project</h3>
-        <p>숫자와 비례 관계를 다루는 경제 설계의 기본기를 익히기 위해 직접 설계·구현했습니다.</p>
+        <p>숫자와 비례 관계를 다루는 경제 설계의 기본기를 익히기 위해 직접 설계했습니다.</p>
       </div>
     ),
 
@@ -482,7 +482,7 @@ function ProjectDetailContent({ slug }: { slug: string }) {
         </ul>
 
         <h3 className="text-base font-semibold text-gray-900 dark:text-[#E5E7EB]">Why This Project</h3>
-        <p>실제 방문자가 사용하는 운영 중인 서비스로, 단순 기능 구현이 아니라 <strong>VPS 직배포 + Docker 컨테이너 분리 + Cloudflare Proxy 보안</strong>까지 전체 운영 사이클을 직접 설계·구축했습니다. RAG 파이프라인 구성부터 인프라 보안, 모니터링까지 백엔드 운영의 전 과정을 경험한 프로젝트입니다.</p>
+        <p>실제 방문자가 사용하는 운영 중인 서비스로, 단순 기능 구현이 아니라 <strong>VPS 직배포 + Docker 컨테이너 분리 + Cloudflare Proxy 보안</strong>까지 전체 운영 사이클을 직접 설계하고 지금도 운영하고 있습니다. RAG 파이프라인 구성부터 인프라 보안, 모니터링까지 백엔드 운영의 전 과정을 경험한 프로젝트입니다.</p>
         <h3 className="text-base font-semibold text-gray-900 dark:text-[#E5E7EB]">Key Architecture Decisions</h3>
         <ul className="list-disc pl-5 space-y-1">
           <li><strong>컨테이너 네트워크 통합</strong> — 프론트(portfolio)와 백엔드(aichat)를 동일 Docker 네트워크로 연결해 안정적으로 통신</li>
@@ -568,7 +568,7 @@ function ProjectDetailContent({ slug }: { slug: string }) {
 
         <h3 className="text-base font-semibold text-gray-900 dark:text-[#E5E7EB]">Team Collaboration</h3>
         <ul className="list-disc pl-5 space-y-1">
-          <li><strong>팀 구성:</strong> 시스템 아키텍트 &amp; 코어 프로그래머(본인) / 게임플레이 &amp; 컴포넌트 통합 / 리드 아티스트 &amp; 비주얼 디렉터 / 테크니컬 기획 &amp; 레벨 디자이너</li>
+          <li><strong>팀 구성:</strong> 구조·FSM 결정 및 검증(본인) / 게임플레이 &amp; 컴포넌트 통합 / 리드 아티스트 &amp; 비주얼 디렉터 / 테크니컬 기획 &amp; 레벨 디자이너</li>
           <li><strong>작업 파이프라인:</strong> 아트 에셋 세팅 → 코어 코드 구축 → 프리팹 조립/통합 → 레벨 배치/튜닝 (단계별 인계)</li>
           <li><strong>Git 규칙:</strong> 역할별 폴더 바운더리 설정, 타인 전담 구역 수정 시 사전 허락 필수</li>
           <li><strong>기획 문서화:</strong> 30+개의 기획/설계 문서를 Plans/에서 관리 (Boss 디자인, AI, 사운드, UI 등)</li>
