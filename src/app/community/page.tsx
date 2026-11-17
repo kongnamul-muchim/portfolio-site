@@ -2,6 +2,10 @@ import Link from 'next/link'
 import { PostService } from '@/services/post.service'
 import { CategoryService } from '@/services/category.service'
 
+// 게시글 목록은 항상 최신 DB 내용이어야 한다.
+// (빌드 시점에 정적 생성하면 글이 고정되거나, 빌드 환경에 DB 가 없으면 실패한다)
+export const dynamic = 'force-dynamic'
+
 const postService = new PostService()
 const categoryService = new CategoryService()
 
@@ -23,12 +27,13 @@ type PostWithRelations = {
 export default async function CommunityHome({
   searchParams
 }: {
-  searchParams: { search?: string; type?: string; page?: string; category?: string }
+  searchParams: Promise<{ search?: string; type?: string; page?: string; category?: string }>
 }) {
-  const page = parseInt(searchParams.page || '1')
-  const search = searchParams.search
-  const searchType = searchParams.type
-  const category = searchParams.category
+  const sp = await searchParams
+  const page = parseInt(sp.page || '1')
+  const search = sp.search
+  const searchType = sp.type
+  const category = sp.category
 
   const [{ posts, totalPages }, categories] = await Promise.all([
     postService.getPosts(page, 12, search, searchType, category),

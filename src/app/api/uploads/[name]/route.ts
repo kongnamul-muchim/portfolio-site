@@ -15,8 +15,8 @@ const CONTENT_TYPES: Record<string, string> = {
   '.webp': 'image/webp',
 }
 
-export async function GET(_req: NextRequest, { params }: { params: { name: string } }) {
-  const name = params.name
+export async function GET(_req: NextRequest, { params }: { params: Promise<{ name: string }> }) {
+  const { name } = await params
 
   // 파일명은 업로드 시 생성한 형식만 허용한다 (경로 조작 차단)
   if (!/^img-\d+-[a-f0-9]{16}\.(png|jpg|gif|webp)$/.test(name)) {

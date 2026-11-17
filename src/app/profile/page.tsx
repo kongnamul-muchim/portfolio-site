@@ -43,18 +43,7 @@ export default function ProfilePage() {
     }
   }, [status, router])
 
-  useEffect(() => {
-    if (session) {
-      fetchProfile()
-    }
-  }, [session])
-
-  useEffect(() => {
-    if (activeTab === 'posts') fetchPosts()
-    if (activeTab === 'comments') fetchComments()
-  }, [activeTab])
-
-  const fetchProfile = async () => {
+  async function fetchProfile() {
     try {
       const res = await fetch('/api/users/profile')
       if (res.ok) {
@@ -67,19 +56,31 @@ export default function ProfilePage() {
     }
   }
 
-  const fetchPosts = async () => {
+  async function fetchPosts() {
     const res = await fetch('/api/users/posts')
     if (res.ok) {
       setPosts(await res.json())
     }
   }
 
-  const fetchComments = async () => {
+  async function fetchComments() {
     const res = await fetch('/api/users/comments')
     if (res.ok) {
       setComments(await res.json())
     }
   }
+
+  // 함수 정의 뒤에서 호출해야 린트/런타임 모두 안전하다
+  useEffect(() => {
+    if (session) {
+      fetchProfile()
+    }
+  }, [session])
+
+  useEffect(() => {
+    if (activeTab === 'posts') fetchPosts()
+    if (activeTab === 'comments') fetchComments()
+  }, [activeTab])
 
   const handleUpdateProfile = async (e: React.FormEvent) => {
     e.preventDefault()
