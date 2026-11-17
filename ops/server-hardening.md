@@ -46,22 +46,22 @@ WAF·해외 차단·fail2ban 을 전부 건너뛰던 경로가 사라진다.
 
 ## 4. 관리자 토큰
 
-- 값은 `/tmp/aichat.env` 의 `ADMIN_PASSWORD`, `/root/backup/prod.env.bak` 와
+- 값은 `/root/secrets/aichat.env` 의 `ADMIN_PASSWORD`, `/root/backup/prod.env.bak` 와
   `/tmp/portfolio-test.env` 의 `ADMIN_TOKEN` 세 곳에 있어야 하고 **모두 같아야** 한다.
 - 교체: `/root/scripts/rotate_admin_token.sh`
 - 토큰은 절대 URL 쿼리로 보내지 않는다. `X-Admin-Token` 헤더만 쓴다.
 
 ## 5. aichat 컨테이너
 
-`--network host` + `--env-file /tmp/aichat.env` 로 뜬다. 재생성할 때 빼먹으면
+`--network host` + `--env-file /root/secrets/aichat.env` 로 뜬다. 재생성할 때 빼먹으면
 DB/발키 접속이 깨진다(예전에는 `host.docker.internal` 이 필요했고, 지금은
-`/tmp/aichat.env` 의 `PG_HOST`/`VALKEY_HOST` 가 `127.0.0.1` 이다).
+`/root/secrets/aichat.env` 의 `PG_HOST`/`VALKEY_HOST` 가 `127.0.0.1` 이다).
 
 ```bash
 docker build -t aichat:latest /root/rag-api
 docker rm -f aichat
 docker run -d --name aichat --network host --add-host host.docker.internal:host-gateway \
-  --env-file /tmp/aichat.env --restart unless-stopped aichat:latest
+  --env-file /root/secrets/aichat.env --restart unless-stopped aichat:latest
 ```
 
 ## 6. 세션
