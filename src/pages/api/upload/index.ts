@@ -106,6 +106,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return res.status(500).json({ error: '파일 저장 실패' })
   }
 
-  const imageUrl = `/uploads/${filename}`
+  // public/ 은 빌드 시점 스냅샷이라 런타임에 쓴 파일이 서빙되지 않는다.
+  // 저장 위치는 그대로 두고, 읽기는 전용 라우트로 처리한다.
+  const imageUrl = `/api/uploads/${filename}`
   return res.status(200).json({ url: imageUrl, filename })
 }
