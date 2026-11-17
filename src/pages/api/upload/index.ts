@@ -78,7 +78,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   try {
-    await (uploadMiddleware as any)(req, res)
+    await (uploadMiddleware as unknown as (r: NextApiRequest, s: NextApiResponse) => Promise<void>)(req, res)
   } catch (error) {
     if (error instanceof Error) {
       if (error.message.includes('File too large')) {

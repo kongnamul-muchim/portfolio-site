@@ -106,8 +106,8 @@ export default function AdminJobsPage() {
       } else {
         setMsg(`❌ 오류: ${data.detail || '알 수 없는 오류'}`)
       }
-    } catch (e: any) {
-      setMsg(`❌ 오류: ${e.message}`)
+    } catch (e) {
+      setMsg(`❌ 오류: ${e instanceof Error ? e.message : String(e)}`)
     } finally {
       setCrawling(false)
     }
@@ -195,8 +195,8 @@ export default function AdminJobsPage() {
                   else setMsg(`❌ 오류: ${data.detail || ''}`)
                   fetchJobs()
                   fetchStats()
-                } catch (e: any) {
-                  setMsg(`❌ ${e.message}`)
+                } catch (e) {
+                  setMsg(`❌ ${e instanceof Error ? e.message : String(e)}`)
                 }
               }}
               className="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white text-sm font-medium rounded-lg transition-colors"

@@ -72,7 +72,7 @@ async function proxyToVps(
     const response = await fetch(target, fetchOptions);
     const data = await response.json();
     return NextResponse.json(data, { status: response.status });
-  } catch (error: any) {
+  } catch (error) {
     return NextResponse.json(
       { detail: '서버 연결 오류', error: String(error) },
       { status: 500 }

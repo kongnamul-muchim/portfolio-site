@@ -2,7 +2,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 
 const CACHE_TTL = 3600_000 // 1시간
-const cache = new Map<string, { data: any; expiry: number }>()
+const cache = new Map<string, { data: unknown; expiry: number }>()
 
 function parseRepo(url: string): { owner: string; repo: string } | null {
   const match = url.match(/github\.com\/([^/]+)\/([^/]+?)(?:\.git)?$/);

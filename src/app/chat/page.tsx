@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef, useEffect, useCallback, FormEvent } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 
 function getSessionId(): string {
   if (typeof window === 'undefined') return '';
@@ -96,7 +96,6 @@ export default function ChatPage() {
   // RAG Evaluation state
   const [evalLoading, setEvalLoading] = useState(false);
   const [evalResults, setEvalResults] = useState<EvalRow[] | null>(null);
-  const [evalBest, setEvalBest] = useState<{ params: { chunk_size: number; top_k: number }; score: number } | null>(null);
   const [evalDetail, setEvalDetail] = useState('');
   const [evalChunkSize, setEvalChunkSize] = useState('1000');
   const [evalTopK, setEvalTopK] = useState('5');
@@ -183,7 +182,7 @@ export default function ChatPage() {
 
       // Include user profile customization
       const activeProfile = Object.fromEntries(
-        Object.entries(profile).filter(([_, v]) => v && v.length > 0)
+        Object.entries(profile).filter(([, v]) => v && v.length > 0)
       );
       if (Object.keys(activeProfile).length > 0) {
         body.user_profile = activeProfile;
@@ -225,7 +224,6 @@ export default function ChatPage() {
   };
 
   const charName = character?.name || '루나';
-  const charEmoji = character?.avatar_emoji || '🌙';
   const charTitle = character?.title || '별빛 큐레이터';
   const greetingMsg = character?.greeting_message || '안녕하세요! 별빛 도서관의 사서예요 🌙';
   const displayName = profile.name_override || charName;
@@ -298,7 +296,7 @@ export default function ChatPage() {
       if (!res.ok) throw Error('평가 실패');
       const data = await res.json();
       const rows = data.results || [];
-      const formatted: EvalRow[] = rows.map((r: any) => ({
+      const formatted: EvalRow[] = rows.map((r: { score?: number; response_time?: number }) => ({
         chunk_size: evalChunkSize,
         top_k: evalTopK,
         avg_score: r.score || 0,
@@ -307,8 +305,8 @@ export default function ChatPage() {
       }));
       setEvalResults(formatted);
       setEvalDetail(`📋 ${rows.length}개 질문 · 키워드 커버리지 기반 평가`);
-    } catch (err: any) {
-      showError(`❌ 평가 오류: ${err.message}`);
+    } catch (err) {
+      showError(`❌ 평가 오류: ${err instanceof Error ? err.message : String(err)}`);
     } finally {
       setEvalLoading(false);
     }
@@ -323,8 +321,8 @@ export default function ChatPage() {
       if (!res.ok) throw Error('비교 실패');
       const data: ModeCompareData = await res.json();
       setModeCompareData(data);
-    } catch (err: any) {
-      showError(`❌ 비교 오류: ${err.message}`);
+    } catch (err) {
+      showError(`❌ 비교 오류: ${err instanceof Error ? err.message : String(err)}`);
     } finally {
       setModeCompareLoading(false);
     }
@@ -535,7 +533,7 @@ export default function ChatPage() {
                             </summary>
                             <div className="mt-1 pl-2 space-y-0.5 text-gray-400">
                               {comp.results.map((r, i) => (
-                                <div key={i}>Q{i+1}: "{r.question}" → {r.num_results}개 결과</div>
+                                <div key={i}>Q{i+1}: &quot;{r.question}&quot; → {r.num_results}개 결과</div>
                               ))}
                             </div>
                           </details>

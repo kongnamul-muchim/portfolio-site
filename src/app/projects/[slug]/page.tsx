@@ -381,7 +381,7 @@ function ProjectDetailContent({ slug }: { slug: string }) {
           </table>
         </div>
         <h3 className="text-base font-semibold text-gray-900 dark:text-[#E5E7EB]">Why Grouped</h3>
-        <p>7개 장르를 별도 카드로 나열하면 "게임을 많이 만들었다"는 인상만 남지만, 하나로 묶으면 <strong>어떤 장르든 동일한 아키텍처로 설계·구현할 수 있다는 전문성</strong>을 보여줍니다. 공통적으로 순수 C# DI Container, SOLID, Event-driven 패턴을 사용합니다.</p>
+        <p>7개 장르를 별도 카드로 나열하면 &quot;게임을 많이 만들었다&quot;는 인상만 남지만, 하나로 묶으면 <strong>어떤 장르든 동일한 아키텍처로 설계·구현할 수 있다는 전문성</strong>을 보여줍니다. 공통적으로 순수 C# DI Container, SOLID, Event-driven 패턴을 사용합니다.</p>
       </div>
     ),
     'minigame-collection': (

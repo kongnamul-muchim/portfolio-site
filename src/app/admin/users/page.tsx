@@ -37,9 +37,9 @@ export default function AdminUsersPage() {
       if (id === fetchId.current) {
         setUsers(data)
       }
-    } catch (e: any) {
+    } catch (e) {
       if (id === fetchId.current) {
-        setError(e.message)
+        setError(e instanceof Error ? e.message : String(e))
       }
     } finally {
       if (id === fetchId.current) {

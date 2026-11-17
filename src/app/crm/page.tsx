@@ -101,7 +101,7 @@ export default function CrmPage() {
       setTotal(custData.total || 0);
       setTotalPages(custData.total_pages || 1);
       setStats(statsData);
-    } catch (e) {
+    } catch {
       toastMsg('데이터를 불러오는데 실패했어요', false);
     } finally {
       setLoading(false);
@@ -141,7 +141,7 @@ export default function CrmPage() {
       toastMsg(editingId ? '수정되었습니다!' : '등록되었습니다!');
       setShowForm(false);
       fetchCustomers(page);
-    } catch (e) {
+    } catch {
       toastMsg('저장 실패', false);
     } finally {
       setSaving(false);
@@ -160,7 +160,7 @@ export default function CrmPage() {
       toastMsg(data.message || '삭제되었습니다');
       setDeleteId(null);
       fetchCustomers(page);
-    } catch (e) {
+    } catch {
       toastMsg('삭제 실패', false);
     } finally {
       setDeleting(false);
