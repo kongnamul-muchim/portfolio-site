@@ -84,13 +84,19 @@ export default function ProjectPage({ params }: { params: { slug: string } }) {
               </div>
             )}
             <div className="flex py-1.5">
-              <dt className="w-20 sm:w-24 shrink-0 text-xs font-medium text-gray-600 dark:text-gray-300">게임 타입</dt>
+              <dt className="w-20 sm:w-24 shrink-0 text-xs font-medium text-gray-600 dark:text-gray-300">{project.type === 'unity' ? '게임 타입' : '프로젝트 유형'}</dt>
               <dd className="text-xs text-gray-600 dark:text-[#9CA3AF]">{typeInfo?.label || project.type}</dd>
             </div>
             <div className="flex py-1.5">
               <dt className="w-20 sm:w-24 shrink-0 text-xs font-medium text-gray-600 dark:text-gray-300">주요 기술</dt>
               <dd className="text-xs text-gray-600 dark:text-[#9CA3AF] leading-relaxed">{project.technologies.join(' · ')}</dd>
             </div>
+            {project.aiUsage && (
+              <div className="flex py-1.5">
+                <dt className="w-20 sm:w-24 shrink-0 text-xs font-medium text-gray-600 dark:text-gray-300">AI 활용</dt>
+                <dd className="text-xs text-gray-600 dark:text-[#9CA3AF] leading-relaxed">{project.aiUsage}</dd>
+              </div>
+            )}
           </dl>
         </header>
 

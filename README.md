@@ -75,3 +75,17 @@ npx tsc --noEmit
 npx next lint
 npm run build
 ```
+
+## AI 활용
+
+이 저장소의 코드 일부는 AI 코딩 에이전트와 함께 작성했습니다.
+
+| 범위 | 내용 |
+|---|---|
+| 사용 | UI 마크업, 보일러플레이트, 문서 초안 |
+| 기록 | 각 프로젝트 상세 페이지의 `AI 활용` 항목, `src/data/projects.ts`의 `aiUsage` 필드 |
+| 판단 | 설계 선택은 `decisions` 항목에 "고민 → 선택 → 이유"로 남김 |
+| 검증 | `tsc --noEmit`, `next lint`, 실서비스 런타임 확인 |
+
+AI 제안을 거부한 지점도 `decisions`에 함께 적어 두었습니다. 숨기지 않고 범위를 밝히는 쪽을 택했습니다.
+

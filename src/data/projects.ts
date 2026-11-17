@@ -33,6 +33,8 @@ export interface Project {
   devPeriod?: string
   content?: string
   hasPlayableDemo?: boolean
+  /** AI를 어느 부분에 썼는지 — 숨기지 않고 표기한다 */
+  aiUsage?: string
 
   /* ── 직군 맞춤용 필드 ── */
   /** 어느 직군 페이지에 노출할지 */
@@ -54,6 +56,7 @@ export const projects: Project[] = [
     type: 'unity',
     description: '6주 동안 기획부터 완성까지 혼자 만든 방치형 RPG. 자동 전투·장비 합성·환생까지 한 사이클을 끝냈고, 밸런스 수치는 전부 CSV로 빼서 코드를 고치지 않고 조절됩니다.',
     image: '/images/afk.webp',
+    aiUsage: 'AI 코딩 에이전트를 UI 스캐폴딩과 반복 코드 작성에 사용했습니다. 저장소 루트의 AGENTS.md에 에이전트 작업 규칙을 명시해 두고 진행했습니다.',
     technologies: ['Unity 6', 'C#', 'DI Container', 'SOLID Principles', 'Event-driven Architecture', 'CSV Data Pipeline'],
     github: 'https://github.com/kongnamul-muchim/AFK',
     featured: false,
@@ -91,6 +94,7 @@ export const projects: Project[] = [
     type: 'unity',
     description: '정령 머지 + 자동 전투 방치형 RPG. 4×4 보드에서 정령을 합성해 진화시키고, 파티 통합 HP로 자동 전투를 돌리는 무한 성장 구조입니다. 핵심은 게임 로직을 Unity 없이도 검증할 수 있게 떼어낸 점입니다.',
     image: '/images/spirit-merge.webp',
+    aiUsage: 'AI 코딩 에이전트를 주석 정리·문서·CLI 테스트 하네스 작성에 사용했습니다. 게임 규칙은 Core 계층에 분리해 명령 67개로 검증했고, 작업 규칙은 저장소의 AGENTS.md에 고정했습니다.',
     technologies: ['Unity 6', 'C#', 'Merge System', 'Auto Battle', 'SOLID Principles', 'Save System', 'WebGL', 'CLI Automation'],
     github: 'https://github.com/kongnamul-muchim/SpiritMerge',
     demo: 'https://kongnamul-muchim.github.io/SpiritMerge/',
@@ -134,6 +138,7 @@ export const projects: Project[] = [
     type: 'unity',
     description: '4인 팀 프로젝트. 환경에 의태하고 포식자 능력을 복사하는 로그라이크 성장 어드벤처입니다. 시스템 아키텍트 겸 코어 프로그래머로 전체 구조와 핵심 상태머신을 맡았습니다.',
     image: '/images/hide-and-ink.webp',
+    aiUsage: '4인 팀 프로젝트입니다. AI 코딩 에이전트를 UI·유틸 코드에 사용했고, 팀 공통 규칙은 AGENTS.md로 공유했습니다.',
     technologies: ['Unity 6', 'C#', 'DI Container', 'FSM', '협업 설계', 'Git 800+ Commits'],
     github: 'https://github.com/kongnamul-muchim/TeamProject',
     featured: false,
@@ -234,6 +239,7 @@ export const projects: Project[] = [
     type: 'web',
     description: '강화·스킬트리·프레스티지가 있는 인크리멘털 클리커. 새로고침해도 진행도가 유지되고, 서버에 기록이 남습니다.',
     image: '/images/cookie-clicker.webp',
+    aiUsage: 'AI 코딩 에이전트의 작업 세션 기록(.superpowers)을 저장소에 그대로 남겨 두었습니다. 어느 부분을 에이전트가 작성했는지 추적할 수 있습니다.',
     technologies: ['Next.js', 'TypeScript', 'Prisma', 'PostgreSQL'],
     github: 'https://github.com/kongnamul-muchim/CookieClicker',
     demo: 'https://cookieclicker.olivilo.shop',
@@ -329,6 +335,7 @@ export const projects: Project[] = [
     type: 'web',
     description: '문서를 올리면 그 내용을 근거로 답하는 RAG 챗봇. 한국어 문서를 넣고, 과거 대화를 기억하고, 검색된 근거를 함께 보여줍니다. (FastAPI + pgvector + DeepSeek)',
     image: '/images/aichat.svg',
+    aiUsage: 'AI는 제품 기능(RAG 검색·응답 생성)으로 쓰였습니다. 서버·프록시·인증 코드는 직접 작성했고, 모델 호출부만 분리해 교체 가능하게 두었습니다.',
     technologies: ['Next.js 14', 'TypeScript', 'Python FastAPI', 'pgvector', 'DeepSeek V4', 'RAG', 'PostgreSQL'],
     github: 'https://github.com/kongnamul-muchim/AIChatBot',
     demo: '/chat',
@@ -365,6 +372,7 @@ export const projects: Project[] = [
     type: 'server',
     description: 'AI 업무 자동화 엔진. 이커머스 상품 설명·마케팅 리포트와 문서 요약·업무 리포트를 하나의 구조로 처리합니다. 새 업무는 코드 수정 없이 핸들러 등록만으로 추가됩니다.',
     image: '/images/autoflow.svg',
+    aiUsage: 'AI 코딩 에이전트를 CLI·웹 데모 UI 작성에 사용했습니다. 파이프라인 상태 머신과 저장소 계층은 직접 설계했습니다.',
     technologies: ['TypeScript', 'Node.js', 'Express', 'Clean Architecture', 'DI Container', 'SOLID Principles', 'Claude API'],
     github: 'https://github.com/kongnamul-muchim/autoflow',
     demo: 'https://games.olivilo.shop/autoflow/',
@@ -407,6 +415,7 @@ export const projects: Project[] = [
     type: 'server',
     description: '지금 보고 있는 이 사이트입니다. Next.js App Router + Prisma + PostgreSQL + Docker로 직접 설계·구축·운영 중입니다. 게시판·RAG 챗봇·채용공고 관리가 한 앱에 들어 있고, VPS에서 컨테이너로 돌아갑니다.',
     image: '/images/portfolio-site.webp',
+    aiUsage: '이 사이트 코드 일부를 AI 코딩 에이전트와 함께 작성했습니다. 설계 판단은 decisions 항목에 남겼고, AI 제안을 거부한 지점도 함께 적었습니다.',
     technologies: ['Next.js', 'TypeScript', 'Prisma', 'PostgreSQL', 'Docker', 'RAG (pgvector)', 'Cloudflare', 'nginx'],
     github: 'https://github.com/kongnamul-muchim/portfolio-site',
     featured: true,
