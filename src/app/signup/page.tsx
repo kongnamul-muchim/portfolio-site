@@ -22,7 +22,7 @@ export default function SignupPage() {
     else if (nickname.length > 20) newErrors.nickname = '닉네임은 20자 이하여야 합니다.'
 
     if (!password) newErrors.password = '비밀번호를 입력해주세요.'
-    else if (password.length < 6) newErrors.password = '비밀번호는 6자 이상이어야 합니다.'
+    else if (password.length < 8 || !/^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]).+$/.test(password)) newErrors.password = '비밀번호는 8자 이상, 영문·숫자·특수문자를 각 1개 이상 포함해야 합니다.'
 
     if (!confirmPassword) newErrors.confirmPassword = '비밀번호 확인을 입력해주세요.'
     else if (password !== confirmPassword) newErrors.confirmPassword = '비밀번호가 일치하지 않습니다.'
@@ -86,7 +86,7 @@ export default function SignupPage() {
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <label htmlFor="signup-nickname" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                닉네임
+                아이디 (닉네임)
               </label>
               <input
                 id="signup-nickname"
@@ -96,7 +96,7 @@ export default function SignupPage() {
                 value={nickname}
                 onChange={(e) => { setNickname(e.target.value); setErrors(prev => ({ ...prev, nickname: '' })) }}
                 className={`input-field ${errors.nickname ? 'border-red-500 focus:ring-red-500' : ''}`}
-                placeholder="2~20자 (로그인 ID로 사용됩니다)"
+                placeholder="2~20자 · 가입 후 변경 불가"
                 maxLength={20}
               />
               {errors.nickname && <p className="text-red-500 text-sm mt-1">{errors.nickname}</p>}
@@ -114,7 +114,7 @@ export default function SignupPage() {
                 value={password}
                 onChange={(e) => { setPassword(e.target.value); setErrors(prev => ({ ...prev, password: '' })) }}
                 className={`input-field ${errors.password ? 'border-red-500 focus:ring-red-500' : ''}`}
-                placeholder="6자 이상"
+                placeholder="8자 이상, 영문·숫자·특수문자 포함"
               />
               {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password}</p>}
             </div>

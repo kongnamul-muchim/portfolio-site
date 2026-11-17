@@ -25,12 +25,12 @@ export default function ProfilePage() {
   const { data: session, status } = useSession()
   const router = useRouter()
   const [activeTab, setActiveTab] = useState<'profile' | 'password' | 'posts' | 'comments'>('profile')
-  const [profile, setProfile] = useState<{ nickname: string; email: string; profileImage: string | null } | null>(null)
+  const [profile, setProfile] = useState<{ nickname: string; displayName?: string | null; email: string; profileImage: string | null } | null>(null)
   const [posts, setPosts] = useState<{ posts: Post[]; totalPages: number }>({ posts: [], totalPages: 1 })
   const [comments, setComments] = useState<{ comments: Comment[]; totalPages: number }>({ comments: [], totalPages: 1 })
   const [loading, setLoading] = useState(true)
 
-  const [nickname, setNickname] = useState('')
+  const [displayName, setDisplayName] = useState('')
   const [currentPassword, setCurrentPassword] = useState('')
   const [newPassword, setNewPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
@@ -60,7 +60,7 @@ export default function ProfilePage() {
       if (res.ok) {
         const data = await res.json()
         setProfile(data)
-        setNickname(data.nickname)
+        setDisplayName(data.displayName ?? '')
       }
     } finally {
       setLoading(false)
@@ -90,7 +90,7 @@ export default function ProfilePage() {
       const res = await fetch('/api/users/profile', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ nickname })
+        body: JSON.stringify({ displayName })
       })
 
       const data = await res.json()
@@ -110,6 +110,11 @@ export default function ProfilePage() {
     e.preventDefault()
     setError('')
     setSuccess('')
+
+    if (newPassword.length < 8 || !/^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]).+$/.test(newPassword)) {
+      setError('새 비밀번호는 8자 이상, 영문·숫자·특수문자를 각각 1개 이상 포함해야 합니다.')
+      return
+    }
 
     if (newPassword !== confirmPassword) {
       setError('새 비밀번호가 일치하지 않습니다.')
@@ -221,16 +226,29 @@ export default function ProfilePage() {
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-[#D1D5DB] mb-1">
-                  닉네임
+                  로그인 아이디
                 </label>
                 <input
                   type="text"
-                  value={nickname}
-                  onChange={(e) => setNickname(e.target.value)}
+                  value={profile.nickname}
+                  disabled
+                  className="w-full border border-gray-300 dark:border-[#374151] rounded-lg px-4 py-2.5 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-[#E5E7EB] cursor-not-allowed"
+                />
+                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">아이디는 가입할 때 정해지며 바꿀 수 없습니다.</p>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-[#D1D5DB] mb-1">
+                  표시 이름
+                </label>
+                <input
+                  type="text"
+                  value={displayName}
+                  onChange={(e) => setDisplayName(e.target.value)}
                   className="w-full border border-gray-300 dark:border-[#374151] rounded-lg px-4 py-2.5 bg-white dark:bg-gray-700 text-gray-900 dark:text-[#E5E7EB] focus:ring-2 focus:ring-cyan-500 focus:border-transparent outline-none transition-all"
-                  minLength={2}
+                  placeholder={profile.nickname}
                   maxLength={20}
                 />
+                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">게시글·댓글에 보이는 이름입니다. 비워두면 로그인 아이디로 표시됩니다.</p>
               </div>
               <button type="submit" className="px-6 py-2.5 bg-cyan-600 hover:bg-cyan-700 text-white font-medium rounded-lg transition-colors">
                 저장
@@ -264,8 +282,9 @@ export default function ProfilePage() {
                   onChange={(e) => setNewPassword(e.target.value)}
                   className="w-full border border-gray-300 dark:border-[#374151] rounded-lg px-4 py-2.5 bg-white dark:bg-gray-700 text-gray-900 dark:text-[#E5E7EB] focus:ring-2 focus:ring-cyan-500 focus:border-transparent outline-none transition-all"
                   required
-                  minLength={6}
+                  minLength={8}
                 />
+                <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">8자 이상, 영문·숫자·특수문자 각 1개 이상</p>
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-[#D1D5DB] mb-1">

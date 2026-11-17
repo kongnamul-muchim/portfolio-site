@@ -28,7 +28,7 @@ export class UserService {
     const isValid = await bcrypt.compare(password, user.password)
     if (!isValid) return null
 
-    return { id: user.id, email: user.email, nickname: user.nickname, role: user.role }
+    return { id: user.id, email: user.email, nickname: user.nickname, displayName: user.displayName, role: user.role }
   }
 
   async getAllUsers() {
@@ -51,22 +51,22 @@ export class UserService {
       id: user.id,
       email: user.email,
       nickname: user.nickname,
+      displayName: user.displayName,
       role: user.role,
       profileImage: user.profileImage,
       createdAt: user.createdAt
     }
   }
 
-  async updateProfile(userId: string, nickname?: string, profileImage?: string | null) {
-    if (nickname) {
-      const existing = await this.userRepository.findByNickname(nickname)
-      if (existing && existing.id !== userId) {
-        throw new Error('이미 사용 중인 닉네임입니다.')
-      }
-    }
+  async updateProfile(userId: string, displayName?: string | null, profileImage?: string | null) {
+    // 표시 이름은 로그인 아이디가 아니므로 중복 검사도, 세션 종료도 필요 없다.
+    // 빈 문자열을 보내면 표시 이름을 지우고 로그인 아이디로 돌아간다.
+    const updateData: { displayName?: string | null; profileImage?: string } = {}
 
-    const updateData: { nickname?: string; profileImage?: string } = {}
-    if (nickname) updateData.nickname = nickname
+    if (displayName !== undefined) {
+      const trimmed = displayName?.trim()
+      updateData.displayName = trimmed ? trimmed : null
+    }
     if (profileImage !== undefined) updateData.profileImage = profileImage ?? undefined
 
     return this.userRepository.updateProfile(userId, updateData)

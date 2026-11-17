@@ -1,5 +1,6 @@
 import { prisma } from '@/lib/db/prisma'
 import { Post } from '@prisma/client'
+import { withShownAuthor } from '@/lib/display'
 
 export interface IPostRepository {
   findById(id: string): Promise<Post | null>
@@ -14,13 +15,14 @@ export interface IPostRepository {
 
 export class PostRepository implements IPostRepository {
   async findById(id: string): Promise<Post | null> {
-    return prisma.post.findUnique({
+    const post = await prisma.post.findUnique({
       where: { id },
       include: {
-        author: { select: { id: true, nickname: true } },
+        author: { select: { id: true, nickname: true, displayName: true } },
         category: { select: { id: true, name: true } }
       }
     })
+    return post ? withShownAuthor(post) : null
   }
 
   async findAll(options?: { skip?: number; take?: number; where?: Record<string, unknown>; categoryId?: string }): Promise<Post[]> {
@@ -29,10 +31,10 @@ export class PostRepository implements IPostRepository {
       where.categoryId = options.categoryId
     }
 
-    return prisma.post.findMany({
+    const posts = await prisma.post.findMany({
       where,
       include: {
-        author: { select: { nickname: true } },
+        author: { select: { nickname: true, displayName: true } },
         category: { select: { id: true, name: true } },
         _count: { select: { comments: true, reactions: true } }
       },
@@ -40,6 +42,7 @@ export class PostRepository implements IPostRepository {
       skip: options?.skip ?? 0,
       take: options?.take ?? 10
     })
+    return posts.map(withShownAuthor)
   }
 
   async count(where?: Record<string, unknown>): Promise<number> {
@@ -81,19 +84,21 @@ export class PostRepository implements IPostRepository {
       OR: [
         { title: { contains: options.search } },
         { content: { contains: options.search } },
-        { author: { nickname: { contains: options.search } } }
+        { author: { nickname: { contains: options.search } } },
+        { author: { displayName: { contains: options.search } } }
       ]
     } : {}
 
-    return prisma.post.findMany({
+    const posts = await prisma.post.findMany({
       where,
       include: {
-        author: { select: { id: true, nickname: true } },
+        author: { select: { id: true, nickname: true, displayName: true } },
         category: { select: { id: true, name: true } },
         _count: { select: { comments: true } }
       },
       orderBy: { createdAt: 'desc' },
       take: options?.take ?? 100
     })
+    return posts.map(withShownAuthor)
   }
 }

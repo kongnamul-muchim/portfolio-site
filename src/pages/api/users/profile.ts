@@ -33,13 +33,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     try {
       const user = await userService.updateProfile(
         session.user.id,
-        validated.data.nickname,
+        validated.data.displayName,
         validated.data.profileImage
       )
       return res.status(200).json({
         id: user.id,
         email: user.email,
         nickname: user.nickname,
+        displayName: user.displayName,
         profileImage: user.profileImage
       })
     } catch (error) {

@@ -11,7 +11,8 @@ model User {
   id           String        @id @default(cuid())
   email        String        @unique
   password     String
-  nickname     String        @unique
+  nickname          String    @unique // 로그인 아이디 (가입 후 변경 불가)
+  displayName       String?   // 화면에 보여줄 이름 (없으면 nickname 사용)
   role         String        @default("member")
   profileImage String?
   activeSession String?   // 단일 세션 — 로그인할 때마다 새 값으로 교체

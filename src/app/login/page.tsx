@@ -26,7 +26,7 @@ function LoginForm() {
     setLoading(false)
 
     if (result?.error) {
-      setError('닉네임 또는 비밀번호가 올바르지 않습니다.')
+      setError('아이디 또는 비밀번호가 올바르지 않습니다.')
     } else {
       // 이 기기에서 로그인했으므로 다른 기기는 로그아웃된다 — 다음 화면에서 안내
       try {
@@ -63,7 +63,7 @@ function LoginForm() {
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <label htmlFor="login-nickname" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                닉네임
+                아이디 (닉네임)
               </label>
               <input
                 id="login-nickname"
@@ -73,7 +73,7 @@ function LoginForm() {
                 value={nickname}
                 onChange={(e) => setNickname(e.target.value)}
                 className="input-field"
-                placeholder="닉네임을 입력하세요"
+                placeholder="가입할 때 정한 닉네임"
                 required
               />
             </div>

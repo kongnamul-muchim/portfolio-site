@@ -28,7 +28,8 @@ export const authOptions: NextAuthOptions = {
         return {
           id: user.id,
           email: user.email,
-          name: user.nickname,
+          // 화면에 보이는 이름은 표시 이름, 없으면 로그인 아이디
+          name: user.displayName || user.nickname,
           role: user.role,
           sid
         }
@@ -54,9 +55,10 @@ export const authOptions: NextAuthOptions = {
         if (token.id && token.sid) {
           const dbUser = await prisma.user.findUnique({
             where: { id: token.id as string },
-            select: { activeSession: true }
+            select: { activeSession: true, nickname: true, displayName: true }
           })
           session.user.sessionReplaced = !dbUser || dbUser.activeSession !== token.sid
+          if (dbUser) session.user.name = dbUser.displayName || dbUser.nickname
         }
       }
       return session

@@ -49,7 +49,8 @@ export const reactionSchema = z.object({
 })
 
 export const updateProfileSchema = z.object({
-  nickname: z.string().min(2, '닉네임은 2자 이상이어야 합니다.').max(20, '닉네임은 20자 이하여야 합니다.').optional(),
+  // 표시 이름은 화면에 보이는 이름일 뿐, 로그인 아이디와 별개다
+  displayName: z.string().max(20, '표시 이름은 20자 이하여야 합니다.').nullable().optional(),
   profileImage: z.string().optional().nullable()
 })
 

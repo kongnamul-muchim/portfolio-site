@@ -9,7 +9,7 @@ export interface IUserRepository {
   findAll(): Promise<User[]>
   delete(id: string): Promise<void>
   updateRole(id: string, role: string): Promise<User>
-  updateProfile(id: string, data: { nickname?: string; profileImage?: string }): Promise<User>
+  updateProfile(id: string, data: { displayName?: string | null; profileImage?: string }): Promise<User>
   updatePassword(id: string, password: string): Promise<User>
   findPostsByUserId(userId: string, options?: { skip?: number; take?: number }): Promise<Post[]>
   countPostsByUserId(userId: string): Promise<number>
@@ -48,7 +48,7 @@ export class UserRepository implements IUserRepository {
     return prisma.user.update({ where: { id }, data: { role } })
   }
 
-  async updateProfile(id: string, data: { nickname?: string; profileImage?: string }): Promise<User> {
+  async updateProfile(id: string, data: { displayName?: string | null; profileImage?: string }): Promise<User> {
     return prisma.user.update({ where: { id }, data })
   }
 
