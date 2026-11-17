@@ -111,6 +111,12 @@ function LoginForm() {
                 회원가입
               </Link>
             </p>
+            <p className="text-xs text-gray-500 dark:text-gray-500 mt-3">
+              비밀번호를 잊으셨다면 관리자에게 문의해주세요.{' '}
+              <a href="mailto:rlaehdduf04@gmail.com" className="underline hover:text-gray-700 dark:hover:text-gray-300">
+                메일 보내기
+              </a>
+            </p>
           </div>
         </div>
       </div>

@@ -21,6 +21,7 @@ export default function AdminUsersPage() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const [search, setSearch] = useState('')
+  const [resetResult, setResetResult] = useState<{ nickname: string; tempPassword: string } | null>(null)
   const fetchId = useRef(0)
 
   const fetchUsers = useCallback(async () => {
@@ -55,6 +56,22 @@ export default function AdminUsersPage() {
     u.nickname.toLowerCase().includes(search.toLowerCase()) ||
     u.email.toLowerCase().includes(search.toLowerCase())
   )
+
+  const handleResetPassword = async (user: User) => {
+    const ok = window.confirm(
+      `${user.nickname} 님의 비밀번호를 임시 비밀번호로 초기화할까요?\n\n· 새 비밀번호가 화면에 한 번만 표시됩니다\n· 이 계정의 로그인 세션은 모두 종료됩니다`
+    )
+    if (!ok) return
+
+    setError('')
+    const res = await fetch(`/api/admin/users/${user.id}/reset-password`, { method: 'POST' })
+    const data = await res.json()
+    if (!res.ok) {
+      setError(data.error || '비밀번호 초기화에 실패했습니다.')
+      return
+    }
+    setResetResult({ nickname: data.nickname, tempPassword: data.tempPassword })
+  }
 
   const stats = {
     total: users.length,
@@ -99,6 +116,35 @@ export default function AdminUsersPage() {
           />
         </div>
 
+        {/* 임시 비밀번호 발급 결과 — 한 번만 보여준다 */}
+        {resetResult && (
+          <div className="bg-amber-50 dark:bg-amber-900/20 border border-amber-300 dark:border-amber-700 rounded-xl p-4 mb-6">
+            <div className="text-sm font-semibold text-amber-800 dark:text-amber-300 mb-2">
+              🔑 {resetResult.nickname} 님의 임시 비밀번호
+            </div>
+            <div className="flex items-center gap-2 flex-wrap">
+              <code className="px-3 py-1.5 rounded-lg bg-white dark:bg-[#111827] border border-amber-300 dark:border-amber-700 font-mono text-base select-all">
+                {resetResult.tempPassword}
+              </code>
+              <button
+                onClick={() => navigator.clipboard?.writeText(resetResult.tempPassword)}
+                className="px-3 py-1.5 text-xs rounded-lg bg-amber-600 hover:bg-amber-700 text-white"
+              >
+                복사
+              </button>
+              <button
+                onClick={() => setResetResult(null)}
+                className="px-3 py-1.5 text-xs rounded-lg border border-amber-400 text-amber-800 dark:text-amber-300"
+              >
+                닫기
+              </button>
+            </div>
+            <p className="text-xs text-amber-700 dark:text-amber-400 mt-2">
+              창을 닫으면 다시 볼 수 없습니다. 본인에게 전달하고, 로그인 후 비밀번호를 바꾸도록 안내하세요.
+            </p>
+          </div>
+        )}
+
         {/* Error */}
         {error && (
           <div className="bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 p-4 rounded-xl mb-6 text-sm border border-red-200 dark:border-red-800">
@@ -118,13 +164,14 @@ export default function AdminUsersPage() {
                   <th className="text-center px-4 py-3 font-medium text-gray-500 dark:text-[#9CA3AF] hidden lg:table-cell">게시글</th>
                   <th className="text-center px-4 py-3 font-medium text-gray-500 dark:text-[#9CA3AF] hidden lg:table-cell">댓글</th>
                   <th className="text-center px-4 py-3 font-medium text-gray-500 dark:text-[#9CA3AF]">가입일</th>
+                  <th className="text-center px-4 py-3 font-medium text-gray-500 dark:text-[#9CA3AF]">관리</th>
                 </tr>
               </thead>
               <tbody>
                 {loading ? (
-                  <tr><td colSpan={6} className="text-center py-8 text-gray-400">로딩 중...</td></tr>
+                  <tr><td colSpan={7} className="text-center py-8 text-gray-400">로딩 중...</td></tr>
                 ) : filtered.length === 0 ? (
-                  <tr><td colSpan={6} className="text-center py-8 text-gray-400">검색 결과가 없습니다</td></tr>
+                  <tr><td colSpan={7} className="text-center py-8 text-gray-400">검색 결과가 없습니다</td></tr>
                 ) : filtered.map(user => (
                   <tr key={user.id} className="border-b border-gray-100 dark:border-[#374151] hover:bg-gray-50 dark:hover:bg-[#111827]">
                     <td className="px-4 py-3">
@@ -163,6 +210,15 @@ export default function AdminUsersPage() {
                         year: 'numeric', month: '2-digit', day: '2-digit',
                         hour: '2-digit', minute: '2-digit'
                       })}
+                    </td>
+                    <td className="px-4 py-3 text-center">
+                      <button
+                        onClick={() => handleResetPassword(user)}
+                        className="px-2.5 py-1 text-xs rounded-lg border border-gray-300 dark:border-[#4B5563] text-gray-600 dark:text-[#9CA3AF] hover:bg-gray-100 dark:hover:bg-[#374151] transition-colors"
+                        title="임시 비밀번호 발급"
+                      >
+                        🔑 초기화
+                      </button>
                     </td>
                   </tr>
                 ))}
