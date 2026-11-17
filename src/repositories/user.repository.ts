@@ -53,7 +53,8 @@ export class UserRepository implements IUserRepository {
   }
 
   async updatePassword(id: string, password: string): Promise<User> {
-    return prisma.user.update({ where: { id }, data: { password } })
+    // 비밀번호를 바꾸면 다른 기기의 세션도 함께 끊는다 (단일 세션 구조)
+    return prisma.user.update({ where: { id }, data: { password, activeSession: null } })
   }
 
   async findPostsByUserId(userId: string, options?: { skip?: number; take?: number }): Promise<Post[]> {

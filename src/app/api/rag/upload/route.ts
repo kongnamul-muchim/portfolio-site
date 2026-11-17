@@ -1,8 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { getToken } from 'next-auth/jwt';
 
-const VPS_API = 'http://host.docker.internal:8000/api';
+// 컨테이너 네트워크 안의 aichat 서비스로 보낸다 (호스트 포트 노출 불필요)
+const VPS_API = 'http://aichat:8000/api';
 
 export async function POST(req: NextRequest) {
+  // 관리자만 문서를 넣을 수 있다 — 지식베이스는 답변 내용을 바꾸는 권한이다
+  const token = await getToken({ req });
+  if (!token || token.role !== 'admin') {
+    return NextResponse.json({ error: '관리자 권한이 필요합니다.' }, { status: 403 });
+  }
+
   try {
     const bodyBuffer = await req.arrayBuffer();
     const contentType = req.headers.get('content-type') || '';
@@ -15,10 +23,7 @@ export async function POST(req: NextRequest) {
     });
     const data = await response.json();
     return NextResponse.json(data, { status: response.status });
-  } catch (error) {
-    return NextResponse.json(
-      { detail: '업로드 프록시 오류', error: String(error) },
-      { status: 500 }
-    );
+  } catch {
+    return NextResponse.json({ detail: '업로드 프록시 오류' }, { status: 502 });
   }
 }

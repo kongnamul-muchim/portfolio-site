@@ -184,7 +184,7 @@ export default function AdminJobsPage() {
         {/* Analyze Controls */}
         <div className="bg-white dark:bg-[#1F2937] p-4 rounded-xl border border-gray-200 dark:border-[#374151] mb-6">
           <div className="flex flex-wrap items-center gap-3">
-            <span className="text-sm font-medium">🤖 DeepSeek 분석</span>
+            <span className="text-sm font-medium">🤖 Gemini 분석</span>
             <button
               onClick={async () => {
                 setMsg('')
@@ -204,7 +204,7 @@ export default function AdminJobsPage() {
               🧠 미분석 공고 분석
             </button>
             <span className="text-xs text-gray-500 dark:text-[#9CA3AF]">
-              DeepSeek V4로 기술스택 추출 및 매칭 점수 계산
+              Gemini 2.5 Flash로 기술스택 추출 및 매칭 점수 계산
             </span>
           </div>
         </div>

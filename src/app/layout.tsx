@@ -5,6 +5,7 @@ import Providers from "@/components/Providers";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { ThemeProvider } from "@/components/ThemeProvider";
+import SiteNotice from "@/components/SiteNotice";
 
 // 디스플레이 폰트 — 게임 타이틀 느낌 (playful 장르)
 const blackHanSans = Black_Han_Sans({
@@ -54,6 +55,7 @@ export default function RootLayout({
       <body className={`${blackHanSans.variable} antialiased min-h-screen`} style={{ background: 'var(--color-paper)', color: 'var(--color-ink)' }}>
         <ThemeProvider>
           <Providers>
+            <SiteNotice />
             <Header />
             <main>{children}</main>
             <Footer />

@@ -318,7 +318,7 @@ function KeyAchievement({ slug }: { slug: string }) {
   const highlights: Record<string, string> = {
     'afk': '6주 장기 프로젝트. DI Container + Event-driven 구조로 자동 전투/장비 합성/환생 시스템 구현. 스테이지·아이템·설정값을 CSV로 분리해, 코드를 고치지 않고 밸런스를 조절할 수 있게 했습니다.',
     'unity-minigames': '블록퍼즐부터 매치3까지 7개 장르를 동일한 Core/Shell + DI 아키텍처로 구현. 순수 C# 게임 로직을 Unity View와 분리해 장르가 달라도 재사용 가능한 구조를 증명.',
-    'aichat': 'DeepSeek V4 + pgvector 기반 RAG 시스템. Docker 컨테이너 분리 + VPS 직배포 운영. Cloudflare Proxy로 백엔드 IP 은닉.',
+    'aichat': 'Gemini 2.5 Flash + pgvector 기반 RAG 시스템. Docker 컨테이너 분리 + VPS 직배포 운영. 백엔드는 내부 도커 네트워크에만 열어 외부 노출을 막았습니다.',
     'cookie-clicker': '강화·스킬트리·프레스티지로 진짜 성장 사이클을 설계한 인크리멘털 게임. 새로고침해도 진행도가 유지되는 저장 구조를 설계.',
     'minigame-collection': 'Blazor WebAssembly + SOLID 원칙. 6종 게임이 공통 Core 라이브러리를 공유하고, 게임별 테스트 프로젝트 7개로 규칙을 검증합니다.',
     'community-board': 'Next.js + Prisma 풀스택. 포트폴리오 사이트 자체가 이 프로젝트의 확장판. 실제 회원가입/로그인/게시글 운영 중.',
@@ -457,8 +457,8 @@ function ProjectDetailContent({ slug }: { slug: string }) {
               ↓
          /api/rag (Server Proxy)
               ↓
-        45.59.101.155:8000 (VPS)
-        ├─ DeepSeek V4 Flash LLM
+        aichat:8000 (내부 도커 네트워크)
+        ├─ Gemini 2.5 Flash LLM
         ├─ pgvector 검색 엔진
         ├─ e5-base Embedding (로컬)
         └─ Valkey Rate Limit`}</pre>
@@ -469,11 +469,11 @@ function ProjectDetailContent({ slug }: { slug: string }) {
           <li><strong>Chunking</strong> - RecursiveCharacterTextSplitter (1000자 단위)</li>
           <li><strong>Embedding</strong> - e5-base 모델 → pgvector 저장</li>
           <li><strong>Retrieval</strong> - 질문 임베딩 → Cosine Similarity 검색</li>
-          <li><strong>Generation</strong> - 검색된 Context + 질문 → DeepSeek V4 Flash 답변</li>
+          <li><strong>Generation</strong> - 검색된 Context + 질문 → Gemini 2.5 Flash 답변</li>
         </ol>
         <h3 className="text-base font-semibold text-gray-900 dark:text-[#E5E7EB]">Key Features</h3>
         <ul className="list-disc pl-5 space-y-1">
-          <li><strong>한국어 특화</strong> - e5-base 한국어 임베딩 + DeepSeek 한국어 지원</li>
+          <li><strong>한국어 특화</strong> - e5-base 한국어 임베딩 + Gemini 한국어 지원</li>
           <li><strong>실시간 스트리밍</strong> - Server-Sent Events 기반 타이핑 효과</li>
           <li><strong>소스 인용</strong> - 답변에 사용된 문서 출처 표시</li>
           <li><strong>관리자 모드</strong> - 문서 업로드/삭제 관리</li>
@@ -654,7 +654,7 @@ function ProjectDetailContent({ slug }: { slug: string }) {
         <ul className="list-disc pl-5 space-y-1">
           <li><strong>유저 시스템</strong> — 회원가입/로그인/프로필</li>
           <li><strong>커뮤니티 게시판</strong> — 글/댓글/좋아요/알림</li>
-          <li><strong>RAG AI 챗봇</strong> — DeepSeek + pgvector 문서 검색 채팅 (/chat)</li>
+          <li><strong>RAG AI 챗봇</strong> — Gemini 2.5 Flash + pgvector 문서 검색 채팅 (/chat)</li>
           <li><strong>채용공고 관리</strong> — 어드민 크롤링/관리 (/admin)</li>
           <li><strong>GitHub 활동 배지</strong> — 서버리스로 레포 활동 실시간 표시</li>
         </ul>

@@ -14,6 +14,7 @@ function LoginForm() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const callbackUrl = searchParams?.get('callbackUrl') || '/'
+  const notice = searchParams?.get('notice')
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -27,6 +28,10 @@ function LoginForm() {
     if (result?.error) {
       setError('닉네임 또는 비밀번호가 올바르지 않습니다.')
     } else {
+      // 이 기기에서 로그인했으므로 다른 기기는 로그아웃된다 — 다음 화면에서 안내
+      try {
+        sessionStorage.setItem('site_notice', '다른 기기가 로그인되어 있어 기존 기기를 로그아웃시켰습니다.')
+      } catch {}
       router.push(callbackUrl)
       router.refresh()
     }
@@ -42,6 +47,12 @@ function LoginForm() {
 
         <div className="card p-8">
           <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">로그인</h1>
+
+          {notice === 'replaced' && (
+            <div className="bg-amber-100 dark:bg-amber-900/30 text-amber-800 dark:text-amber-300 p-3 rounded-lg mb-4">
+              다른 기기에서 로그인하여 로그아웃되었습니다.
+            </div>
+          )}
 
           {error && (
             <div className="bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 p-3 rounded-lg mb-4">

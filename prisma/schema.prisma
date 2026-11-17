@@ -14,6 +14,7 @@ model User {
   nickname     String        @unique
   role         String        @default("member")
   profileImage String?
+  activeSession String?   // 단일 세션 — 로그인할 때마다 새 값으로 교체
   posts        Post[]
   comments     Comment[]
   reactions    Reaction[]

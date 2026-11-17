@@ -90,6 +90,7 @@ export default function ChatPage() {
 
   // Admin state
   const [adminToken, setAdminToken] = useState<string | null>(null);
+  const [notice, setNotice] = useState<string | null>(null);
   const [showLoginPrompt, setShowLoginPrompt] = useState(false);
   const [loginPw, setLoginPw] = useState('');
 
@@ -110,6 +111,11 @@ export default function ChatPage() {
     setTimeout(() => setError(null), 4000);
   }, []);
 
+  const showNotice = useCallback((msg: string) => {
+    setNotice(msg);
+    setTimeout(() => setNotice(null), 4000);
+  }, []);
+
   // Load saved profile from localStorage
   useEffect(() => {
     try {
@@ -127,13 +133,30 @@ export default function ChatPage() {
     } catch {}
   }, []);
 
-  // Check for saved admin token
+  // 저장된 관리자 토큰 검증 — 서버가 인정하지 않으면 즉시 폐기한다
   useEffect(() => {
+    let saved: string | null = null;
     try {
-      const saved = localStorage.getItem('rag_admin_token');
-      if (saved) setAdminToken(saved);
-    } catch {}
-  }, []);
+      saved = localStorage.getItem('rag_admin_token');
+    } catch { return; }
+    if (!saved) return;
+
+    fetch('/api/rag/verify-admin', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ token: saved }),
+    })
+      .then(async (res) => {
+        if (res.ok) {
+          setAdminToken(saved);
+          return;
+        }
+        const data = await res.json().catch(() => ({}));
+        try { localStorage.removeItem('rag_admin_token'); } catch {}
+        showError(`❌ ${data.error || '관리자 암호가 올바르지 않습니다.'}`);
+      })
+      .catch(() => showError('⚠️ 관리자 권한 확인 실패'));
+  }, [showError]);
 
   // Set default character
   useEffect(() => {
@@ -272,19 +295,40 @@ export default function ChatPage() {
     setShowLoginPrompt(true);
   };
 
-  const submitAdminLogin = () => {
-    if (loginPw) {
+  const submitAdminLogin = async () => {
+    if (!loginPw) {
+      showError('❌ 암호를 입력해 주세요.');
+      return;
+    }
+
+    try {
+      const res = await fetch('/api/rag/verify-admin', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ token: loginPw }),
+      });
+      const data = await res.json().catch(() => ({}));
+
+      if (!res.ok || !data.ok) {
+        showError(`❌ ${data.error || '암호가 틀렸습니다.'}`);
+        return;
+      }
+
       localStorage.setItem('rag_admin_token', loginPw);
       setAdminToken(loginPw);
       setShowLoginPrompt(false);
-      window.location.reload();
+      showNotice('✅ 관리자 권한으로 전환됩니다.');
+      setTimeout(() => window.location.reload(), 900);
+    } catch {
+      showError('❌ 암호가 틀렸습니다. (서버 확인 실패)');
     }
   };
 
   const logoutAdmin = () => {
     localStorage.removeItem('rag_admin_token');
     setAdminToken(null);
-    window.location.reload();
+    showNotice('🔓 관리자 권한이 해제되었습니다.');
+    setTimeout(() => window.location.reload(), 900);
   };
 
   // RAG Evaluation
@@ -357,6 +401,12 @@ export default function ChatPage() {
       {error && (
         <div className="fixed top-4 left-1/2 -translate-x-1/2 z-50 bg-red-600 text-white px-4 py-2 rounded-lg text-sm shadow-lg animate-pulse">
           {error}
+        </div>
+      )}
+
+      {notice && (
+        <div className="fixed top-4 left-1/2 -translate-x-1/2 z-50 bg-cyan-600 text-white px-4 py-2 rounded-lg text-sm shadow-lg">
+          {notice}
         </div>
       )}
 
