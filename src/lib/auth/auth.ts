@@ -22,7 +22,10 @@ export const authOptions: NextAuthOptions = {
 
         // 단일 세션: 로그인할 때마다 식별자를 새로 발급하고 DB 값을 교체한다.
         // 이전 기기의 토큰은 sid 가 달라져 다음 요청에서 무효 처리된다.
-        const sid = randomUUID()
+        // 예외: 공용 데모 계정은 여러 방문자가 동시에 쓴다. sid 를 고정해
+        //       서로 세션을 끊지 않게 한다(끊기면 "다른 기기가 로그인..." 경고가 뜬다).
+        const isSharedDemo = user.nickname === 'demo'
+        const sid = isSharedDemo ? 'demo-shared' : randomUUID()
         await prisma.user.update({ where: { id: user.id }, data: { activeSession: sid } })
 
         return {
