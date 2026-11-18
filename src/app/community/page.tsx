@@ -139,10 +139,19 @@ export default async function CommunityHome({
                 <svg className="w-16 h-16 mx-auto text-gray-300 dark:text-gray-600 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
                 </svg>
-                <p className="text-gray-500 dark:text-gray-400">게시글이 없습니다.</p>
-                <Link href="/community/write" className="btn-primary inline-block mt-4">
-                  첫 글 작성하기
-                </Link>
+                <p className="text-lg font-semibold text-gray-800 dark:text-[#E5E7EB]">아직 글이 없습니다</p>
+                <p className="mt-2 text-sm text-gray-500 dark:text-gray-400 leading-relaxed">
+                  이 게시판은 포트폴리오용 데모입니다. 글·댓글·좋아요·알림이 실제로 동작하고,
+                  서버에서 권한과 입력을 검증합니다.
+                </p>
+                <div className="mt-5 flex flex-wrap items-center justify-center gap-2">
+                  <Link href="/community/write" className="btn-primary inline-block">
+                    첫 글 작성하기
+                  </Link>
+                  <Link href="/login" className="btn-secondary inline-block">
+                    데모 계정으로 체험
+                  </Link>
+                </div>
               </div>
             ) : (
               <div className="grid gap-4">
