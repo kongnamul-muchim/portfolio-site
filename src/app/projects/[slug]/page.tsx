@@ -98,6 +98,29 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
             {project.description}
           </p>
 
+          {/* 대표 CTA — 플레이/데모는 첫 화면에서 바로 보여야 한다 (기존엔 페이지 맨 아래에 있었다) */}
+          {project.demo && (
+            project.demo.startsWith('http') ? (
+              <a
+                href={project.demo}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold mb-5 hover:-translate-y-0.5 transition-transform"
+                style={{ background: 'var(--color-accent-ink)', color: 'var(--color-paper)' }}
+              >
+                ▶ {project.type === 'unity' ? '지금 플레이' : '데모 보기'}
+              </a>
+            ) : (
+              <Link
+                href={project.demo}
+                className="inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold mb-5 hover:-translate-y-0.5 transition-transform"
+                style={{ background: 'var(--color-accent-ink)', color: 'var(--color-paper)' }}
+              >
+                ▶ {project.type === 'unity' ? '지금 플레이' : '데모 보기'}
+              </Link>
+            )
+          )}
+
           {/* Spec Sheet — 행 목록 (게임 패키지 뒷면 느낌) */}
           <dl className="detail-spec border-t border-gray-100 dark:border-gray-800 pt-4">
             {project.devPeriod && (
