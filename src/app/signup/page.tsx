@@ -75,7 +75,14 @@ export default function SignupPage() {
         </div>
 
         <div className="card p-8">
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">회원가입</h1>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">회원가입</h1>
+
+          {/* 이 게시판은 데모다 — 무엇을 받지 않는지 가입 전에 밝힌다 */}
+          <div className="mb-5 rounded-lg border border-gray-200 dark:border-[#1F2937] bg-gray-50 dark:bg-gray-800/40 p-3 text-xs leading-relaxed text-gray-600 dark:text-[#9CA3AF]">
+            <strong className="text-gray-800 dark:text-[#E5E7EB]">데모 게시판입니다.</strong> 이메일을 받지 않고, 비밀번호 재설정도 없습니다.
+            아무 값이나 넣어보셔도 됩니다(데이터는 예고 없이 초기화될 수 있습니다).
+            구경만 하시려면 <strong className="text-gray-800 dark:text-[#E5E7EB]">demo / demo1234!</strong> 로 로그인하세요.
+          </div>
 
           {error && (
             <div className="bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 p-3 rounded-lg mb-4">

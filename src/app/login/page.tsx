@@ -46,7 +46,20 @@ function LoginForm() {
         </div>
 
         <div className="card p-8">
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">로그인</h1>
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">로그인</h1>
+
+          {/* 가입 장벽 제거 — 데모 계정을 바로 채워준다 */}
+          <div className="mb-5 rounded-lg border border-gray-200 dark:border-[#1F2937] bg-gray-50 dark:bg-gray-800/40 p-3 text-xs leading-relaxed text-gray-600 dark:text-[#9CA3AF]">
+            가입 없이 둘러보시려면 데모 계정을 쓰세요.{' '}
+            <strong className="text-gray-800 dark:text-[#E5E7EB]">demo / demo1234!</strong>{' '}
+            <button
+              type="button"
+              onClick={() => { setNickname('demo'); setPassword('demo1234!'); setError('') }}
+              className="underline font-medium text-[#0E7490] dark:text-[#22D3EE] hover:no-underline"
+            >
+              자동 입력
+            </button>
+          </div>
 
           {notice === 'replaced' && (
             <div className="bg-amber-100 dark:bg-amber-900/30 text-amber-800 dark:text-amber-300 p-3 rounded-lg mb-4">

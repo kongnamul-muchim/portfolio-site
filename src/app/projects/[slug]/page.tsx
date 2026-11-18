@@ -76,7 +76,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
           </svg>
-          Back to Projects
+          프로젝트 목록
         </Link>
 
         {/* Header */}
@@ -199,7 +199,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
           <RoleEvidence project={project} />
 
           <h2 className="text-lg font-semibold text-gray-900 dark:text-[#E5E7EB] mb-5 mt-8">
-            Project Details
+            기술 상세
           </h2>
           <div className="space-y-6 text-gray-600 dark:text-[#9CA3AF] text-sm leading-relaxed min-w-0">
             <ProjectDetailContent slug={project.id} />
@@ -373,7 +373,7 @@ function KeyAchievement({ slug }: { slug: string }) {
     'spirit-merge': '10일 만에 기획부터 완성까지. 머지+자동전투+파견 3개 루프가 맞물리는 방치형 RPG. 88개 스크립트를 Core/Systems 13개 서비스로 SRP 분리, 원자적 쓰기+백업 자동 저장(오프라인 경과 반영), Unity TCP CLI 검증 명령 67개로 상태 확인, WebGL 브라우저 실기동.',
     'portfolio-site': '지금 보고 있는 이 사이트 자체. Next.js App Router + Prisma + PostgreSQL + Docker로 구성했고 직접 운영 중. 커뮤니티부터 RAG AI 챗봇, 채용공고 관리까지 전 기능을 통합한 풀스택 앱.',
   }
-  return <>{highlights[slug] || '자세한 정보는 아래 Project Details를 확인해주세요.'}</>
+  return <>{highlights[slug] || '자세한 정보는 아래 기술 상세를 확인해주세요.'}</>
 }
 
 function ProjectDetailContent({ slug }: { slug: string }) {
@@ -465,7 +465,6 @@ function ProjectDetailContent({ slug }: { slug: string }) {
     ),
     'community-board': (
       <div className="space-y-4">
-        <h3 className="text-base font-semibold text-gray-900 dark:text-[#E5E7EB]">Project Overview</h3>
         <p>Next.js App Router 기반의 커뮤니티 게시판 시스템입니다. 이 포트폴리오 사이트 자체가 이 프로젝트를 기반으로 확장되었습니다.</p>
         <h3 className="text-base font-semibold text-gray-900 dark:text-[#E5E7EB]">Key Features</h3>
         <ul className="list-disc pl-5 space-y-1">
@@ -494,7 +493,6 @@ function ProjectDetailContent({ slug }: { slug: string }) {
 
     'aichat': (
       <div className="space-y-4">
-        <h3 className="text-base font-semibold text-gray-900 dark:text-[#E5E7EB]">Project Overview</h3>
         <p>RAG(Retrieval-Augmented Generation) 기반 AI 채팅 시스템입니다. 사용자가 업로드한 문서를 기반으로 LLM이 검색하여 답변하는 지능형 채팅 인터페이스를 제공합니다.</p>
         <h3 className="text-base font-semibold text-gray-900 dark:text-[#E5E7EB]">System Architecture</h3>
         <CollapsibleCode summary="아키텍처 트리 보기">
@@ -684,9 +682,6 @@ function ProjectDetailContent({ slug }: { slug: string }) {
     ),
     'portfolio-site': (
       <div className="space-y-4">
-        <h3 className="text-base font-semibold text-gray-900 dark:text-[#E5E7EB]">Project Overview</h3>
-        <p>지금 보고 있는 이 포트폴리오 사이트 자체입니다. Next.js App Router + TypeScript + Prisma + PostgreSQL로 설계하고, VPS에서 Docker 컨테이너로 직접 운영하는 풀스택 앱입니다.</p>
-
         <h3 className="text-base font-semibold text-gray-900 dark:text-[#E5E7EB]">Full-stack Composition</h3>
         <ul className="list-disc pl-5 space-y-1">
           <li><strong>Frontend</strong> — Next.js App Router + TypeScript, 반응형 다크/라이트 테마</li>
@@ -698,16 +693,19 @@ function ProjectDetailContent({ slug }: { slug: string }) {
 
         <h3 className="text-base font-semibold text-gray-900 dark:text-[#E5E7EB]">Security Audit</h3>
         <ul className="list-disc pl-5 space-y-1">
-          <li><strong>범위</strong> — 서버가 있는 저장소 5개, HTTP 라우트 60개를 코드에서 정적 추출 (2026-11-18)</li>
-          <li><strong>신뢰 지점 41곳</strong> — 서버가 클라이언트 값을 받아들이는 지점(본문 숫자·경로 ID·업로드 파일명·IP 헤더·세션)을 세고, 각 지점마다 대응 공격을 배정 (자동 재현 35건 / 공격 8종 · 수동 판정 35건)</li>
-          <li><strong>실제 요청으로 재현</strong> — IDOR 5건, 업로드 경로 조작 3종, 권한 없는 라우트 접근: 모두 거부 응답 확인</li>
-          <li><strong>취약점 6건 발견·수정</strong> — ① 방문자 수가 <code>X-Forwarded-For</code> 첫 값을 신뢰(3회 위조 → 3명 집계, 수정 후 1명) ②③④ 포트폴리오 프록시 3곳이 위조 IP를 업스트림에 전달 ⑤ autoflow 파이프라인 steps 무제한(300 steps = 17초, 데이터 224KB 증가 → 상한 50) ⑥ nginx 국가 차단이 같은 헤더로 우회 가능 → Cloudflare가 확정한 헤더만 신뢰</li>
+          <li><strong>범위</strong> — 서버가 있는 저장소 5개 · HTTP 라우트 60개에서 <strong>신뢰 지점 41곳</strong>을 코드로 추출 (2026-11-18)</li>
+          <li><strong>재현</strong> — 41곳에 공격 8종을 배정해 <strong>35건을 실제 요청으로</strong> 재현. IDOR 5건 · 업로드 경로 조작 3종 · 무권한 라우트 접근 모두 거부 응답</li>
+          <li><strong>수정</strong> — 취약점 <strong>6건</strong> 발견·수정(XFF 신뢰 3곳, steps 무제한, 국가차단 우회 등). 같은 요청을 다시 보내 차단을 확인하고 매일 자동 게이트로 회귀 감시</li>
+        </ul>
+        <CollapsibleCode summary="감사 상세 기록 보기 — 판정 기준 · 2차검증 · 운영 가드 · 헤더 실측">
+        <ul className="list-disc pl-5 space-y-1">
           <li><strong>과장하지 않는 표기</strong> — &quot;취약점 0건&quot;이 아니라 <code>PASS / FAIL / EXPECTED / REVIEWED / REVIEW</code> 5종으로 나눠 기록. 수정 후 같은 요청을 다시 보내 차단을 확인하고, <code>--expect pass</code> 게이트로 회귀를 자동 판정</li>
           <li><strong>2차검증 (교차 확인)</strong> — 같은 수정을 도구 없이 다시 확인: ① raw curl로 헤더 위조 3회 → 증가 0 ② <strong>대조군</strong>(정상 요청 +1)으로 &quot;차단된 것&quot;과 &quot;쓰기가 죽은 것&quot;을 구분 ③ 같은 검사를 2회 연속 실행해 판정이 흔들리지 않는지(멱등성) ④ 라이브 도메인에 위조 헤더 2종을 동시에 보내 DB에 저장된 IP가 실제 IP인지 확인</li>
           <li><strong>운영 가드</strong> — 앱 컨테이너는 <code>127.0.0.1</code> 에만 바인딩하고 반드시 프록시를 거친다. 앱은 <code>X-Real-IP</code> 를 신뢰하므로 포트를 외부에 열면 그 헤더가 곧 위조 경로가 된다(2차검증에서 확인한 조건부 위험)</li>
           <li><strong>게이트 자동화</strong> — 1·2·3층을 매일 자동 실행한다. 정상이면 <strong>아무 알림도 보내지 않고</strong>, 실패한 층만 요약해 보고한다(거짓 경보를 줄이려 <code>npm audit</code> 은 프로덕션·개발 의존성을 분리하고 메이저 격차는 <code>REVIEW</code> 로 남긴다). 상태를 바꾸는 공격은 격리 DB(<code>appdb_test</code>)를 보는 테스트 컨테이너에서만 실행해 운영 데이터와 분리했다</li>
           <li><strong>보안 헤더 실측</strong> — 4개 도메인 응답 헤더를 직접 확인. <code>games</code> 는 <code>add_header</code> 상속 규칙(location 에 하나라도 있으면 server 레벨은 상속 안 됨) 때문에 헤더가 <strong>0개</strong>였고 수정 후 4개가 됐습니다. 포트폴리오는 nginx·앱이 같은 헤더를 2중 전송해 1개로 정리, CSP의 <code>unsafe-eval</code> 은 제거(운영 빌드에서 불필요)</li>
         </ul>
+        </CollapsibleCode>
 
         <h3 className="text-base font-semibold text-gray-900 dark:text-[#E5E7EB]">Included Services</h3>
         <ul className="list-disc pl-5 space-y-1">

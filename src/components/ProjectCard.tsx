@@ -43,7 +43,7 @@ export default function ProjectCard({ project }: { project: Project }) {
             <span className="more-tags">+{project.technologies.length - 4}</span>
           )}
         </div>
-        <span className="card-cta">View Project →</span>
+        <span className="card-cta">자세히 보기 →</span>
       </div>
     </Link>
   )
