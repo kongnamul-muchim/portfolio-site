@@ -655,10 +655,10 @@ function ProjectDetailContent({ slug }: { slug: string }) {
         <h3 className="text-base font-semibold text-gray-900 dark:text-[#E5E7EB]">Security Audit</h3>
         <ul className="list-disc pl-5 space-y-1">
           <li><strong>범위</strong> — 서버가 있는 저장소 5개, HTTP 라우트 60개를 코드에서 정적 추출 (2026-11-18)</li>
-          <li><strong>신뢰 지점 41곳</strong> — 서버가 클라이언트 값을 받아들이는 지점(본문 숫자·경로 ID·업로드 파일명·IP 헤더·세션)을 세고, 각 지점마다 대응 공격을 배정 (자동 재현 6 / 수동 확인 35)</li>
+          <li><strong>신뢰 지점 41곳</strong> — 서버가 클라이언트 값을 받아들이는 지점(본문 숫자·경로 ID·업로드 파일명·IP 헤더·세션)을 세고, 각 지점마다 대응 공격을 배정 (자동 재현 35건 / 공격 8종 · 수동 판정 35건)</li>
           <li><strong>실제 요청으로 재현</strong> — IDOR 5건, 업로드 경로 조작 3종, 권한 없는 라우트 접근: 모두 거부 응답 확인</li>
-          <li><strong>취약점 1건 발견·수정</strong> — 방문자 수가 <code>X-Forwarded-For</code> 첫 값을 신뢰해 3회 위조 시 3명으로 집계됨. 프록시 확정 IP만 쓰도록 수정 후 같은 요청이 1명으로 집계되는 것을 확인</li>
-          <li><strong>과장하지 않는 표기</strong> — &quot;취약점 0건&quot;이 아니라 &quot;자동 재현 N건 통과 / 수동 확인 M건&quot;으로 구분해 기록</li>
+          <li><strong>취약점 6건 발견·수정</strong> — ① 방문자 수가 <code>X-Forwarded-For</code> 첫 값을 신뢰(3회 위조 → 3명 집계, 수정 후 1명) ②③④ 포트폴리오 프록시 3곳이 위조 IP를 업스트림에 전달 ⑤ autoflow 파이프라인 steps 무제한(300 steps = 17초, 데이터 224KB 증가 → 상한 50) ⑥ nginx 국가 차단이 같은 헤더로 우회 가능 → Cloudflare가 확정한 헤더만 신뢰</li>
+          <li><strong>과장하지 않는 표기</strong> — &quot;취약점 0건&quot;이 아니라 <code>PASS / FAIL / EXPECTED / REVIEWED / REVIEW</code> 5종으로 나눠 기록. 수정 후 같은 요청을 다시 보내 차단을 확인하고, <code>--expect pass</code> 게이트로 회귀를 자동 판정</li>
         </ul>
 
         <h3 className="text-base font-semibold text-gray-900 dark:text-[#E5E7EB]">Included Services</h3>
