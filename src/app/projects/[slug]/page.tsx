@@ -680,6 +680,7 @@ function ProjectDetailContent({ slug }: { slug: string }) {
           <li><strong>과장하지 않는 표기</strong> — &quot;취약점 0건&quot;이 아니라 <code>PASS / FAIL / EXPECTED / REVIEWED / REVIEW</code> 5종으로 나눠 기록. 수정 후 같은 요청을 다시 보내 차단을 확인하고, <code>--expect pass</code> 게이트로 회귀를 자동 판정</li>
           <li><strong>2차검증 (교차 확인)</strong> — 같은 수정을 도구 없이 다시 확인: ① raw curl로 헤더 위조 3회 → 증가 0 ② <strong>대조군</strong>(정상 요청 +1)으로 &quot;차단된 것&quot;과 &quot;쓰기가 죽은 것&quot;을 구분 ③ 같은 검사를 2회 연속 실행해 판정이 흔들리지 않는지(멱등성) ④ 라이브 도메인에 위조 헤더 2종을 동시에 보내 DB에 저장된 IP가 실제 IP인지 확인</li>
           <li><strong>운영 가드</strong> — 앱 컨테이너는 <code>127.0.0.1</code> 에만 바인딩하고 반드시 프록시를 거친다. 앱은 <code>X-Real-IP</code> 를 신뢰하므로 포트를 외부에 열면 그 헤더가 곧 위조 경로가 된다(2차검증에서 확인한 조건부 위험)</li>
+          <li><strong>게이트 자동화</strong> — 1·2·3층을 매일 자동 실행한다. 정상이면 <strong>아무 알림도 보내지 않고</strong>, 실패한 층만 요약해 보고한다(거짓 경보를 줄이려 <code>npm audit</code> 은 프로덕션·개발 의존성을 분리하고 메이저 격차는 <code>REVIEW</code> 로 남긴다). 상태를 바꾸는 공격은 격리 DB(<code>appdb_test</code>)를 보는 테스트 컨테이너에서만 실행해 운영 데이터와 분리했다</li>
           <li><strong>보안 헤더 실측</strong> — 4개 도메인 응답 헤더를 직접 확인. <code>games</code> 는 <code>add_header</code> 상속 규칙(location 에 하나라도 있으면 server 레벨은 상속 안 됨) 때문에 헤더가 <strong>0개</strong>였고 수정 후 4개가 됐습니다. 포트폴리오는 nginx·앱이 같은 헤더를 2중 전송해 1개로 정리, CSP의 <code>unsafe-eval</code> 은 제거(운영 빌드에서 불필요)</li>
         </ul>
 
