@@ -11,11 +11,11 @@
   --color-neutral: oklch(56% 0.02 240);
   --color-muted: oklch(43% 0.022 245);
   --color-ink: oklch(23% 0.03 250);
-  --color-accent: #22D3EE;
-  --color-accent-ink: oklch(48% 0.13 215);
-  --color-coral: oklch(62% 0.19 35);
-  --color-coral-ink: oklch(52% 0.17 35);
-  --color-pear: oklch(84% 0.14 105);
+  /* 액센트는 한 색만 — 진홍. (teal 은 포커스 링 전용) */
+  --color-accent: oklch(62% 0.19 35);
+  --color-accent-ink: oklch(52% 0.17 35);
+  --color-coral: var(--color-accent);
+  --color-coral-ink: var(--color-accent-ink);
   --color-focus: oklch(60% 0.14 215);
   --shadow-soft: 0 8px 24px -10px oklch(35% 0.06 250 / 0.35);
   --shadow-lift: 0 14px 32px -12px oklch(35% 0.06 250 / 0.45);
@@ -28,11 +28,10 @@
   --color-neutral: oklch(62% 0.02 245);
   --color-muted: oklch(74% 0.015 240);
   --color-ink: oklch(95% 0.008 240);
-  --color-accent: #67E8F9;
-  --color-accent-ink: oklch(80% 0.10 195);
-  --color-coral: oklch(70% 0.16 35);
-  --color-coral-ink: oklch(76% 0.14 35);
-  --color-pear: oklch(82% 0.12 105);
+  --color-accent: oklch(70% 0.16 35);
+  --color-accent-ink: oklch(76% 0.14 35);
+  --color-coral: var(--color-accent);
+  --color-coral-ink: var(--color-accent-ink);
   --color-focus: oklch(75% 0.12 200);
   --shadow-soft: 0 8px 24px -10px oklch(0% 0 0 / 0.5);
   --shadow-lift: 0 14px 32px -12px oklch(0% 0 0 / 0.6);
@@ -415,9 +414,9 @@ h1, h2, h3 {
   color: var(--color-muted);
 }
 .marquee-badge.hot {
-  background: var(--color-coral);
-  border-color: var(--color-coral);
-  color: #fff;
+  background: var(--color-ink);
+  border-color: var(--color-ink);
+  color: var(--color-paper);
 }
 
 /* --- 에디토리얼 섹션 → 플레이풀 섹션 --- */
@@ -454,31 +453,43 @@ h1, h2, h3 {
 }
 
 /* About — 카드 스타일 */
-.about-card {
-  background: var(--color-paper-2);
-  border: 1px solid var(--color-rule);
-  border-radius: var(--radius-card);
-  padding: clamp(1.75rem, 4vw, 3rem);
-  box-shadow: var(--shadow-soft);
-  max-width: 76ch;
+/* 카드 대신 2단 텍스트 — 다른 섹션과 같은 헤어라인 톤 유지 */
+.about-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(1.5rem, 4vw, 3.5rem);
+  align-items: start;
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--color-rule);
 }
-.about-card p {
-  font-size: clamp(1rem, 1vw + 0.7rem, 1.125rem);
-  line-height: 1.75;
+@media (min-width: 861px) {
+  .about-grid > div:last-child {
+    border-left: 1px solid var(--color-rule);
+    padding-left: clamp(1.5rem, 4vw, 3.5rem);
+    margin-left: calc(-1 * clamp(1.5rem, 4vw, 3.5rem) + 0px);
+  }
+}
+@media (max-width: 860px) {
+  .about-grid { grid-template-columns: 1fr; }
+}
+.about-grid p {
+  font-size: clamp(0.98rem, 0.5vw + 0.8rem, 1.06rem);
+  line-height: 1.8;
   color: var(--color-muted);
+  margin: 0;
 }
-.about-card p + p {
-  margin-top: 1rem;
+.about-grid p + p {
+  margin-top: 0.9rem;
 }
-.about-card strong {
+.about-grid strong {
   color: var(--color-ink);
   font-weight: 800;
 }
-.about-card .about-badges {
+.about-grid .about-badges {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.6rem;
-  margin-top: 1.5rem;
+  gap: 0.5rem;
+  margin-top: 1.2rem;
 }
 .about-badge {
   font-size: 0.8rem;
@@ -611,18 +622,23 @@ h1, h2, h3 {
   color: var(--color-muted);
   white-space: nowrap;
 }
-.play-chip.type-unity { background: oklch(90% 0.06 250); border-color: transparent; color: oklch(45% 0.12 260); }
-.play-chip.type-web { background: oklch(90% 0.07 35); border-color: transparent; color: oklch(50% 0.13 35); }
-.play-chip.type-server { background: oklch(90% 0.07 195); border-color: transparent; color: oklch(45% 0.11 215); }
-.play-chip.type-docs { background: oklch(90% 0.07 105); border-color: transparent; color: oklch(45% 0.1 105); }
-.play-chip.type-wip { background: oklch(88% 0.03 250); border-color: transparent; color: oklch(45% 0.05 250); }
-/* 플레이 가능 표시 — 목록에서 바로 눈에 띄게 */
-.play-chip.play-chip-play { background: var(--color-accent-ink); border-color: transparent; color: var(--color-paper); font-weight: 700; }
-.dark .play-chip.type-unity { background: oklch(30% 0.06 260); color: oklch(80% 0.06 260); }
-.dark .play-chip.type-web { background: oklch(30% 0.07 35); color: oklch(80% 0.08 35); }
-.dark .play-chip.type-server { background: oklch(30% 0.07 195); color: oklch(80% 0.06 195); }
-.dark .play-chip.type-docs { background: oklch(30% 0.07 105); color: oklch(80% 0.07 105); }
-.dark .play-chip.type-wip { background: oklch(30% 0.03 250); color: oklch(75% 0.03 250); }
+/* 타입 칩은 색으로 구분하지 않는다 (5색 경쟁 → 무채색). 정보는 라벨 텍스트가 담당. */
+.play-chip.type-unity,
+.play-chip.type-web,
+.play-chip.type-server,
+.play-chip.type-docs,
+.play-chip.type-wip {
+  background: var(--color-paper-2);
+  border-color: var(--color-rule);
+  color: var(--color-muted);
+}
+/* 플레이 가능 표시 — 목록에서 바로 눈에 띄게 (잉크 필, 액센트는 아껴 쓴다) */
+.play-chip.play-chip-play {
+  background: var(--color-ink);
+  border-color: var(--color-ink);
+  color: var(--color-paper);
+  font-weight: 700;
+}
 .play-card .card-cta {
   margin-top: 0.85rem;
   display: inline-block;
@@ -1350,16 +1366,21 @@ html.ornate .detail-stats > div > div:first-child {
 
 /* 홈 — 직군별 입구 */
 .role-entries {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 0.75rem;
   margin-top: 2rem;
+}
+@media (max-width: 860px) {
+  .role-entries { grid-template-columns: 1fr; }
 }
 .role-entry {
   display: flex;
   flex-direction: column;
-  gap: 0.15rem;
-  padding: 0.7rem 1rem;
+  justify-content: space-between;
+  gap: 0.5rem;
+  min-height: 5.4rem;
+  padding: 0.95rem 1.1rem;
   border: 1px solid var(--color-rule);
   background: var(--color-paper-2);
   text-decoration: none;

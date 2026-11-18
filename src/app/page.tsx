@@ -33,10 +33,10 @@ export default function Home() {
         <div className="shell">
         <div className="marquee-badges">
           <span className="marquee-badge hot">독학 개발자</span>
-          <span className="marquee-badge">🎮 Unity 게임 아키텍처</span>
-          <span className="marquee-badge">🤖 RAG AI 챗봇</span>
-          <span className="marquee-badge">🐳 Docker 자체 운영</span>
-          <span className="marquee-badge">☁️ Cloudflare + nginx</span>
+          <span className="marquee-badge">Unity 게임 아키텍처</span>
+          <span className="marquee-badge">RAG AI 챗봇</span>
+          <span className="marquee-badge">Docker 자체 운영</span>
+          <span className="marquee-badge">Cloudflare + nginx</span>
         </div>
 
         {/* 직군별 입구 — 지원하는 회사에 맞춰 순서를 바꿔 보여준다 */}
@@ -67,24 +67,26 @@ export default function Home() {
             </div>
           </Reveal>
           <Reveal delay={80}>
-            <div className="about-card">
+            <div className="about-grid">
             <p>
               고등학교 졸업 후 <strong>독학</strong>으로 개발을 시작했습니다. Unity 게임 개발로 처음 코드를 배웠지만,
               <strong> “서버 없이 완성된 게임은 없다”</strong>는 생각에 Next.js와 Docker를 공부했고,
               <strong> “데이터 없이 AI는 없다”</strong>는 생각에 RAG와 pgvector까지 확장했습니다.
             </p>
-            <p>
-              지금은 <strong>클라이언트 → 백엔드 → AI → 인프라</strong>까지 전 스택을 직접 다루는
-              <strong> 게임 개발자</strong>로서, SOLID 원칙과 DI Container로 유지보수 가능한
-              게임 시스템 아키텍처를 설계하는 것을 가장 중요하게 생각합니다.
-            </p>
-            <div className="about-badges">
-              <span className="about-badge">SOLID 원칙</span>
-              <span className="about-badge">DI Container</span>
-              <span className="about-badge">Event-driven</span>
-              <span className="about-badge">RAG + pgvector</span>
+            <div>
+              <p>
+                지금은 <strong>클라이언트 → 백엔드 → AI → 인프라</strong>까지 전 스택을 직접 다루는
+                <strong> 게임 개발자</strong>로서, SOLID 원칙과 DI Container로 유지보수 가능한
+                게임 시스템 아키텍처를 설계하는 것을 가장 중요하게 생각합니다.
+              </p>
+              <div className="about-badges">
+                <span className="about-badge">SOLID 원칙</span>
+                <span className="about-badge">DI Container</span>
+                <span className="about-badge">Event-driven</span>
+                <span className="about-badge">RAG + pgvector</span>
+              </div>
             </div>
-          </div>
+            </div>
           </Reveal>
         </div>
       </section>
