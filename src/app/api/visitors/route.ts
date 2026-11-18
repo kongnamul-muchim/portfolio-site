@@ -1,5 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/db/prisma'
+// 방문자 IP는 프록시가 확정한 값만 믿는다. 이 라우트만 예전 규칙(XFF 첫 값)을 쓰고 있어서
+// 헤더 위조로 방문자 수를 부풀릴 수 있었다 (2026-11-18: 12명 → 14명 재현).
+// 다른 라우트(/api/rag, proxy.ts)와 같은 헬퍼를 쓴다.
+import { getClientIp } from '@/lib/client-ip'
 
 // 방문자 집계의 "오늘"은 KST(UTC+9) 자정 기준이다.
 // 컨테이너는 UTC로 도는데 new Date().setHours(0,0,0,0) 을 쓰면
@@ -28,17 +32,15 @@ export async function GET() {
 
     return NextResponse.json({ count })
   } catch (error) {
-    console.error('Failed to get visitor count:', error)
-    return NextResponse.json({ count: 0 })
+    // DB 장애를 "방문자 0명"으로 숨기지 않는다. 상태코드로 알리고 화면은 배지를 감춘다.
+    console.error('Failed to get visitor count:', error instanceof Error ? error.message : String(error))
+    return NextResponse.json({ count: 0, ok: false, error: 'db_unavailable' }, { status: 503 })
   }
 }
 
 export async function POST(request: NextRequest) {
   try {
-    const ip =
-      request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ||
-      request.headers.get('x-real-ip') ||
-      '127.0.0.1'
+    const ip = getClientIp(request)
 
     const today = kstDayStart()
 
@@ -70,7 +72,7 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ count })
   } catch (error) {
-    console.error('Failed to log visitor:', error)
-    return NextResponse.json({ count: 0 })
+    console.error('Failed to log visitor:', error instanceof Error ? error.message : String(error))
+    return NextResponse.json({ count: 0, ok: false, error: 'db_unavailable' }, { status: 503 })
   }
 }

@@ -6,17 +6,17 @@ export default function VisitorBadge() {
   const [count, setCount] = useState<number | null>(null)
 
   useEffect(() => {
-    // 방문 기록 POST
+    // 방문 기록 POST — 서버가 503을 주면(DB 장애) "0명"을 표시하지 않고 배지를 감춘다
     fetch('/api/visitors', { method: 'POST' })
-      .then(res => res.json())
-      .then(data => setCount(data.count))
+      .then(res => (res.ok ? res.json() : null))
+      .then(data => setCount(data ? data.count : null))
       .catch(() => setCount(null))
 
     // 60초마다 갱신
     const interval = setInterval(() => {
       fetch('/api/visitors')
-        .then(res => res.json())
-        .then(data => setCount(data.count))
+        .then(res => (res.ok ? res.json() : null))
+        .then(data => { if (data) setCount(data.count) })
         .catch(() => {})
     }, 60000)
 
