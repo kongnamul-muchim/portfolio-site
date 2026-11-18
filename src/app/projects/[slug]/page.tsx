@@ -5,8 +5,8 @@ import GithubActivityBadge from '@/components/GithubActivityBadge'
 import RoleEvidence from '@/components/RoleEvidence'
 import { getRepoCommitCount } from '@/lib/github'
 
-// 커밋 수를 GitHub 에서 가져오므로 1시간마다 갱신한다
-export const revalidate = 3600
+// 커밋 수를 GitHub 에서 가져오므로 5분마다 갱신한다 (토큰 있으면 5000회/시간 한도)
+export const revalidate = 300
 
 export function generateStaticParams() {
   return projects.map((project) => ({
