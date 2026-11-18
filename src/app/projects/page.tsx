@@ -8,8 +8,8 @@ export default function ProjectsPage() {
   return (
     <div className="portfolio-page min-h-screen">
       {/* 목록 헤더 */}
-      <section className="play-section px-8 sm:px-12 pt-10">
-        <div className="max-w-6xl mx-auto">
+      <section className="play-section pt-10">
+        <div className="shell">
           <Reveal>
             <div className="play-section-head">
               <h1>프로젝트</h1>
@@ -25,8 +25,8 @@ export default function ProjectsPage() {
       </section>
 
       {/* 모든 작품 — 필터 + 카드 그리드 */}
-      <section className="play-section px-8 sm:px-12 pt-0">
-        <div className="max-w-6xl mx-auto">
+      <section className="play-section pt-0">
+        <div className="shell">
           <ProjectGrid />
         </div>
       </section>

@@ -3,8 +3,7 @@
 import { useState, useEffect } from 'react';
 
 interface ActivityData {
-  lastUpdate: string | null;
-  ago: string;
+  ago: string | null;
   days: number;
 }
 
@@ -21,7 +20,7 @@ export default function GithubActivityBadge({ repo }: { repo: string }) {
   }, [repo]);
 
   // 30일 넘은 프로젝트는 badge 숨김 (완성된 게임은 오래돼도 정상)
-  if (!data || !data.lastUpdate || data.days > MAX_DAYS) return null;
+  if (!data || !data.ago || data.days > MAX_DAYS) return null;
 
   // 커밋 메시지는 노출하지 않는다 — 방문자에게 의미 없는 내부 작업 문구가
   // 그대로 보이면 오해를 만들 수 있어서, 마지막 활동 시점만 보여준다.

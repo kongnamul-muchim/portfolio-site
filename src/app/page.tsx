@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { getFeaturedProjects, projects } from '@/data/projects'
 import Reveal from '@/components/Reveal'
 import ProjectCard from '@/components/ProjectCard'
+import HeroStatusCard from '@/components/HeroStatusCard'
 import OrnateDetector from '@/components/OrnateDetector'
 
 export default function Home() {
@@ -13,17 +14,23 @@ export default function Home() {
     <div className="portfolio-page min-h-screen">
       <OrnateDetector />
       {/* Marquee Hero — 게임 타이틀 화면 */}
-      <section className="marquee-hero px-8 sm:px-12">
-        <h1 className="marquee-display">
-          <span className="line line-1">게임, AI, 인프라.</span>
-          <span className="line accent-word line-2">세 영역을 직접 잇는</span>
-          <span className="line line-3">개발자.</span>
-        </h1>
-        <p className="marquee-lede">
-          고등학교 졸업 후 독학으로 시작해 Unity 게임과 미니게임 프로토타입을 기획하고 검증하며 성장했습니다.
-          클라이언트에서 백엔드, AI, 인프라까지 전 스택을 다루는,<br />
-          <strong>견고하고 확장 가능한 게임 시스템을 설계하는 개발자</strong>입니다.
-        </p>
+      <section className="marquee-hero">
+        <div className="shell marquee-hero-grid">
+          <div className="marquee-hero-copy">
+            <h1 className="marquee-display">
+              <span className="line line-1">게임, AI, 인프라.</span>
+              <span className="line accent-word line-2">세 영역을 직접 잇는</span>
+              <span className="line line-3">개발자.</span>
+            </h1>
+            <p className="marquee-lede">
+              고등학교 졸업 후 독학으로 시작해 Unity 게임과 미니게임 프로토타입을 기획하고 검증하며 성장했습니다.
+              클라이언트에서 백엔드, AI, 인프라까지 전 스택을 다루는,<br />
+              <strong>견고하고 확장 가능한 게임 시스템을 설계하는 개발자</strong>입니다.
+            </p>
+          </div>
+          <HeroStatusCard />
+        </div>
+        <div className="shell">
         <div className="marquee-badges">
           <span className="marquee-badge hot">독학 개발자</span>
           <span className="marquee-badge">🎮 Unity 게임 아키텍처</span>
@@ -47,11 +54,12 @@ export default function Home() {
             <span className="role-entry-title">AI를 어디까지 썼나 →</span>
           </Link>
         </div>
+        </div>
       </section>
 
       {/* About */}
-      <section className="play-section px-8 sm:px-12 pt-0">
-        <div className="max-w-6xl mx-auto">
+      <section className="play-section">
+        <div className="shell">
           <Reveal>
             <div className="play-section-head">
               <h2>About</h2>
@@ -83,8 +91,8 @@ export default function Home() {
 
       {/* Featured Works — 대표 작품 (3개) */}
       {featuredProjects.length > 0 && (
-        <section className="play-section px-8 sm:px-12 pt-0">
-          <div className="max-w-6xl mx-auto">
+        <section className="play-section">
+          <div className="shell">
             <Reveal>
               <div className="play-section-head">
                 <h2>대표 작품</h2>

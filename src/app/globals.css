@@ -24,7 +24,7 @@
 .dark {
   --color-paper: oklch(16% 0.02 250);
   --color-paper-2: oklch(20% 0.024 250);
-  --color-rule: oklch(34% 0.02 250);
+  --color-rule: oklch(42% 0.02 250);
   --color-neutral: oklch(62% 0.02 245);
   --color-muted: oklch(74% 0.015 240);
   --color-ink: oklch(95% 0.008 240);
@@ -73,6 +73,9 @@
 body {
   color: var(--foreground);
   background: var(--background);
+  /* 한글은 단어 단위로 끊는다. 긴 영문/URL 은 overflow-wrap 이 받아준다. */
+  word-break: keep-all;
+  overflow-wrap: break-word;
   font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
 }
 
@@ -283,6 +286,125 @@ h1, h2, h3 {
   gap: 0.6rem;
   position: relative;
 }
+
+/* ── 히어로 2단: 좌 텍스트 / 우 운영 현황 ───────────────── */
+.marquee-hero-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 2.25rem;
+  align-items: center;
+  width: 100%;
+}
+.marquee-hero-copy {
+  min-width: 0;
+}
+@media (min-width: 1024px) {
+  .marquee-hero-grid {
+    grid-template-columns: minmax(0, 1fr) 26rem;
+    gap: 3.5rem;
+    align-items: center;
+  }
+}
+
+.hero-status {
+  border: 1px solid var(--color-rule);
+  border-radius: var(--radius-card);
+  background: var(--color-paper-2);
+  box-shadow: var(--shadow-soft);
+  padding: 1.5rem 1.6rem 1.35rem;
+  color: var(--color-ink);
+  display: flex;
+  flex-direction: column;
+}
+.hero-status-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 1.1rem;
+}
+.hero-status-label {
+  font-size: 0.72rem;
+  letter-spacing: 0.02em;
+  color: var(--color-neutral);
+}
+.hero-status-live {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.7rem;
+  font-weight: 800;
+  color: var(--color-accent-ink);
+}
+.hero-status-live i {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--color-accent-ink);
+  box-shadow: 0 0 0 3px color-mix(in oklab, var(--color-accent-ink) 20%, transparent);
+}
+.hero-status-big {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+}
+.hero-status-big .num {
+  font-family: var(--font-display), 'Pretendard', sans-serif;
+  font-size: 2.7rem;
+  font-weight: 800;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+.hero-status-big .cap {
+  font-size: 0.8rem;
+  color: var(--color-muted);
+}
+.hero-status-split {
+  display: flex;
+  gap: 1.6rem;
+  margin-top: 1.15rem;
+  padding-top: 0.95rem;
+  border-top: 1px solid var(--color-rule);
+}
+.hero-status-split div {
+  display: flex;
+  align-items: baseline;
+  gap: 0.4rem;
+}
+.hero-status-split b {
+  font-size: 1rem;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+.hero-status-split span {
+  font-size: 0.72rem;
+  color: var(--color-muted);
+}
+.hero-status-commits {
+  list-style: none;
+  margin: 0.95rem 0 0;
+  padding: 0.95rem 0 0;
+  border-top: 1px solid var(--color-rule);
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  font-size: 0.82rem;
+}
+.hero-status-commits li {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  color: var(--color-muted);
+}
+.hero-status-commits li span:first-child {
+  color: var(--color-ink);
+  font-weight: 600;
+}
+.hero-status-foot {
+  margin: 0.95rem 0 0;
+  font-size: 0.7rem;
+  color: var(--color-neutral);
+}
 .marquee-badge {
   font-size: 0.78rem;
   font-weight: 700;
@@ -406,9 +528,16 @@ h1, h2, h3 {
   overflow: hidden;
 }
 .play-card .card-thumb img {
-  max-width: 100%;
-  max-height: 100%;
+  width: 100%;
+  height: 100%;
+  border-radius: 5px;
+  object-fit: cover;
+  object-position: center;
+}
+/* 로고/도해는 잘리면 안 되므로 contain 유지 */
+.play-card .card-thumb img[src$='.svg'] {
   object-fit: contain;
+  border-radius: 0;
 }
 .play-card .card-body {
   padding: 0.25rem 0;
@@ -421,8 +550,8 @@ h1, h2, h3 {
 .play-card .card-top {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 0.75rem;
+  justify-content: flex-start;
+  gap: 0.7rem;
 }
 .play-card h3 {
   font-family: var(--font-display), 'Pretendard', sans-serif;
@@ -563,10 +692,18 @@ h1, h2, h3 {
   z-index: 50;
   transition: background-color 150ms ease;
 }
+/* 모든 페이지가 같은 좌측 정렬선을 쓰도록 하는 단일 컨테이너 */
+.shell {
+  width: 100%;
+  max-width: 78rem;
+  margin-inline: auto;
+  padding-inline: clamp(1.25rem, 4vw, 3rem);
+}
+
 .masthead-inner {
-  max-width: 72rem;
+  max-width: 78rem;
   margin: 0 auto;
-  padding: 0.8rem clamp(1.25rem, 4vw, 1.5rem);
+  padding: 0.8rem clamp(1.25rem, 4vw, 3rem);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -633,6 +770,11 @@ h1, h2, h3 {
   transition: all 150ms ease;
   white-space: nowrap;
 }
+/* 다크: 코랄 배경 위 흰 글자는 2.27:1 → 잉크색 글자로 7.4:1 */
+.dark .masthead-cta {
+  color: #0B1220;
+}
+
 .masthead-cta:hover {
   transform: translateY(-1px);
   box-shadow: var(--shadow-lift);

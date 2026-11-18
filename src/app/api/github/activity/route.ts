@@ -27,7 +27,13 @@ export async function GET(req: NextRequest) {
     const res = await fetch(
       `https://api.github.com/repos/${parsed.owner}/${parsed.repo}/commits?per_page=1`,
       {
-        headers: { 'User-Agent': 'portfolio.olivilo.shop' },
+        headers: {
+          'User-Agent': 'portfolio.olivilo.shop',
+          // 익명 호출은 IP당 60회/시 → 서버 공용 IP 가 금방 소진된다.
+          ...(process.env.GITHUB_TOKEN
+            ? { Authorization: `Bearer ${process.env.GITHUB_TOKEN}` }
+            : {}),
+        },
         signal: AbortSignal.timeout(5000),
       }
     );
@@ -38,12 +44,10 @@ export async function GET(req: NextRequest) {
     }
     const commits = await res.json();
     if (!Array.isArray(commits) || commits.length === 0) {
-      return NextResponse.json({ lastUpdate: null, days: 999 });
+      return NextResponse.json({ ago: null, days: 999 });
     }
 
     const commit = commits[0];
-    const rawMessage = commit.commit?.message || '';
-    const shortMsg = rawMessage.split('\n')[0].trim();
     const date = new Date(commit.commit?.author?.date || Date.now());
     const now = Date.now();
     const diff = now - date.getTime();
@@ -52,11 +56,12 @@ export async function GET(req: NextRequest) {
       : diff < 86400000 ? `${Math.floor(diff / 3600000)}시간 전`
       : `${Math.floor(diff / 86400000)}일 전`;
 
-    const result = { lastUpdate: shortMsg, ago, days: Math.floor(diff / 86400000) };
+    // 커밋 메시지는 외부에 내보내지 않는다 — 활동 시점만 노출.
+    const result = { ago, days: Math.floor(diff / 86400000) };
     cache.set(cacheKey, { data: result, expiry: Date.now() + CACHE_TTL });
     return NextResponse.json(result);
   } catch {
     if (cached) return NextResponse.json(cached.data);
-    return NextResponse.json({ lastUpdate: null });
+    return NextResponse.json({ ago: null, days: 999 });
   }
 }
