@@ -659,6 +659,8 @@ function ProjectDetailContent({ slug }: { slug: string }) {
           <li><strong>실제 요청으로 재현</strong> — IDOR 5건, 업로드 경로 조작 3종, 권한 없는 라우트 접근: 모두 거부 응답 확인</li>
           <li><strong>취약점 6건 발견·수정</strong> — ① 방문자 수가 <code>X-Forwarded-For</code> 첫 값을 신뢰(3회 위조 → 3명 집계, 수정 후 1명) ②③④ 포트폴리오 프록시 3곳이 위조 IP를 업스트림에 전달 ⑤ autoflow 파이프라인 steps 무제한(300 steps = 17초, 데이터 224KB 증가 → 상한 50) ⑥ nginx 국가 차단이 같은 헤더로 우회 가능 → Cloudflare가 확정한 헤더만 신뢰</li>
           <li><strong>과장하지 않는 표기</strong> — &quot;취약점 0건&quot;이 아니라 <code>PASS / FAIL / EXPECTED / REVIEWED / REVIEW</code> 5종으로 나눠 기록. 수정 후 같은 요청을 다시 보내 차단을 확인하고, <code>--expect pass</code> 게이트로 회귀를 자동 판정</li>
+          <li><strong>2차검증 (교차 확인)</strong> — 같은 수정을 도구 없이 다시 확인: ① raw curl로 헤더 위조 3회 → 증가 0 ② <strong>대조군</strong>(정상 요청 +1)으로 &quot;차단된 것&quot;과 &quot;쓰기가 죽은 것&quot;을 구분 ③ 같은 검사를 2회 연속 실행해 판정이 흔들리지 않는지(멱등성) ④ 라이브 도메인에 위조 헤더 2종을 동시에 보내 DB에 저장된 IP가 실제 IP인지 확인</li>
+          <li><strong>운영 가드</strong> — 앱 컨테이너는 <code>127.0.0.1</code> 에만 바인딩하고 반드시 프록시를 거친다. 앱은 <code>X-Real-IP</code> 를 신뢰하므로 포트를 외부에 열면 그 헤더가 곧 위조 경로가 된다(2차검증에서 확인한 조건부 위험)</li>
         </ul>
 
         <h3 className="text-base font-semibold text-gray-900 dark:text-[#E5E7EB]">Included Services</h3>
