@@ -100,7 +100,7 @@ export const projects: Project[] = [
     demo: 'https://kongnamul-muchim.github.io/SpiritMerge/',
     featured: true,
     devPeriod: '2026-07-28 ~ 2026-08-06',
-    hasPlayableDemo: false,
+    hasPlayableDemo: true,
     roles: ['game'],
     problem: '머지 게임은 "합성 → 전투 → 보상 → 다시 합성"이 한 바퀴 도는지가 전부입니다. 그런데 머지·전투·파견·저장이 전부 씬에 붙어 있으면, 한 바퀴를 확인할 때마다 마우스로 30번은 클릭해야 했습니다.',
     decisions: [
@@ -453,7 +453,7 @@ export const projects: Project[] = [
     ],
     limits: [
       '트래픽이 거의 없는 개인 사이트라, 대규모 부하 상황은 검증하지 못했습니다.',
-      '백업은 수동 스크립트입니다. 자동 백업·복구 훈련은 아직 안 했습니다.',
+      '백업은 매일 03:00에 자동입니다(pg_dump 3개 DB + uploads, 7일 보관). 다만 복구 훈련은 아직 안 했습니다 — 백업이 있다는 것과 되살릴 수 있다는 것은 다릅니다.',
     ],
   },
 ]

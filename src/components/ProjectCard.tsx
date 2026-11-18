@@ -25,6 +25,11 @@ export default function ProjectCard({ project }: { project: Project }) {
         </div>
         <p className="card-desc">{project.description}</p>
         <div className="card-meta">
+          {project.hasPlayableDemo && (
+            <span className="play-chip play-chip-play">
+              ▶ {project.type === 'unity' ? '플레이' : '데모'}
+            </span>
+          )}
           {project.devPeriod && (
             <span className="work-period">📅 {project.devPeriod}</span>
           )}

@@ -22,17 +22,18 @@ export const metadata: Metadata = {
   },
   description: "Unity 게임, AI 시스템, 자체 서버 운영까지 전 스택을 다루는 프로덕트 엔지니어 포트폴리오",
   metadataBase: new URL("https://portfolio.olivilo.shop"),
+  alternates: { canonical: "/" },
   openGraph: {
     type: "website",
     title: "GuGu.dev — 게임 · AI · 인프라 엔지니어",
     description: "Unity 게임 개발, RAG AI 챗봇, Docker 기반 자체 서버 운영 — 전 스택을 직접 다루는 프로덕트 엔지니어",
-    images: ["/images/resonance.png"],
+    images: ["/images/og.png"],
   },
   twitter: {
     card: "summary_large_image",
     title: "GuGu.dev — 게임 · AI · 인프라 엔지니어",
     description: "Unity 게임 개발, RAG AI 챗봇, Docker 기반 자체 서버 운영 — 전 스택을 직접 다루는 프로덕트 엔지니어",
-    images: ["/images/resonance.png"],
+    images: ["/images/og.png"],
   },
 };
 

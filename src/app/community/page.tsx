@@ -1,6 +1,20 @@
 import Link from 'next/link'
+import type { Metadata } from 'next'
 import { PostService } from '@/services/post.service'
 import { CategoryService } from '@/services/category.service'
+
+export const metadata: Metadata = {
+  title: '커뮤니티 — 게시판 · 댓글 · 알림 | GuGu.dev',
+  description:
+    '직접 만든 게시판입니다. 회원가입·글·댓글·좋아요·알림이 붙어 있고, 이 포트폴리오 사이트 안에서 실제로 돌아갑니다.',
+  alternates: { canonical: '/community' },
+  openGraph: {
+    title: '커뮤니티 — 게시판 · 댓글 · 알림',
+    description: '회원가입·글·댓글·좋아요·알림이 붙은 자체 게시판. 이 사이트 안에서 실제로 돌아갑니다.',
+    url: '/community',
+    images: ['/images/og.png'],
+  },
+}
 
 // 게시글 목록은 항상 최신 DB 내용이어야 한다.
 // (빌드 시점에 정적 생성하면 글이 고정되거나, 빌드 환경에 DB 가 없으면 실패한다)

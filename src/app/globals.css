@@ -478,6 +478,8 @@ h1, h2, h3 {
 .play-chip.type-server { background: oklch(90% 0.07 195); border-color: transparent; color: oklch(45% 0.11 215); }
 .play-chip.type-docs { background: oklch(90% 0.07 105); border-color: transparent; color: oklch(45% 0.1 105); }
 .play-chip.type-wip { background: oklch(88% 0.03 250); border-color: transparent; color: oklch(45% 0.05 250); }
+/* 플레이 가능 표시 — 목록에서 바로 눈에 띄게 */
+.play-chip.play-chip-play { background: var(--color-accent-ink); border-color: transparent; color: var(--color-paper); font-weight: 700; }
 .dark .play-chip.type-unity { background: oklch(30% 0.06 260); color: oklch(80% 0.06 260); }
 .dark .play-chip.type-web { background: oklch(30% 0.07 35); color: oklch(80% 0.08 35); }
 .dark .play-chip.type-server { background: oklch(30% 0.07 195); color: oklch(80% 0.06 195); }
@@ -846,7 +848,8 @@ html.ornate .portfolio-page > * {
 }
 /* 포인트 컬러 텍스트 (accent 단색) */
 html.ornate .marquee-display .accent-word {
-  color: var(--color-accent);
+  /* 크림 배경 위 시안 원색은 대비 1.69:1 → 텍스트용 accent-ink 사용 */
+  color: var(--color-accent-ink);
 }
 /* 히어로 라인 등장 — 한 번만 */
 html.ornate .marquee-display .line {

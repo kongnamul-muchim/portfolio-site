@@ -24,9 +24,11 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   return {
     title: `${project.title} | GuGu.dev`,
     description: desc,
+    alternates: { canonical: `/projects/${project.id}` },
     openGraph: {
       title: `${project.title} | GuGu.dev`,
       description: desc,
+      url: `/projects/${project.id}`,
       images: project.image ? [project.image] : [],
     },
     twitter: {
@@ -135,7 +137,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
             alt={project.title}
             className="w-full h-auto max-h-[540px] object-contain transition-all duration-300 group-hover:brightness-110"
           />
-          <div className="absolute inset-0 bg-[#0D0D0E]/65 transition-opacity duration-300 group-hover:bg-[#0D0D0E]/10 pointer-events-none" />
+          <div className="absolute inset-0 bg-[#0D0D0E]/10 transition-opacity duration-300 group-hover:bg-[#0D0D0E]/0 pointer-events-none" />
         </div>
 
         {/* Detail Content */}
