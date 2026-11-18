@@ -10,11 +10,21 @@ export default function ProjectCard({ project }: { project: Project }) {
   const defaultImage = '/images/default.jpeg'
   const hasRealImage = project.image !== '/images/placeholder.svg' && project.image !== defaultImage
   const displayImage = hasRealImage ? project.image : defaultImage
+  // 이 사이트 스크린샷은 흰 화면이라 다크 테마에서 번쩍인다 → 다크 전용 캡처로 교체
+  const darkImage = project.image === '/images/portfolio-site.webp' ? '/images/portfolio-site-dark.webp' : null
 
   return (
     <Link href={`/projects/${project.id}`} className="play-card">
       <div className="card-thumb">
-        <img src={displayImage} alt={project.title} loading="lazy" />
+        <img
+          src={displayImage}
+          alt={project.title}
+          loading="lazy"
+          className={darkImage ? 'thumb-light-only' : undefined}
+        />
+        {darkImage && (
+          <img src={darkImage} alt="" aria-hidden="true" loading="lazy" className="thumb-dark-only" />
+        )}
       </div>
       <div className="card-body">
         <div className="card-top">
@@ -31,7 +41,7 @@ export default function ProjectCard({ project }: { project: Project }) {
             </span>
           )}
           {project.devPeriod && (
-            <span className="work-period">📅 {project.devPeriod}</span>
+            <span className="work-period">{project.devPeriod}</span>
           )}
           {project.github && (
             <GithubActivityBadge repo={project.github} />

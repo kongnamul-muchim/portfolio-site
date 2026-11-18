@@ -512,7 +512,7 @@ h1, h2, h3 {
   transition: border-color 150ms ease;
 }
 .play-card:hover {
-  border-bottom-color: var(--color-coral);
+  border-bottom-color: var(--color-accent);
 }
 .play-card .card-thumb {
   width: clamp(12rem, 22vw, 16rem);
@@ -533,6 +533,15 @@ h1, h2, h3 {
   border-radius: 5px;
   object-fit: cover;
   object-position: center;
+}
+.play-card .card-thumb .thumb-dark-only {
+  display: none;
+}
+.dark .play-card .card-thumb .thumb-dark-only {
+  display: block;
+}
+.dark .play-card .card-thumb .thumb-light-only {
+  display: none;
 }
 /* 로고/도해는 잘리면 안 되므로 contain 유지 */
 .play-card .card-thumb img[src$='.svg'] {
@@ -830,36 +839,40 @@ h1, h2, h3 {
 }
 
 /* --- Ft8 마퀴 스크롤 푸터 --- */
+/* 푸터는 테마와 무관하게 "항상 어두운 판" — ink/paper 를 쓰면 다크에서 흰 판으로 뒤집힌다 */
 .marquee-footer {
-  border-top: 3px solid var(--color-ink);
-  background: var(--color-ink);
-  color: var(--color-paper);
+  --footer-bg: oklch(17% 0.015 255);
+  --footer-fg: oklch(95% 0.008 250);
+  border-top: 1px solid oklch(30% 0.02 255);
+  background: var(--footer-bg);
+  color: var(--footer-fg);
   overflow: hidden;
   margin-top: 3rem;
 }
-.marquee-track {
+.stack-line {
   display: flex;
-  white-space: nowrap;
-  animation: marquee-scroll 28s linear infinite;
-  padding: 1rem 0;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.15rem 0.55rem;
+  max-width: 78rem;
+  margin: 0 auto;
+  padding: 1.15rem clamp(1.25rem, 4vw, 3rem) 0.15rem;
+  font-size: 0.8rem;
+  letter-spacing: 0.02em;
+  color: oklch(72% 0.02 240);
 }
-.marquee-track span {
-  font-family: var(--font-display), 'Pretendard', sans-serif;
-  font-size: 1.15rem;
-  letter-spacing: 0.05em;
-  padding-right: 1.5rem;
+.stack-line .sep {
+  color: oklch(48% 0.02 240);
+  margin-left: 0.55rem;
 }
-.marquee-track .sep {
-  color: var(--color-coral);
-}
-@keyframes marquee-scroll {
-  from { transform: translateX(0); }
-  to { transform: translateX(-50%); }
+@media (prefers-reduced-motion: no-preference) {
+  .stack-line span { transition: color 150ms ease; }
+  .stack-line span:hover { color: var(--footer-fg); }
 }
 .marquee-footer-inner {
-  max-width: 72rem;
+  max-width: 78rem;
   margin: 0 auto;
-  padding: 2.5rem clamp(1.25rem, 4vw, 1.5rem) 2rem;
+  padding: 1.6rem clamp(1.25rem, 4vw, 3rem) 2rem;
   display: flex;
   flex-direction: column;
   gap: 1.25rem;
@@ -867,7 +880,7 @@ h1, h2, h3 {
 .marquee-footer-inner .wordmark {
   font-family: var(--font-display), 'Pretendard', sans-serif;
   font-size: clamp(1.5rem, 3vw, 2.2rem);
-  color: var(--color-paper);
+  color: var(--footer-fg);
   margin: 0;
 }
 .marquee-footer-inner .wordmark .dot {
@@ -889,7 +902,7 @@ h1, h2, h3 {
   color: oklch(70% 0.02 240);
 }
 .marquee-footer-inner .meta a {
-  color: var(--color-paper);
+  color: var(--footer-fg);
   text-decoration: none;
   border-bottom: 1px solid var(--color-coral);
   transition: color 150ms ease;
@@ -917,7 +930,6 @@ h1, h2, h3 {
 }
 @media (prefers-reduced-motion: reduce) {
   .sparkle { display: none; }
-  .marquee-track { animation: none; }
 }
 
 /* --- 모바일 대응 --- */

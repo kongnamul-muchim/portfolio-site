@@ -26,7 +26,7 @@ export default function GithubActivityBadge({ repo }: { repo: string }) {
   // 그대로 보이면 오해를 만들 수 있어서, 마지막 활동 시점만 보여준다.
   return (
     <div className="flex items-center gap-1.5 text-[11px] text-gray-600 dark:text-[#9CA3AF] mb-3">
-      <span className="shrink-0">🔄</span>
+      <span className="shrink-0" aria-hidden="true">↻</span>
       <span className="truncate">최근 커밋 {data.ago}</span>
     </div>
   );

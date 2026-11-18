@@ -1,19 +1,17 @@
-// Ft8 마퀴 스크롤 푸터 — 게임 크레딧 느낌
-const MARQUEE_ITEMS = [
+// 푸터 스택 라인 — 회전 마퀴 대신 한 줄 고정 (중복·과잉 motion 제거)
+const STACK_ITEMS = [
   'Unity', 'C#', 'Next.js', 'TypeScript', 'Docker', 'PostgreSQL',
   'RAG', 'pgvector', 'SOLID', 'DI Container', 'nginx', 'Cloudflare',
 ]
 
 export default function Footer() {
-  const track = [...MARQUEE_ITEMS, ...MARQUEE_ITEMS] // 두 번 반복 → -50% 애니메이션
-
   return (
     <footer id="contact-section" className="marquee-footer">
-      {/* 마퀴 스크롤 */}
-      <div className="marquee-track" aria-hidden="true">
-        {track.map((item, i) => (
-          <span key={i}>
-            {item} <span className="sep">✦</span>
+      <div className="stack-line">
+        {STACK_ITEMS.map((item, i) => (
+          <span key={item}>
+            {item}
+            {i < STACK_ITEMS.length - 1 && <span className="sep" aria-hidden="true">·</span>}
           </span>
         ))}
       </div>
