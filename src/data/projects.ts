@@ -446,7 +446,7 @@ export const projects: Project[] = [
       },
     ],
     evidence: [
-      { label: '커밋', value: '40', note: '' },
+      { label: '커밋', value: '72', note: 'GitHub API 자동 집계' },
       { label: '운영', value: '직접 운영', note: '컨테이너 + nginx + Cloudflare' },
       { label: '배포 절차', value: '2단계', note: '테스트 → 운영' },
       { label: '보안', value: '4중', note: 'SSH·UFW·Fail2Ban·프록시' },

@@ -1,18 +1,16 @@
 /** @type {import('next').NextConfig} */
+// X-Frame-Options / X-Content-Type-Options / Referrer-Policy / HSTS 는 nginx(global/security.conf)가 붙인다.
+// 여기서 또 붙이면 응답 헤더가 2중으로 나가므로 앱에서만 줄 수 있는 것(CSP·Permissions-Policy)만 둔다.
 const securityHeaders = [
-  // 클릭재킹 방지 — 이 사이트를 다른 사이트가 프레임에 넣지 못하게
-  { key: 'X-Frame-Options', value: 'SAMEORIGIN' },
-  // 브라우저가 Content-Type 을 멋대로 해석하지 않게 (XSS 완화)
-  { key: 'X-Content-Type-Options', value: 'nosniff' },
-  { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
   // 카메라·마이크·위치 등 브라우저 기능 차단
   { key: 'Permissions-Policy', value: 'camera=(), microphone=(), geolocation=(), payment=()' },
   // 외부 스크립트 주입 차단. Next.js 가 인라인 스크립트를 쓰므로 'unsafe-inline' 은 필요하다.
+  // 'unsafe-eval' 은 개발 모드에서만 필요하므로 운영 CSP 에서는 뺀다.
   {
     key: 'Content-Security-Policy',
     value: [
       "default-src 'self'",
-      "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
+      "script-src 'self' 'unsafe-inline'",
       "style-src 'self' 'unsafe-inline'",
       "img-src 'self' data: blob:",
       "font-src 'self' data:",
