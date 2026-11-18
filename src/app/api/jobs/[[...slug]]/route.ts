@@ -1,5 +1,6 @@
 import { getValidToken } from '@/lib/auth/valid-token'
 import { ADMIN_ALIAS_PW } from '@/lib/auth/admin-alias'
+import { getClientIp } from '@/lib/client-ip'
 import { NextRequest, NextResponse } from 'next/server';
 import { getToken } from 'next-auth/jwt';
 
@@ -38,8 +39,8 @@ async function proxyToVps(
 
   try {
     const method = req.method;
-    const clientIp = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim()
-      || req.headers.get('x-real-ip') || 'unknown';
+    // XFF 첫 값은 클라이언트가 임의로 넣을 수 있다. x-real-ip(프록시가 덮어쓴 값)만 신뢰한다.
+    const clientIp = getClientIp(req);
 
     const fetchHeaders: Record<string, string> = {
       'X-Forwarded-For': clientIp,

@@ -652,6 +652,15 @@ function ProjectDetailContent({ slug }: { slug: string }) {
           <li><strong>CD</strong> — GitHub webhook + systemd 자동 빌드/배포</li>
         </ul>
 
+        <h3 className="text-base font-semibold text-gray-900 dark:text-[#E5E7EB]">Security Audit</h3>
+        <ul className="list-disc pl-5 space-y-1">
+          <li><strong>범위</strong> — 서버가 있는 저장소 5개, HTTP 라우트 60개를 코드에서 정적 추출 (2026-11-18)</li>
+          <li><strong>신뢰 지점 41곳</strong> — 서버가 클라이언트 값을 받아들이는 지점(본문 숫자·경로 ID·업로드 파일명·IP 헤더·세션)을 세고, 각 지점마다 대응 공격을 배정 (자동 재현 6 / 수동 확인 35)</li>
+          <li><strong>실제 요청으로 재현</strong> — IDOR 5건, 업로드 경로 조작 3종, 권한 없는 라우트 접근: 모두 거부 응답 확인</li>
+          <li><strong>취약점 1건 발견·수정</strong> — 방문자 수가 <code>X-Forwarded-For</code> 첫 값을 신뢰해 3회 위조 시 3명으로 집계됨. 프록시 확정 IP만 쓰도록 수정 후 같은 요청이 1명으로 집계되는 것을 확인</li>
+          <li><strong>과장하지 않는 표기</strong> — &quot;취약점 0건&quot;이 아니라 &quot;자동 재현 N건 통과 / 수동 확인 M건&quot;으로 구분해 기록</li>
+        </ul>
+
         <h3 className="text-base font-semibold text-gray-900 dark:text-[#E5E7EB]">Included Services</h3>
         <ul className="list-disc pl-5 space-y-1">
           <li><strong>유저 시스템</strong> — 회원가입/로그인/프로필</li>

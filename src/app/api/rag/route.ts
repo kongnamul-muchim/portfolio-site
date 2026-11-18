@@ -68,7 +68,8 @@ export async function GET(req: NextRequest) {
       : `${VPS_API}/rate-limit`;
     const response = await fetch(url, {
       headers: {
-        'X-Forwarded-For': req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'unknown',
+        // 위조 가능한 XFF 첫 값 대신 프록시가 덮어쓴 x-real-ip 기준 값을 넘긴다.
+        'X-Forwarded-For': getClientIp(req),
       },
     });
     const data = await response.json();
